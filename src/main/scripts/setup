@@ -10,22 +10,19 @@ def undeploy():
     if app: actions.undeploy(app)
     app = actions.getAppName("icat.component")
     if app: actions.undeploy(app) 
-    
+
 actions, arg, props = getActions("setup.properties", [])
 
 prop_name = "run.properties"
-prop_list = ["user.list"]
+prop_list = ["message"]
 
 if arg in ["CONFIGURE", "INSTALL"]:
     actions.configure(prop_name, prop_list)
     actions.checkNoErrors()
-    
+
 if arg == "INSTALL":   
     properties = getProperties(prop_name, prop_list)
-    for v in properties["user.list"].split():
-        if "user." + v + ".password" not in properties:
-            abort ("user.list included " + v + " but user." + v + ".password is not defined")       
-           
+
     try:
         undeploy()
         ovfiles = [[prop_name, "WEB-INF/classes"]]
@@ -33,9 +30,9 @@ if arg == "INSTALL":
         actions.deploy(deploymentorder=80, files=ovfiles)
     except Exception, e:
         abort(str(e))
-               
+
 if arg == "UNINSTALL":
     try:
-        undeploy() 
+        undeploy()
     except Exception, e:
-        abort(str(e))       
+        abort(str(e))

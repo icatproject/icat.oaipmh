@@ -1,6 +1,8 @@
 package org.icatproject.icat_component.exceptions;
 
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.net.HttpURLConnection;
 
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
@@ -15,15 +17,18 @@ import org.slf4j.LoggerFactory;
 @Provider
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
-	private static Logger logger = LoggerFactory.getLogger(NotFoundExceptionMapper.class);
+	private final static Logger logger = LoggerFactory.getLogger(NotFoundExceptionMapper.class);
 
 	@Override
 	public Response toResponse(NotFoundException e) {
-		logger.info("Processing: " + e.getClass() + " " + e.getMessage(), e);
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		e.printStackTrace(new PrintStream(baos));
+		logger.error("Processing: " + baos.toString());
+		baos.reset();
 		JsonGenerator gen = Json.createGenerator(baos);
-		gen.writeStartObject().write("code", "NOT_IMPLEMENTED")
-				.write("message", "Operation not implemented by this icat.component server.").writeEnd().close();
-		return Response.status(Response.Status.NOT_IMPLEMENTED).entity(baos.toString()).build();
+		gen.writeStartObject().write("code", "InternalException").write("message", e.getClass() + " " + e.getMessage())
+				.writeEnd().close();
+		return Response.status(HttpURLConnection.HTTP_NOT_FOUND).entity(baos.toString()).build();
 	}
 }
