@@ -83,6 +83,10 @@
 
 	<h2>The run.properties file</h2>
 	<dl>
+		<dt>required_property</dt>
+		<dd>
+			a dummy example of a property that is required for this component.
+		</dd>
 		<dt>message</dt>
 		<dd>
 			if specified will be returned by the REST API on the "message" endpoint.
@@ -97,11 +101,9 @@
 			<code>curl -k https://localhost:8181/icat.component/version -w "\n"</code>
 			which should return the version,<br />
 			<code>curl -k https://localhost:8181/icat.component/message -w "\n"</code>
-			which should return the message (default or custom),<br />
+			which should either return the message or get mapped to a 404 error,<br />
 			<code>curl -k https://localhost:8181/icat.component/hello -w "\n"</code>
 			which should return Hello World, and <br />
-			<code>curl -k https://localhost:8181/icat.component/fail -w "\n"</code>
-			which should get mapped to a 404 error.
 		</blockquote>
 	</p>
 

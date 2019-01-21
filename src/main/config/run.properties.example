@@ -1,5 +1,8 @@
 # Real comments in this file are marked with '#' whereas commented out lines
 # are marked with '!'
 
-# The message to be returned.
+# An example property (required to install the component)
+required_property = dummy
+
+# The message to be returned (optional)
 !message = this is an example message

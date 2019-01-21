@@ -1,17 +1,18 @@
 package org.icatproject.icat_component;
 
 import java.io.ByteArrayOutputStream;
+import java.net.HttpURLConnection;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.icatproject.icat_component.exceptions.ComponentException;
 import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.CheckedProperties.CheckedPropertyException;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class SimpleREST {
 	private static final Logger logger = LoggerFactory.getLogger(SimpleREST.class);
 	private static final Marker fatal = MarkerFactory.getMarker("FATAL");
 
+	private String required_property;
 	private String message;
 
 	@PostConstruct
@@ -35,10 +37,12 @@ public class SimpleREST {
 		try {
 			props.loadFromResource("run.properties");
 
+			required_property = props.getString("required_property");
+
 			if (props.has("message")) {
 				message = props.getString("message");
 			} else {
-				message = "this is the default message";
+				message = null;
 			}
 
 		} catch (CheckedPropertyException e) {
@@ -63,7 +67,10 @@ public class SimpleREST {
 	@GET
 	@Path("message")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String message() {
+	public String message() throws ComponentException {
+		if (message == null) {
+			throw new ComponentException("example for not found exception mapping", HttpURLConnection.HTTP_NOT_FOUND);
+		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		JsonGenerator gen = Json.createGenerator(baos);
 		gen.writeStartObject().write("message", message).writeEnd();
@@ -82,10 +89,4 @@ public class SimpleREST {
 		return baos.toString();
 	}
 
-	@GET
-	@Path("fail")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String fail() {
-		throw new NotFoundException("example for not found exception mapping");
-	}
 }

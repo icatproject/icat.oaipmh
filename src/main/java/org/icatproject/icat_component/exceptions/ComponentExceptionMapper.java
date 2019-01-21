@@ -2,11 +2,9 @@ package org.icatproject.icat_component.exceptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.net.HttpURLConnection;
 
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -15,20 +13,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
+public class ComponentExceptionMapper implements ExceptionMapper<ComponentException> {
 
-	private final static Logger logger = LoggerFactory.getLogger(NotFoundExceptionMapper.class);
+	private final static Logger logger = LoggerFactory.getLogger(ComponentExceptionMapper.class);
 
 	@Override
-	public Response toResponse(NotFoundException e) {
+	public Response toResponse(ComponentException e) {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		e.printStackTrace(new PrintStream(baos));
 		logger.error("Processing: " + baos.toString());
 		baos.reset();
 		JsonGenerator gen = Json.createGenerator(baos);
-		gen.writeStartObject().write("code", "InternalException").write("message", e.getClass() + " " + e.getMessage())
-				.writeEnd().close();
-		return Response.status(HttpURLConnection.HTTP_NOT_FOUND).entity(baos.toString()).build();
+		gen.writeStartObject().write("message", e.getClass() + " " + e.getMessage())
+			.writeEnd().close();
+		return Response.status(e.getHttpStatusCode()).entity(baos.toString()).build();
 	}
 }
