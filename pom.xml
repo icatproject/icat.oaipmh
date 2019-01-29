@@ -8,7 +8,7 @@
 	<name>ICAT: icat.component</name>
 
 	<description>
-      This is an empty example component for ICAT.
+      A simple Hello World style example component for ICAT.
     </description>
 
 	<properties>
