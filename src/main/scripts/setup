@@ -3,25 +3,26 @@ from setup_utils import *
 import os
 
 # icat.component
+
 def undeploy():
-    app = actions.getAppName("icat_component.ear")
-    if app: actions.undeploy(app) 
-    app = actions.getAppName("icat_component")
-    if app: actions.undeploy(app)
     app = actions.getAppName("icat.component")
-    if app: actions.undeploy(app) 
+    if app: actions.undeploy(app)
 
 actions, arg, props = getActions("setup.properties", [])
 
 prop_name = "run.properties"
 prop_list = ["required_property"]
 
+properties = getProperties(prop_name, prop_list)
+
 if arg in ["CONFIGURE", "INSTALL"]:
     actions.configure(prop_name, prop_list)
     actions.checkNoErrors()
 
-if arg == "INSTALL":   
-    properties = getProperties(prop_name, prop_list)
+if arg == "INSTALL":
+
+    if properties.get("required_property") == "dummy":
+        abort("The required_property must not be set to 'dummy' in run.properties")
 
     try:
         undeploy()

@@ -2,7 +2,7 @@
 # are marked with '!'
 
 # An example property (required to install the component)
-required_property = dummy
+required_property = example value
 
 # The message to be returned (optional)
 !message = this is an example message
