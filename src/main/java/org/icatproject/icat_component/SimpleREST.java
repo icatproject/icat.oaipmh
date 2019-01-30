@@ -50,7 +50,7 @@ public class SimpleREST {
 			throw new IllegalStateException(e.getMessage());
 		}
 
-		logger.debug("Initialised SimpleREST");
+		logger.info("Initialised SimpleREST with required_property: " + required_property);
 	}
 
 	@GET
