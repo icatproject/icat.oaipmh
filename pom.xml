@@ -16,7 +16,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.scm.id>github</project.scm.id>
 		<repoUrl>https://repo.icatproject.org/repo</repoUrl>
-		<gitUrl>https://github.com/icatproject/icat.component</gitUrl>
+		<gitUrl>https://github.com/icatproject-contrib/icat.component</gitUrl>
 	</properties>
 
 	<repositories>
@@ -34,7 +34,7 @@
 	</scm>
 
 	<issueManagement>
-		<url>https://github.com/icatproject/icat.component/issues</url>
+		<url>https://github.com/icatproject-contrib/icat.component/issues</url>
 		<system>GitHub</system>
 	</issueManagement>
 
@@ -221,6 +221,7 @@
 	</build>
 
 	<reporting>
+
 		<plugins>
 
 			<plugin>
@@ -246,5 +247,7 @@
 			</plugin>
 
 		</plugins>
+
 	</reporting>
+
 </project>
