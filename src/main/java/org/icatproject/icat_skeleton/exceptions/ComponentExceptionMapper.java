@@ -1,4 +1,4 @@
-package org.icatproject.icat_component.exceptions;
+package org.icatproject.icat_skeleton.exceptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

@@ -2,10 +2,10 @@
 from setup_utils import *
 import os
 
-# icat.component
+# icat.skeleton
 
 def undeploy():
-    app = actions.getAppName("icat.component")
+    app = actions.getAppName("icat.skeleton")
     if app: actions.undeploy(app)
 
 actions, arg, props = getActions("setup.properties", [])

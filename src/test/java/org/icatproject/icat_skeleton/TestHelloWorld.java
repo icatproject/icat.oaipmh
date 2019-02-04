@@ -1,4 +1,4 @@
-package org.icatproject.icat_component;
+package org.icatproject.icat_skeleton;
 
 import static org.junit.Assert.assertEquals;
 

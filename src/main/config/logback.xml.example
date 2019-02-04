@@ -2,9 +2,9 @@
 
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${HOME}/logs/icat_component.log</file>
+		<file>${HOME}/logs/icat_skeleton.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${HOME}/logs/icat_component.log.%d{yyyy-MM-dd}.%i.zip
+			<fileNamePattern>${HOME}/logs/icat_skeleton.log.%d{yyyy-MM-dd}.%i.zip
 			</fileNamePattern>
 			<maxHistory>30</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy

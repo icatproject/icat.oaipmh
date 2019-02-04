@@ -1,4 +1,4 @@
-package org.icatproject.icat_component;
+package org.icatproject.icat_skeleton;
 
 import java.io.IOException;
 import java.io.InputStream;

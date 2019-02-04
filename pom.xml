@@ -2,10 +2,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.icatproject</groupId>
-	<artifactId>icat.component</artifactId>
+	<artifactId>icat.skeleton</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>ICAT: icat.component</name>
+	<name>ICAT: icat.skeleton</name>
 
 	<description>
       A simple Hello World style example component for ICAT.
@@ -16,7 +16,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.scm.id>github</project.scm.id>
 		<repoUrl>https://repo.icatproject.org/repo</repoUrl>
-		<gitUrl>https://github.com/icatproject-contrib/icat.component</gitUrl>
+		<gitUrl>https://github.com/icatproject-contrib/icat.skeleton</gitUrl>
 	</properties>
 
 	<repositories>
@@ -34,7 +34,7 @@
 	</scm>
 
 	<issueManagement>
-		<url>https://github.com/icatproject-contrib/icat.component/issues</url>
+		<url>https://github.com/icatproject-contrib/icat.skeleton/issues</url>
 		<system>GitHub</system>
 	</issueManagement>
 
@@ -54,7 +54,7 @@
 		<downloadUrl>${repoUrl}</downloadUrl>
 		<site>
 			<id>repo.icatproject.org</id>
-			<url>dav:${repoUrl}/../site/icat/component/${project.version}</url>
+			<url>dav:${repoUrl}/../site/icat/skeleton/${project.version}</url>
 		</site>
 		<repository>
 			<id>repo.icatproject.org</id>
