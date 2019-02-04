@@ -1,5 +1,4 @@
-icat_component: A simple Hello World style example component for ICAT
-------------
+# icat_component: A simple Hello World style example component for ICAT
 
 General installation instructions are at http://www.icatproject.org/installation/component
 
