@@ -1,7 +1,7 @@
-# icat_skeleton: A simple Hello World style example component for ICAT
+# icat_oai: An OAI-PMH interface for ICAT Server
 
 General installation instructions are at http://www.icatproject.org/installation/component
 
-Specific installation instructions are at http://www.icatproject.org/mvn/site/icat/skeleton/${project.version}/installation.html
+Specific installation instructions are at http://www.icatproject.org/mvn/site/icat/oai/${project.version}/installation.html
 
-All documentation on icat_skeleton may be found at http://www.icatproject.org/mvn/site/icat/skeleton/${project.version}
+All documentation on icat_oai may be found at http://www.icatproject.org/mvn/site/icat/oai/${project.version}

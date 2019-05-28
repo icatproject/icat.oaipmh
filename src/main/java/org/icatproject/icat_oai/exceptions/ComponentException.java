@@ -1,4 +1,4 @@
-package org.icatproject.icat_skeleton.exceptions;
+package org.icatproject.icat_oai.exceptions;
 
 @SuppressWarnings("serial")
 public class ComponentException extends Exception {

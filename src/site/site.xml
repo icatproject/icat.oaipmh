@@ -4,7 +4,7 @@
 	<body>
 
 		<breadcrumbs>
-			<item name="icat.skeleton" href="index.html" />
+			<item name="icat.oai" href="index.html" />
 		</breadcrumbs>
 
 		<menu name="Information for Users">

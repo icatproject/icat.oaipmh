@@ -1,4 +1,4 @@
-package org.icatproject.icat_skeleton;
+package org.icatproject.icat_oai;
 
 import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
@@ -12,7 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.icatproject.icat_skeleton.exceptions.ComponentException;
+import org.icatproject.icat_oai.exceptions.ComponentException;
 import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.CheckedProperties.CheckedPropertyException;
 import org.slf4j.Logger;

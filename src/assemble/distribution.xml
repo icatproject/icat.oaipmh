@@ -7,15 +7,15 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <outputDirectory>icat.skeleton</outputDirectory>
+            <outputDirectory>icat.oai</outputDirectory>
             <directory>${basedir}/src/main/scripts</directory>
         </fileSet>
         <fileSet>
-            <outputDirectory>icat.skeleton</outputDirectory>
+            <outputDirectory>icat.oai</outputDirectory>
             <directory>${basedir}/src/main/config</directory>
         </fileSet>
         <fileSet>
-            <outputDirectory>icat.skeleton</outputDirectory>
+            <outputDirectory>icat.oai</outputDirectory>
             <directory>${basedir}</directory>
             <filtered>true</filtered>
             <includes>
@@ -27,15 +27,15 @@
     <dependencySets>
 
         <dependencySet>
-            <outputDirectory>icat.skeleton</outputDirectory>
+            <outputDirectory>icat.oai</outputDirectory>
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <includes>
-                <include>org.icatproject:icat.skeleton</include>
+                <include>org.icatproject:icat.oai</include>
             </includes>
         </dependencySet>
 
         <dependencySet>
-            <outputDirectory>icat.skeleton</outputDirectory>
+            <outputDirectory>icat.oai</outputDirectory>
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <unpack>true</unpack>
             <unpackOptions>
