@@ -1,8 +1,17 @@
 # Real comments in this file are marked with '#' whereas commented out lines
 # are marked with '!'
 
-# An example property (required to install the component)
-required_property = example value
+# The metadata formats to be supported: Dublin Core (oai_dc) is required
+!metadataPrefixes = oai_dc oai_datacite
 
-# The message to be returned (optional)
-!message = this is an example message
+# The path to the xslt definition for each metadata format
+!oai_dc.xslt        = /path/to/oai_dc.xsl
+!oai_datacite.xslt  = /path/to/oai_datacite.xsl
+
+# The namespace for each metadata format
+!oai_dc.namespace       = http://www.openarchives.org/OAI/2.0/oai_dc/
+!oai_datacite.namespace = http://schema.datacite.org/oai/oai-1.1/
+
+# A schema definition for each metadata format
+!oai_dc.schema          = http://www.openarchives.org/OAI/2.0/oai_dc.xsd
+!oai_datacite.schema    = http://schema.datacite.org/oai/oai-1.1/oai.xsd

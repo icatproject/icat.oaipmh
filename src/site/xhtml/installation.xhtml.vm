@@ -83,13 +83,22 @@
 
 	<h2>The run.properties file</h2>
 	<dl>
-		<dt>required_property</dt>
+		<dt>metadataPrefixes</dt>
 		<dd>
-			a dummy example of a property that is required for this component.
+			A space separated list of metadata formats to be supported.
+			At minimum, support for the Dublin Core format (oai_dc) is required.
 		</dd>
-		<dt>message</dt>
+		<dt>&lt;metadataPrefix&gt;.xslt</dt>
 		<dd>
-			if specified will be returned by the REST API on the "message" endpoint.
+			For each metadata format, specify the absolute path to an xslt definition.
+		</dd>
+		<dt>&lt;metadataPrefix&gt;.namespace</dt>
+		<dd>
+			For each metadata format, specify the namespace.
+		</dd>
+		<dt>&lt;metadataPrefix&gt;.schema</dt>
+		<dd>
+			For each metadata format, specify the link to a schema definition.
 		</dd>
 	</dl>
 

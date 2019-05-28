@@ -37,13 +37,13 @@ public class SimpleREST {
 		try {
 			props.loadFromResource("run.properties");
 
-			required_property = props.getString("required_property");
+			// required_property = props.getString("required_property");
 
-			if (props.has("message")) {
-				message = props.getString("message");
-			} else {
-				message = null;
-			}
+			// if (props.has("message")) {
+			// 	message = props.getString("message");
+			// } else {
+			// 	message = null;
+			// }
 
 		} catch (CheckedPropertyException e) {
 			logger.error(fatal, e.getMessage());
