@@ -30,7 +30,7 @@ public class RequestHandler {
     }
 
     public String request(HttpServletRequest req) {
-        XmlResponseGenerator res = new XmlResponseGenerator();
+        XmlResponse res = new XmlResponse();
         String verb = req.getParameter("verb");
 
         if (verb.equals("Identify"))
@@ -62,49 +62,49 @@ public class RequestHandler {
         return output;
     }
 
-    private void identify(HttpServletRequest req, XmlResponseGenerator res) {
+    private void identify(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listIdentifiers(HttpServletRequest req, XmlResponseGenerator res) {
+    private void listIdentifiers(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "from", "until", "metadataPrefix", "set", "resumptionToken" };
         String[] requiredParameters = { "metadataPrefix" };
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listRecords(HttpServletRequest req, XmlResponseGenerator res) {
+    private void listRecords(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "from", "until", "set", "resumptionToken", "metadataPrefix" };
         String[] requiredParameters = { "metadataPrefix" };
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listSets(HttpServletRequest req, XmlResponseGenerator res) {
+    private void listSets(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "resumptionToken" };
         String[] requiredParameters = {};
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listMetadataFormats(HttpServletRequest req, XmlResponseGenerator res) {
+    private void listMetadataFormats(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "identifier" };
         String[] requiredParameters = {};
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void getRecord(HttpServletRequest req, XmlResponseGenerator res) {
+    private void getRecord(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void illegalVerb(HttpServletRequest req, XmlResponseGenerator res) {
+    private void illegalVerb(HttpServletRequest req, XmlResponse res) {
         res.makeResponseOutline(getRequestUrl(req), new HashMap<String, String>());
         res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
     }
 
     private void checkParameters(String[] allowedParameters, String[] requiredParameters, HttpServletRequest req,
-            XmlResponseGenerator res) {
+            XmlResponse res) {
         Map<String, String> checkedParameters = new HashMap<String, String>();
         Map<String, String[]> parameters = req.getParameterMap();
 

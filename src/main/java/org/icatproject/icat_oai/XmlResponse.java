@@ -14,14 +14,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class XmlResponseGenerator {
+public class XmlResponse {
 
-    private static final Logger logger = LoggerFactory.getLogger(XmlResponseGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlResponse.class);
 
     private DocumentBuilderFactory factory;
     private Document document;
 
-    public XmlResponseGenerator() {
+    public XmlResponse() {
         factory = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder builder = null;
