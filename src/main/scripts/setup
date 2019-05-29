@@ -11,7 +11,7 @@ def undeploy():
 actions, arg, props = getActions("setup.properties", [])
 
 prop_name = "run.properties"
-prop_list = ["metadataPrefixes"]
+prop_list = ["icat.url", "icat.auth", "repositoryName", "adminEmails", "metadataPrefixes"]
 
 properties = getProperties(prop_name, prop_list)
 
@@ -20,6 +20,9 @@ if arg in ["CONFIGURE", "INSTALL"]:
     actions.checkNoErrors()
 
 if arg == "INSTALL":
+
+    if len(properties["icat.auth"].split()) != 5:
+        abort("Invalid value for 'icat.auth' in run.properties")
 
     if "oai_dc" not in properties["metadataPrefixes"].split():
         abort("Support for the metadataPrefix 'oai_dc' is missing in run.properties")

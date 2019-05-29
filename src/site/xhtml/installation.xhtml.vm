@@ -83,6 +83,24 @@
 
 	<h2>The run.properties file</h2>
 	<dl>
+		<dt>icat.url</dt>
+		<dd>
+			The url of the machine hosting the icat service.
+			It should normally just have the scheme, the hostname and the port.
+		</dd>
+		<dt>icat.auth</dt>
+		<dd>
+			Space separated icat plugin name and credentials for a user
+			permitted to read all investigations, datasets, and datafiles.
+		</dd>
+		<dt>repositoryName</dt>
+		<dd>
+			A human readable name for the repository.
+		</dd>
+		<dt>adminEmails</dt>
+		<dd>
+			A space separated list of e-mail addresses of the repository administrator.
+		</dd>
 		<dt>metadataPrefixes</dt>
 		<dd>
 			A space separated list of metadata formats to be supported.

@@ -33,11 +33,17 @@ public class RequestInterface {
 
 	@PostConstruct
 	private void init() {
-		bean = new RequestHandler();
-
 		CheckedProperties props = new CheckedProperties();
 		try {
 			props.loadFromResource("run.properties");
+
+			String icatUrl = props.getString("icat.url");
+			String[] icatAuth = props.getString("icat.auth").split("\\s+");
+
+			String repositoryName = props.getString("repositoryName");
+			String[] adminEmails = props.getString("adminEmails").split("\\s+");
+
+			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails);
 
 			String[] prefixes = props.getString("metadataPrefixes").split("\\s+");
 			for (String prefix : prefixes) {

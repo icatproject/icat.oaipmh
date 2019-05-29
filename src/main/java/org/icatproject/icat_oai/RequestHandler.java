@@ -1,7 +1,6 @@
 package org.icatproject.icat_oai;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +18,15 @@ public class RequestHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private ArrayList<MetadataFormat> metadataFormats;
+    private ResponseBuilder rb;
 
-    public RequestHandler() {
-        metadataFormats = new ArrayList<MetadataFormat>();
+    public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails) {
+        rb = new ResponseBuilder(repositoryName, adminEmails);
+        rb.performIcatLogin(icatUrl, icatAuth);
     }
 
     public void registerMetadataFormat(MetadataFormat format) {
-        metadataFormats.add(format);
+        rb.addMetadataFormat(format);
     }
 
     public String request(HttpServletRequest req) {
@@ -65,7 +65,10 @@ public class RequestHandler {
     private void handleIdentify(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
-        checkParameters(allowedParameters, requiredParameters, req, res);
+
+        if (checkParameters(allowedParameters, requiredParameters, req, res)) {
+            rb.buildIdentifyResponse(req, res);
+        }
     }
 
     private void handleListIdentifiers(HttpServletRequest req, XmlResponse res) {
@@ -99,35 +102,38 @@ public class RequestHandler {
     }
 
     private void handleIllegalVerb(HttpServletRequest req, XmlResponse res) {
-        res.makeResponseOutline(getRequestUrl(req), new HashMap<String, String>());
+        res.makeResponseOutline(rb.getRequestUrl(req), new HashMap<String, String>());
         res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
     }
 
-    private void checkParameters(String[] allowedParameters, String[] requiredParameters, HttpServletRequest req,
+    private boolean checkParameters(String[] allowedParameters, String[] requiredParameters, HttpServletRequest req,
             XmlResponse res) {
         Map<String, String> checkedParameters = new HashMap<String, String>();
         Map<String, String[]> parameters = req.getParameterMap();
 
-        boolean ok = false;
+        boolean allParamsOk = true;
+        boolean paramOk = false;
         boolean includesResumptionToken = false;
 
         for (String param : parameters.keySet()) {
-            ok = false;
+            paramOk = false;
             if (param.equals("resumptionToken"))
                 includesResumptionToken = true;
             if (parameters.get(param).length == 1) {
                 for (String allowedParameter : allowedParameters) {
                     if (allowedParameter.contains(param)) {
-                        ok = true;
-                        // break;
+                        paramOk = true;
+                        break;
                     }
                 }
             }
-            if (ok)
+            if (paramOk)
                 checkedParameters.put(param, parameters.get(param)[0]);
+            else
+                allParamsOk = false;
         }
 
-        res.makeResponseOutline(getRequestUrl(req), checkedParameters);
+        res.makeResponseOutline(rb.getRequestUrl(req), checkedParameters);
 
         if (parameters.size() != checkedParameters.size())
             res.addError("badArgument", "The request includes illegal arguments, or includes a repeated argument.");
@@ -135,35 +141,19 @@ public class RequestHandler {
             res.addError("badArgument", "The request includes illegal arguments in addition to the resumptionToken.");
 
         for (String requiredParameter : requiredParameters) {
-            ok = false;
+            paramOk = false;
             for (String param : parameters.keySet()) {
                 if (requiredParameter.contains(param)) {
-                    ok = true;
+                    paramOk = true;
                     break;
                 }
             }
-            if (!ok) {
+            if (!paramOk) {
                 res.addError("badArgument", "The request is missing the required argument: " + requiredParameter);
+                allParamsOk = false;
             }
         }
-    }
 
-    private String getRequestUrl(HttpServletRequest req) {
-        String scheme = req.getScheme();
-        String serverName = req.getServerName();
-        int serverPort = req.getServerPort();
-        String contextPath = req.getContextPath();
-        String servletPath = req.getServletPath();
-
-        StringBuilder url = new StringBuilder();
-        url.append(scheme).append("://").append(serverName);
-
-        if (serverPort != 80 && serverPort != 443) {
-            url.append(":").append(serverPort);
-        }
-
-        url.append(contextPath).append(servletPath);
-
-        return url.toString();
+        return allParamsOk;
     }
 }

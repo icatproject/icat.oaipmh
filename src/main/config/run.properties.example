@@ -1,6 +1,16 @@
 # Real comments in this file are marked with '#' whereas commented out lines
 # are marked with '!'
 
+# ICAT Client configuration
+!icat.url = https://example.com:443
+!icat.auth = simple username nick password 123456
+
+# A human readable name for the repository
+!repositoryName = Repository1
+
+# The e-mail address(es) of the repository administrator
+!adminEmails = someone@example.com another@example.org
+
 # The metadata formats to be supported: Dublin Core (oai_dc) is required
 !metadataPrefixes = oai_dc oai_datacite
 
