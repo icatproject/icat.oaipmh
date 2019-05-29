@@ -34,19 +34,19 @@ public class RequestHandler {
         String verb = req.getParameter("verb");
 
         if (verb.equals("Identify"))
-            identify(req, res);
+            handleIdentify(req, res);
         else if (verb.equals("ListIdentifiers"))
-            listIdentifiers(req, res);
+            handleListIdentifiers(req, res);
         else if (verb.equals("ListRecords"))
-            listRecords(req, res);
+            handleListRecords(req, res);
         else if (verb.equals("ListSets"))
-            listSets(req, res);
+            handleListSets(req, res);
         else if (verb.equals("ListMetadataFormats"))
-            listMetadataFormats(req, res);
+            handleListMetadataFormats(req, res);
         else if (verb.equals("GetRecord"))
-            getRecord(req, res);
+            handleGetRecord(req, res);
         else
-            illegalVerb(req, res);
+            handleIllegalVerb(req, res);
 
         String output = "";
         try {
@@ -62,43 +62,43 @@ public class RequestHandler {
         return output;
     }
 
-    private void identify(HttpServletRequest req, XmlResponse res) {
+    private void handleIdentify(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listIdentifiers(HttpServletRequest req, XmlResponse res) {
+    private void handleListIdentifiers(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "from", "until", "metadataPrefix", "set", "resumptionToken" };
         String[] requiredParameters = { "metadataPrefix" };
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listRecords(HttpServletRequest req, XmlResponse res) {
+    private void handleListRecords(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "from", "until", "set", "resumptionToken", "metadataPrefix" };
         String[] requiredParameters = { "metadataPrefix" };
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listSets(HttpServletRequest req, XmlResponse res) {
+    private void handleListSets(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "resumptionToken" };
         String[] requiredParameters = {};
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void listMetadataFormats(HttpServletRequest req, XmlResponse res) {
+    private void handleListMetadataFormats(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "identifier" };
         String[] requiredParameters = {};
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void getRecord(HttpServletRequest req, XmlResponse res) {
+    private void handleGetRecord(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
         checkParameters(allowedParameters, requiredParameters, req, res);
     }
 
-    private void illegalVerb(HttpServletRequest req, XmlResponse res) {
+    private void handleIllegalVerb(HttpServletRequest req, XmlResponse res) {
         res.makeResponseOutline(getRequestUrl(req), new HashMap<String, String>());
         res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
     }
