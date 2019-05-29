@@ -7,7 +7,7 @@ import org.junit.Test;
 public class TestHelloWorld {
 	@Test
 	public void test() throws Exception {
-		SimpleREST a = new SimpleREST();
-		assertEquals("{\"Hello\":\"World\"}", a.hello());
+		RequestInterface i = new RequestInterface();
+		assertEquals("{\"version\":\"1.0.0-SNAPSHOT\"}", i.getVersion());
 	}
 }
