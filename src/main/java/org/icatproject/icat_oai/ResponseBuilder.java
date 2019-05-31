@@ -107,6 +107,36 @@ public class ResponseBuilder {
         res.addContent(identify);
     }
 
+    public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) {
+        res.addError("noSetHierarchy", "This repository does not support sets");
+    }
+
+    public void buildListMetadataFormatsResponse(HttpServletRequest req, XmlResponse res) {
+        Document doc = res.getDocument();
+
+        Element listMetadataFormats = doc.createElement("ListMetadataFormats");
+
+        for (MetadataFormat format : metadataFormats) {
+            Element metadataFormat = doc.createElement("metadataFormat");
+
+            Element metadataPrefix = doc.createElement("metadataPrefix");
+            metadataPrefix.appendChild(doc.createTextNode(format.getMetadataPrefix()));
+            metadataFormat.appendChild(metadataPrefix);
+
+            Element metadataNamespace = doc.createElement("metadataNamespace");
+            metadataNamespace.appendChild(doc.createTextNode(format.getMetadataNamespace()));
+            metadataFormat.appendChild(metadataNamespace);
+
+            Element schema = doc.createElement("schema");
+            schema.appendChild(doc.createTextNode(format.getMetadataSchema()));
+            metadataFormat.appendChild(schema);
+
+            listMetadataFormats.appendChild(metadataFormat);
+        }
+
+        res.addContent(listMetadataFormats);
+    }
+
     public String getFormattedDateTime(String dateTime) {
         return OffsetDateTime.parse(dateTime).format(DateTimeFormatter.ISO_INSTANT);
     }

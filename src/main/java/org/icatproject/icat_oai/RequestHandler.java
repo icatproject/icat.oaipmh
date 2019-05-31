@@ -86,13 +86,19 @@ public class RequestHandler {
     private void handleListSets(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "resumptionToken" };
         String[] requiredParameters = {};
-        checkParameters(allowedParameters, requiredParameters, req, res);
+
+        if (checkParameters(allowedParameters, requiredParameters, req, res)) {
+            rb.buildListSetsResponse(req, res);
+        }
     }
 
     private void handleListMetadataFormats(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "identifier" };
         String[] requiredParameters = {};
-        checkParameters(allowedParameters, requiredParameters, req, res);
+
+        if (checkParameters(allowedParameters, requiredParameters, req, res)) {
+            rb.buildListMetadataFormatsResponse(req, res);
+        }
     }
 
     private void handleGetRecord(HttpServletRequest req, XmlResponse res) {
