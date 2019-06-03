@@ -87,7 +87,7 @@ public class ResponseBuilder {
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
             jsonReader.close();
-            JsonString earliestDate = (JsonString) jsonArray.get(0);
+            JsonString earliestDate = jsonArray.getJsonString(0);
             earliestDatestamp = getFormattedDateTime(earliestDate.getString());
         } catch (IcatException e) {
             logger.error(e.getMessage());
@@ -105,6 +105,15 @@ public class ResponseBuilder {
         identify.appendChild(granularity);
 
         res.addContent(identify);
+    }
+
+    public void buildListIdentifiersResponse(HttpServletRequest req, XmlResponse res) {
+        Document doc = res.getDocument();
+
+        Element listIdentifiers = doc.createElement("ListIdentifiers");
+        getIcatHeaders(req, res, listIdentifiers);
+
+        res.addContent(listIdentifiers);
     }
 
     public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) {
@@ -135,6 +144,43 @@ public class ResponseBuilder {
         }
 
         res.addContent(listMetadataFormats);
+    }
+
+    public void getIcatHeaders(HttpServletRequest req, XmlResponse res, Element el) {
+        try {
+            String result = icatSession.search("SELECT inv.id, inv.modTime FROM Investigation inv ORDER BY inv.modTime");
+            JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
+            JsonArray jsonArray = jsonReader.readArray();
+            jsonReader.close();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonArray item = jsonArray.getJsonArray(i);
+                String identifier = getFormattedIdentifier(req.getServerName(), item.getJsonNumber(0).toString());
+                String datestamp = getFormattedDateTime(item.getJsonString(1).getString());
+                appendXmlHeader(el, identifier, datestamp);
+            }
+        } catch (IcatException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public void appendXmlHeader(Element el, String identifier, String datestamp) {
+        Document doc = el.getOwnerDocument();
+        Element header = doc.createElement("header");
+
+        Element id = doc.createElement("identifier");
+        id.setTextContent(identifier);
+
+        Element date = doc.createElement("datestamp");
+        date.setTextContent(datestamp);
+
+        header.appendChild(id);
+        header.appendChild(date);
+
+        el.appendChild(header);
+    }
+
+    public String getFormattedIdentifier(String url, String id) {
+        return "oai:" + url.toString() + ":" + id.toString();
     }
 
     public String getFormattedDateTime(String dateTime) {

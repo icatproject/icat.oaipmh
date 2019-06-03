@@ -74,7 +74,10 @@ public class RequestHandler {
     private void handleListIdentifiers(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "from", "until", "metadataPrefix", "set", "resumptionToken" };
         String[] requiredParameters = { "metadataPrefix" };
-        checkParameters(allowedParameters, requiredParameters, req, res);
+
+        if (checkParameters(allowedParameters, requiredParameters, req, res)) {
+            rb.buildListIdentifiersResponse(req, res);
+        }
     }
 
     private void handleListRecords(HttpServletRequest req, XmlResponse res) {
