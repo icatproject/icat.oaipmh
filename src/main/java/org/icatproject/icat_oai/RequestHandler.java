@@ -83,7 +83,10 @@ public class RequestHandler {
     private void handleListRecords(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "from", "until", "set", "resumptionToken", "metadataPrefix" };
         String[] requiredParameters = { "metadataPrefix" };
-        checkParameters(allowedParameters, requiredParameters, req, res);
+
+        if (checkParameters(allowedParameters, requiredParameters, req, res)) {
+            rb.buildListRecordsResponse(req, res);
+        }
     }
 
     private void handleListSets(HttpServletRequest req, XmlResponse res) {
@@ -107,7 +110,10 @@ public class RequestHandler {
     private void handleGetRecord(HttpServletRequest req, XmlResponse res) {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
-        checkParameters(allowedParameters, requiredParameters, req, res);
+
+        if (checkParameters(allowedParameters, requiredParameters, req, res)) {
+            rb.buildGetRecordResponse(req, res);
+        }
     }
 
     private void handleIllegalVerb(HttpServletRequest req, XmlResponse res) {

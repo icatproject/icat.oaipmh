@@ -10,6 +10,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonReader;
 import javax.json.JsonString;
+import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 
 import org.icatproject.icat.client.ICAT;
@@ -111,9 +112,27 @@ public class ResponseBuilder {
         Document doc = res.getDocument();
 
         Element listIdentifiers = doc.createElement("ListIdentifiers");
-        getIcatHeaders(req, res, listIdentifiers);
 
+        ArrayList<HeaderInformation> headers = getIcatHeaders(req, res);
+        for (HeaderInformation header : headers) {
+            appendXmlHeader(listIdentifiers, header);
+        }
         res.addContent(listIdentifiers);
+    }
+
+    public void buildListRecordsResponse(HttpServletRequest req, XmlResponse res) {
+        Document doc = res.getDocument();
+
+        Element listRecords = doc.createElement("ListRecords");
+
+        ArrayList<RecordInformation> records = getIcatRecords(req, res);
+        for (RecordInformation info : records) {
+            Element record = doc.createElement("record");
+            appendXmlHeader(record, info.getHeader());
+            appendXmlMetadata(record, info.getMetadata());
+            listRecords.appendChild(record);
+        }
+        res.addContent(listRecords);
     }
 
     public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) {
@@ -146,37 +165,201 @@ public class ResponseBuilder {
         res.addContent(listMetadataFormats);
     }
 
-    public void getIcatHeaders(HttpServletRequest req, XmlResponse res, Element el) {
+    public void buildGetRecordResponse(HttpServletRequest req, XmlResponse res) {
+        Document doc = res.getDocument();
+
+        Element getRecord = doc.createElement("GetRecord");
+
+        RecordInformation info = getIcatRecords(req, res).get(0);
+
+        Element record = doc.createElement("record");
+        appendXmlHeader(record, info.getHeader());
+        appendXmlMetadata(record, info.getMetadata());
+        getRecord.appendChild(record);
+
+        res.addContent(getRecord);
+    }
+
+    public ArrayList<HeaderInformation> getIcatHeaders(HttpServletRequest req, XmlResponse res) {
+        ArrayList<HeaderInformation> headers = new ArrayList<HeaderInformation>();
+
         try {
-            String result = icatSession.search("SELECT inv.id, inv.modTime FROM Investigation inv ORDER BY inv.modTime");
+            String result = icatSession
+                    .search("SELECT inv.id, inv.modTime FROM Investigation inv ORDER BY inv.modTime");
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
             jsonReader.close();
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonArray item = jsonArray.getJsonArray(i);
+
                 String identifier = getFormattedIdentifier(req.getServerName(), item.getJsonNumber(0).toString());
                 String datestamp = getFormattedDateTime(item.getJsonString(1).getString());
-                appendXmlHeader(el, identifier, datestamp);
+                boolean deleted = false;
+
+                headers.add(new HeaderInformation(identifier, datestamp, deleted));
             }
         } catch (IcatException e) {
             logger.error(e.getMessage());
         }
+
+        return headers;
     }
 
-    public void appendXmlHeader(Element el, String identifier, String datestamp) {
+    public ArrayList<RecordInformation> getIcatRecords(HttpServletRequest req, XmlResponse res) {
+        ArrayList<RecordInformation> records = new ArrayList<RecordInformation>();
+
+        try {
+            String result = icatSession.search(
+                    "SELECT inv.id, inv.modTime, inv.doi, inv.title, inv.releaseDate, inv.startDate, inv.endDate, inv.name, inv.visitId, inv.summary FROM Investigation inv ORDER BY inv.modTime");
+            JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
+            JsonArray jsonArray = jsonReader.readArray();
+            jsonReader.close();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonArray item = jsonArray.getJsonArray(i);
+
+                String identifier = getFormattedIdentifier(req.getServerName(), item.getJsonNumber(0).toString());
+                String datestamp = getFormattedDateTime(item.getJsonString(1).getString());
+                boolean deleted = false;
+                HeaderInformation header = new HeaderInformation(identifier, datestamp, deleted);
+
+                String doi = getJsonAsString(item.get(2));
+                ArrayList<MetadataUser> investigationUsers = new ArrayList<MetadataUser>();
+                String title = getJsonAsString(item.get(3));
+                String releaseDate = getFormattedDateTime(getJsonAsString(item.get(4)));
+                String startDate = getFormattedDateTime(getJsonAsString(item.get(5)));
+                String endDate = getFormattedDateTime(getJsonAsString(item.get(6)));
+                String name = getJsonAsString(item.get(7));
+                String visitId = getJsonAsString(item.get(8));
+                String summary = getJsonAsString(item.get(9));
+                MetadataInformation metadata = new MetadataInformation(doi, investigationUsers, title, releaseDate,
+                        startDate, endDate, name, visitId, summary);
+
+                records.add(new RecordInformation(header, metadata));
+            }
+        } catch (IcatException e) {
+            logger.error(e.getMessage());
+        }
+
+        return records;
+    }
+
+    public void appendXmlHeader(Element el, HeaderInformation info) {
         Document doc = el.getOwnerDocument();
         Element header = doc.createElement("header");
 
+        if (info.getDeleted()) {
+            header.setAttribute("status", "deleted");
+        }
+
         Element id = doc.createElement("identifier");
-        id.setTextContent(identifier);
+        id.setTextContent(info.getIdentifier());
+        header.appendChild(id);
 
         Element date = doc.createElement("datestamp");
-        date.setTextContent(datestamp);
-
-        header.appendChild(id);
+        date.setTextContent(info.getDatestamp());
         header.appendChild(date);
 
         el.appendChild(header);
+    }
+
+    public void appendXmlMetadata(Element el, MetadataInformation info) {
+        Document doc = el.getOwnerDocument();
+        Element metadata = doc.createElement("metadata");
+
+        if (info.getDoi() != null) {
+            Element doi = doc.createElement("doi");
+            doi.setTextContent(info.getDoi());
+            metadata.appendChild(doi);
+        }
+
+        if (info.getInvestigationUsers().size() != 0) {
+            Element users = doc.createElement("users");
+            for (MetadataUser investigationUser : info.getInvestigationUsers()) {
+                Element user = doc.createElement("user");
+
+                if (investigationUser.getFullName() != null) {
+                    Element fullName = doc.createElement("fullName");
+                    fullName.setTextContent(investigationUser.getFullName());
+                    user.appendChild(fullName);
+                }
+
+                if (investigationUser.getGivenName() != null) {
+                    Element givenName = doc.createElement("givenName");
+                    givenName.setTextContent(investigationUser.getGivenName());
+                    user.appendChild(givenName);
+                }
+
+                if (investigationUser.getFamilyName() != null) {
+                    Element familyName = doc.createElement("familyName");
+                    familyName.setTextContent(investigationUser.getFamilyName());
+                    user.appendChild(familyName);
+                }
+
+                if (investigationUser.getOrcidId() != null) {
+                    Element orcidId = doc.createElement("orcidId");
+                    orcidId.setTextContent(investigationUser.getOrcidId());
+                    user.appendChild(orcidId);
+                }
+
+                users.appendChild(user);
+            }
+            metadata.appendChild(users);
+        }
+
+        if (info.getTitle() != null) {
+            Element title = doc.createElement("title");
+            title.setTextContent(info.getTitle());
+            metadata.appendChild(title);
+        }
+
+        if (info.getReleaseDate() != null) {
+            Element releaseDate = doc.createElement("releaseDate");
+            releaseDate.setTextContent(info.getReleaseDate());
+            metadata.appendChild(releaseDate);
+        }
+
+        if (info.getStartDate() != null) {
+            Element startDate = doc.createElement("startDate");
+            startDate.setTextContent(info.getStartDate());
+            metadata.appendChild(startDate);
+        }
+
+        if (info.getEndDate() != null) {
+            Element endDate = doc.createElement("endDate");
+            endDate.setTextContent(info.getEndDate());
+            metadata.appendChild(endDate);
+        }
+
+        if (info.getName() != null) {
+            Element name = doc.createElement("name");
+            name.setTextContent(info.getName());
+            metadata.appendChild(name);
+        }
+
+        if (info.getVisitId() != null) {
+            Element visitId = doc.createElement("visitId");
+            visitId.setTextContent(info.getVisitId());
+            metadata.appendChild(visitId);
+        }
+
+        if (info.getSummary() != null) {
+            Element summary = doc.createElement("summary");
+            summary.setTextContent(info.getSummary());
+            metadata.appendChild(summary);
+        }
+
+        el.appendChild(metadata);
+    }
+
+    public String getJsonAsString(JsonValue value) {
+        switch (value.getValueType()) {
+        case STRING:
+            return ((JsonString) value).getString();
+        case NULL:
+            return null;
+        default:
+            return value.toString();
+        }
     }
 
     public String getFormattedIdentifier(String url, String id) {
@@ -184,7 +367,9 @@ public class ResponseBuilder {
     }
 
     public String getFormattedDateTime(String dateTime) {
-        return OffsetDateTime.parse(dateTime).format(DateTimeFormatter.ISO_INSTANT);
+        if (dateTime != null)
+            return OffsetDateTime.parse(dateTime).format(DateTimeFormatter.ISO_INSTANT);
+        return null;
     }
 
     public String getRequestUrl(HttpServletRequest req) {
