@@ -12,6 +12,7 @@ import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.Templates;
 
 import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
@@ -113,11 +114,16 @@ public class ResponseBuilder {
 
         Element listIdentifiers = doc.createElement("ListIdentifiers");
 
-        ArrayList<HeaderInformation> headers = getIcatHeaders(req, res);
-        for (HeaderInformation header : headers) {
-            appendXmlHeader(listIdentifiers, header);
+        Templates template = getMetadataTemplate(req, res);
+
+        if (template != null) {
+            ArrayList<HeaderInformation> headers = getIcatHeaders(req, res);
+            for (HeaderInformation header : headers) {
+                appendXmlHeader(listIdentifiers, header);
+            }
+            res.addContent(listIdentifiers);
+            res.transformMetadataFormat(template);
         }
-        res.addContent(listIdentifiers);
     }
 
     public void buildListRecordsResponse(HttpServletRequest req, XmlResponse res) {
@@ -125,14 +131,19 @@ public class ResponseBuilder {
 
         Element listRecords = doc.createElement("ListRecords");
 
-        ArrayList<RecordInformation> records = getIcatRecords(req, res);
-        for (RecordInformation info : records) {
-            Element record = doc.createElement("record");
-            appendXmlHeader(record, info.getHeader());
-            appendXmlMetadata(record, info.getMetadata());
-            listRecords.appendChild(record);
+        Templates template = getMetadataTemplate(req, res);
+
+        if (template != null) {
+            ArrayList<RecordInformation> records = getIcatRecords(req, res);
+            for (RecordInformation info : records) {
+                Element record = doc.createElement("record");
+                appendXmlHeader(record, info.getHeader());
+                appendXmlMetadata(record, info.getMetadata());
+                listRecords.appendChild(record);
+            }
+            res.addContent(listRecords);
+            res.transformMetadataFormat(template);
         }
-        res.addContent(listRecords);
     }
 
     public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) {
@@ -170,14 +181,19 @@ public class ResponseBuilder {
 
         Element getRecord = doc.createElement("GetRecord");
 
-        RecordInformation info = getIcatRecords(req, res).get(0);
+        Templates template = getMetadataTemplate(req, res);
 
-        Element record = doc.createElement("record");
-        appendXmlHeader(record, info.getHeader());
-        appendXmlMetadata(record, info.getMetadata());
-        getRecord.appendChild(record);
+        if (template != null) {
+            RecordInformation info = getIcatRecords(req, res).get(0);
 
-        res.addContent(getRecord);
+            Element record = doc.createElement("record");
+            appendXmlHeader(record, info.getHeader());
+            appendXmlMetadata(record, info.getMetadata());
+            getRecord.appendChild(record);
+
+            res.addContent(getRecord);
+            res.transformMetadataFormat(template);
+        }
     }
 
     public ArrayList<HeaderInformation> getIcatHeaders(HttpServletRequest req, XmlResponse res) {
@@ -349,6 +365,17 @@ public class ResponseBuilder {
         }
 
         el.appendChild(metadata);
+    }
+
+    public Templates getMetadataTemplate(HttpServletRequest req, XmlResponse res) {
+        String metadataPrefix = req.getParameter("metadataPrefix");
+        for (MetadataFormat format : this.metadataFormats) {
+            if (metadataPrefix.equals(format.getMetadataPrefix())) {
+                return format.getTemplate();
+            }
+        }
+        res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
+        return null;
     }
 
     public String getJsonAsString(JsonValue value) {

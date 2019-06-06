@@ -7,6 +7,13 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,5 +76,19 @@ public class XmlResponse {
 
     public void addContent(Node content) {
         document.getDocumentElement().appendChild(content);
+    }
+
+    public void transformMetadataFormat(Templates template) {
+        try {
+            Transformer transformer = template.newTransformer();
+            Source source = new DOMSource(document);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.newDocument();
+            Result result = new DOMResult(doc);
+            transformer.transform(source, result);
+            document = doc;
+        } catch (TransformerException | ParserConfigurationException e) {
+            logger.error(e.getMessage());
+        }
     }
 }

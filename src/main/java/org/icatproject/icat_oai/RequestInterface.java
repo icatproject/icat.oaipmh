@@ -1,6 +1,7 @@
 package org.icatproject.icat_oai;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -14,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.xml.transform.TransformerConfigurationException;
 
 import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.CheckedProperties.CheckedPropertyException;
@@ -51,7 +53,7 @@ public class RequestInterface {
 						props.getString(prefix + ".namespace"), props.getString(prefix + ".schema"));
 				bean.registerMetadataFormat(format);
 			}
-		} catch (CheckedPropertyException e) {
+		} catch (CheckedPropertyException | FileNotFoundException | TransformerConfigurationException e) {
 			logger.error(fatal, e.getMessage());
 			throw new IllegalStateException(e.getMessage());
 		}
