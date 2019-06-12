@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
@@ -138,7 +139,8 @@ public class ResponseBuilder {
             for (RecordInformation info : records) {
                 Element record = doc.createElement("record");
                 appendXmlHeader(record, info.getHeader());
-                appendXmlMetadata(record, info.getMetadata());
+                if (info.getMetadata() != null)
+                    appendXmlMetadata(record, info.getMetadata());
                 listRecords.appendChild(record);
             }
             res.addContent(listRecords);
@@ -188,7 +190,8 @@ public class ResponseBuilder {
 
             Element record = doc.createElement("record");
             appendXmlHeader(record, info.getHeader());
-            appendXmlMetadata(record, info.getMetadata());
+            if (info.getMetadata() != null)
+                appendXmlMetadata(record, info.getMetadata());
             getRecord.appendChild(record);
 
             res.addContent(getRecord);
@@ -200,19 +203,15 @@ public class ResponseBuilder {
         ArrayList<HeaderInformation> headers = new ArrayList<HeaderInformation>();
 
         try {
-            String result = icatSession
-                    .search("SELECT inv.id, inv.modTime FROM Investigation inv ORDER BY inv.modTime");
+            String query = "SELECT inv FROM Investigation inv ORDER BY inv.modTime";
+            String result = icatSession.search(query);
+
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
             jsonReader.close();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JsonArray item = jsonArray.getJsonArray(i);
-
-                String identifier = getFormattedIdentifier(req.getServerName(), item.getJsonNumber(0).toString());
-                String datestamp = getFormattedDateTime(item.getJsonString(1).getString());
-                boolean deleted = false;
-
-                headers.add(new HeaderInformation(identifier, datestamp, deleted));
+            for (JsonValue inv : jsonArray) {
+                JsonObject invObj = ((JsonObject) inv).getJsonObject("Investigation");
+                headers.add(extracHeaderInformation(invObj, req));
             }
         } catch (IcatException e) {
             logger.error(e.getMessage());
@@ -225,30 +224,19 @@ public class ResponseBuilder {
         ArrayList<RecordInformation> records = new ArrayList<RecordInformation>();
 
         try {
-            String result = icatSession.search(
-                    "SELECT inv.id, inv.modTime, inv.doi, inv.title, inv.releaseDate, inv.startDate, inv.endDate, inv.name, inv.visitId, inv.summary FROM Investigation inv ORDER BY inv.modTime");
+            String query = "SELECT inv FROM Investigation inv ORDER BY inv.modTime INCLUDE inv.investigationUsers, inv.datasets.datafiles";
+            String result = icatSession.search(query);
+
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
             jsonReader.close();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JsonArray item = jsonArray.getJsonArray(i);
+            for (JsonValue inv : jsonArray) {
+                JsonObject invObj = ((JsonObject) inv).getJsonObject("Investigation");
 
-                String identifier = getFormattedIdentifier(req.getServerName(), item.getJsonNumber(0).toString());
-                String datestamp = getFormattedDateTime(item.getJsonString(1).getString());
-                boolean deleted = false;
-                HeaderInformation header = new HeaderInformation(identifier, datestamp, deleted);
-
-                String doi = getJsonAsString(item.get(2));
-                ArrayList<MetadataUser> investigationUsers = new ArrayList<MetadataUser>();
-                String title = getJsonAsString(item.get(3));
-                String releaseDate = getFormattedDateTime(getJsonAsString(item.get(4)));
-                String startDate = getFormattedDateTime(getJsonAsString(item.get(5)));
-                String endDate = getFormattedDateTime(getJsonAsString(item.get(6)));
-                String name = getJsonAsString(item.get(7));
-                String visitId = getJsonAsString(item.get(8));
-                String summary = getJsonAsString(item.get(9));
-                MetadataInformation metadata = new MetadataInformation(doi, investigationUsers, title, releaseDate,
-                        startDate, endDate, name, visitId, summary);
+                HeaderInformation header = extracHeaderInformation(invObj, req);
+                MetadataInformation metadata = null;
+                if (!header.getDeleted())
+                    metadata = extracMetadataInformation(invObj);
 
                 records.add(new RecordInformation(header, metadata));
             }
@@ -257,6 +245,48 @@ public class ResponseBuilder {
         }
 
         return records;
+    }
+
+    public HeaderInformation extracHeaderInformation(JsonObject invObj, HttpServletRequest req) {
+        String identifier = getFormattedIdentifier(req.getServerName(), invObj.getJsonNumber("id").toString());
+        String datestamp = getFormattedDateTime(invObj.getString("modTime", null));
+        boolean deleted = false;
+        nested_loop: // if any datafile in any dataset of this investigation has a non-empty
+                     // "location" attribute, the investigation isn't seen as being "deleted";
+                     // else it is, unless it has no datasets associated with it
+        for (JsonValue dataset : invObj.getJsonArray("datasets")) {
+            deleted = true;
+            for (JsonValue datafile : ((JsonObject) dataset).getJsonArray("datafiles")) {
+                String location = ((JsonObject) datafile).getString("location", null);
+                if (location != null) {
+                    deleted = false;
+                    break nested_loop;
+                }
+            }
+        }
+        return new HeaderInformation(identifier, datestamp, deleted);
+    }
+
+    public MetadataInformation extracMetadataInformation(JsonObject invObj) {
+        String doi = invObj.getString("doi", null);
+        ArrayList<MetadataUser> investigationUsers = new ArrayList<MetadataUser>();
+        for (JsonValue user : invObj.getJsonArray("investigationUsers")) {
+            JsonObject userObj = (JsonObject) user;
+            String fullName = userObj.getString("fullName", null);
+            String givenName = userObj.getString("givenName", null);
+            String familyName = userObj.getString("familyName", null);
+            String orcidId = userObj.getString("orcidId", null);
+            investigationUsers.add(new MetadataUser(fullName, givenName, familyName, orcidId));
+        }
+        String title = invObj.getString("title", null);
+        String releaseDate = getFormattedDateTime(invObj.getString("releaseDate", null));
+        String startDate = getFormattedDateTime(invObj.getString("startDate", null));
+        String endDate = getFormattedDateTime(invObj.getString("endDate", null));
+        String name = invObj.getString("name", null);
+        String visitId = invObj.getString("visitId", null);
+        String summary = invObj.getString("summary", null);
+        return new MetadataInformation(doi, investigationUsers, title, releaseDate, startDate, endDate, name, visitId,
+                summary);
     }
 
     public void appendXmlHeader(Element el, HeaderInformation info) {
@@ -376,17 +406,6 @@ public class ResponseBuilder {
         }
         res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
         return null;
-    }
-
-    public String getJsonAsString(JsonValue value) {
-        switch (value.getValueType()) {
-        case STRING:
-            return ((JsonString) value).getString();
-        case NULL:
-            return null;
-        default:
-            return value.toString();
-        }
     }
 
     public String getFormattedIdentifier(String url, String id) {
