@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.icatproject.icat_oai.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,8 @@ public class RequestHandler {
 
     private ResponseBuilder rb;
 
-    public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails) {
+    public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails)
+            throws InternalException {
         rb = new ResponseBuilder(repositoryName, adminEmails);
         rb.performIcatLogin(icatUrl, icatAuth);
     }
@@ -29,7 +31,7 @@ public class RequestHandler {
         rb.addMetadataFormat(format);
     }
 
-    public String request(HttpServletRequest req) {
+    public String request(HttpServletRequest req) throws InternalException {
         XmlResponse res = new XmlResponse();
         String verb = req.getParameter("verb");
 
@@ -62,7 +64,7 @@ public class RequestHandler {
         return output;
     }
 
-    private void handleIdentify(HttpServletRequest req, XmlResponse res) {
+    private void handleIdentify(HttpServletRequest req, XmlResponse res) throws InternalException {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
 
@@ -71,7 +73,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleListIdentifiers(HttpServletRequest req, XmlResponse res) {
+    private void handleListIdentifiers(HttpServletRequest req, XmlResponse res) throws InternalException {
         String[] allowedParameters = { "verb", "from", "until", "metadataPrefix", "set", "resumptionToken" };
         String[] requiredParameters = { "metadataPrefix" };
 
@@ -80,7 +82,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleListRecords(HttpServletRequest req, XmlResponse res) {
+    private void handleListRecords(HttpServletRequest req, XmlResponse res) throws InternalException {
         String[] allowedParameters = { "verb", "from", "until", "set", "resumptionToken", "metadataPrefix" };
         String[] requiredParameters = { "metadataPrefix" };
 
@@ -107,7 +109,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleGetRecord(HttpServletRequest req, XmlResponse res) {
+    private void handleGetRecord(HttpServletRequest req, XmlResponse res) throws InternalException {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
 

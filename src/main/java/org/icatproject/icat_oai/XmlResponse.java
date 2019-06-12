@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.icatproject.icat_oai.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -28,7 +29,7 @@ public class XmlResponse {
     private DocumentBuilderFactory factory;
     private Document document;
 
-    public XmlResponse() {
+    public XmlResponse() throws InternalException {
         factory = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder builder = null;
@@ -36,6 +37,7 @@ public class XmlResponse {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
 
         document = builder.newDocument();
@@ -78,7 +80,7 @@ public class XmlResponse {
         document.getDocumentElement().appendChild(content);
     }
 
-    public void transformMetadataFormat(Templates template) {
+    public void transformMetadataFormat(Templates template) throws InternalException {
         try {
             Transformer transformer = template.newTransformer();
             Source source = new DOMSource(document);
@@ -89,6 +91,7 @@ public class XmlResponse {
             document = doc;
         } catch (TransformerException | ParserConfigurationException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
     }
 }

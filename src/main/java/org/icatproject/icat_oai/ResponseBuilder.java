@@ -10,7 +10,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Templates;
@@ -18,6 +17,7 @@ import javax.xml.transform.Templates;
 import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
 import org.icatproject.icat.client.Session;
+import org.icatproject.icat_oai.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -38,12 +38,13 @@ public class ResponseBuilder {
         this.adminEmails = adminEmails;
     }
 
-    public void performIcatLogin(String icatUrl, String[] icatAuth) {
+    public void performIcatLogin(String icatUrl, String[] icatAuth) throws InternalException {
         ICAT restIcat = null;
         try {
             restIcat = new ICAT(icatUrl);
         } catch (URISyntaxException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
 
         HashMap<String, String> credentials = new HashMap<String, String>();
@@ -54,6 +55,7 @@ public class ResponseBuilder {
             icatSession = restIcat.login(icatAuth[0], credentials);
         } catch (IcatException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
     }
 
@@ -61,7 +63,7 @@ public class ResponseBuilder {
         metadataFormats.add(format);
     }
 
-    public void buildIdentifyResponse(HttpServletRequest req, XmlResponse res) {
+    public void buildIdentifyResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
         Document doc = res.getDocument();
 
         Element identify = doc.createElement("Identify");
@@ -90,10 +92,13 @@ public class ResponseBuilder {
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
             jsonReader.close();
-            JsonString earliestDate = jsonArray.getJsonString(0);
-            earliestDatestamp = getFormattedDateTime(earliestDate.getString());
+            String earliestDate = jsonArray.getJsonString(0).getString();
+            earliestDatestamp = getFormattedDateTime(earliestDate);
+        } catch (IndexOutOfBoundsException e) {
+            earliestDatestamp = "1000-01-01T00:00:00Z";
         } catch (IcatException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
         Element earliest = doc.createElement("earliestDatestamp");
         earliest.appendChild(doc.createTextNode(earliestDatestamp));
@@ -110,7 +115,7 @@ public class ResponseBuilder {
         res.addContent(identify);
     }
 
-    public void buildListIdentifiersResponse(HttpServletRequest req, XmlResponse res) {
+    public void buildListIdentifiersResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
         Document doc = res.getDocument();
 
         Element listIdentifiers = doc.createElement("ListIdentifiers");
@@ -127,7 +132,7 @@ public class ResponseBuilder {
         }
     }
 
-    public void buildListRecordsResponse(HttpServletRequest req, XmlResponse res) {
+    public void buildListRecordsResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
         Document doc = res.getDocument();
 
         Element listRecords = doc.createElement("ListRecords");
@@ -178,7 +183,7 @@ public class ResponseBuilder {
         res.addContent(listMetadataFormats);
     }
 
-    public void buildGetRecordResponse(HttpServletRequest req, XmlResponse res) {
+    public void buildGetRecordResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
         Document doc = res.getDocument();
 
         Element getRecord = doc.createElement("GetRecord");
@@ -186,20 +191,26 @@ public class ResponseBuilder {
         Templates template = getMetadataTemplate(req, res);
 
         if (template != null) {
-            RecordInformation info = getIcatRecords(req, res).get(0);
+            try {
+                RecordInformation info = getIcatRecords(req, res).get(0);
 
-            Element record = doc.createElement("record");
-            appendXmlHeader(record, info.getHeader());
-            if (info.getMetadata() != null)
-                appendXmlMetadata(record, info.getMetadata());
-            getRecord.appendChild(record);
+                Element record = doc.createElement("record");
+                appendXmlHeader(record, info.getHeader());
+                if (info.getMetadata() != null)
+                    appendXmlMetadata(record, info.getMetadata());
+                getRecord.appendChild(record);
 
-            res.addContent(getRecord);
-            res.transformMetadataFormat(template);
+                res.addContent(getRecord);
+                res.transformMetadataFormat(template);
+            } catch (IndexOutOfBoundsException e) {
+                res.addError("idDoesNotExist",
+                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
+            }
         }
     }
 
-    public ArrayList<HeaderInformation> getIcatHeaders(HttpServletRequest req, XmlResponse res) {
+    public ArrayList<HeaderInformation> getIcatHeaders(HttpServletRequest req, XmlResponse res)
+            throws InternalException {
         ArrayList<HeaderInformation> headers = new ArrayList<HeaderInformation>();
 
         try {
@@ -215,12 +226,14 @@ public class ResponseBuilder {
             }
         } catch (IcatException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
 
         return headers;
     }
 
-    public ArrayList<RecordInformation> getIcatRecords(HttpServletRequest req, XmlResponse res) {
+    public ArrayList<RecordInformation> getIcatRecords(HttpServletRequest req, XmlResponse res)
+            throws InternalException {
         ArrayList<RecordInformation> records = new ArrayList<RecordInformation>();
 
         try {
@@ -242,6 +255,7 @@ public class ResponseBuilder {
             }
         } catch (IcatException e) {
             logger.error(e.getMessage());
+            throw new InternalException();
         }
 
         return records;

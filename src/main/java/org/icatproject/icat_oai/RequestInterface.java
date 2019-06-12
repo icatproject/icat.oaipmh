@@ -17,6 +17,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerConfigurationException;
 
+import org.icatproject.icat_oai.exceptions.InternalException;
 import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.CheckedProperties.CheckedPropertyException;
 import org.slf4j.Logger;
@@ -56,6 +57,8 @@ public class RequestInterface {
 		} catch (CheckedPropertyException | FileNotFoundException | TransformerConfigurationException e) {
 			logger.error(fatal, e.getMessage());
 			throw new IllegalStateException(e.getMessage());
+		} catch (InternalException e) {
+			throw new IllegalStateException();
 		}
 
 		logger.info("Initialised RequestInterface");
@@ -76,14 +79,14 @@ public class RequestInterface {
 	@Path("request")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_XML)
-	public String postRequest(@Context HttpServletRequest req) {
+	public String postRequest(@Context HttpServletRequest req) throws InternalException {
 		return bean.request(req);
 	}
 
 	@GET
 	@Path("request")
 	@Produces(MediaType.TEXT_XML)
-	public String getRequest(@Context HttpServletRequest req) {
+	public String getRequest(@Context HttpServletRequest req) throws InternalException {
 		return bean.request(req);
 	}
 }
