@@ -124,11 +124,17 @@ public class ResponseBuilder {
 
         if (template != null) {
             ArrayList<HeaderInformation> headers = getIcatHeaders(req, res);
-            for (HeaderInformation header : headers) {
-                appendXmlHeader(listIdentifiers, header);
+
+            if (headers.size() == 0) {
+                res.addError("noRecordsMatch",
+                        "The combination of the values of the from, until, and set arguments results in an empty list");
+            } else {
+                for (HeaderInformation header : headers) {
+                    appendXmlHeader(listIdentifiers, header);
+                }
+                res.addContent(listIdentifiers);
+                res.transformMetadataFormat(template);
             }
-            res.addContent(listIdentifiers);
-            res.transformMetadataFormat(template);
         }
     }
 
@@ -141,15 +147,21 @@ public class ResponseBuilder {
 
         if (template != null) {
             ArrayList<RecordInformation> records = getIcatRecords(req, res);
-            for (RecordInformation info : records) {
-                Element record = doc.createElement("record");
-                appendXmlHeader(record, info.getHeader());
-                if (info.getMetadata() != null)
-                    appendXmlMetadata(record, info.getMetadata());
-                listRecords.appendChild(record);
+
+            if (records.size() == 0) {
+                res.addError("noRecordsMatch",
+                        "The combination of the values of the from, until, and set arguments results in an empty list");
+            } else {
+                for (RecordInformation info : records) {
+                    Element record = doc.createElement("record");
+                    appendXmlHeader(record, info.getHeader());
+                    if (info.getMetadata() != null)
+                        appendXmlMetadata(record, info.getMetadata());
+                    listRecords.appendChild(record);
+                }
+                res.addContent(listRecords);
+                res.transformMetadataFormat(template);
             }
-            res.addContent(listRecords);
-            res.transformMetadataFormat(template);
         }
     }
 
