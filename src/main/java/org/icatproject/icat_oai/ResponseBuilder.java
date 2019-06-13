@@ -249,7 +249,7 @@ public class ResponseBuilder {
         ArrayList<RecordInformation> records = new ArrayList<RecordInformation>();
 
         try {
-            String query = "SELECT inv FROM Investigation inv ORDER BY inv.modTime INCLUDE inv.investigationUsers, inv.datasets.datafiles";
+            String query = "SELECT inv FROM Investigation inv ORDER BY inv.modTime INCLUDE inv.investigationUsers.user, inv.datasets.datafiles";
             String result = icatSession.search(query);
 
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
@@ -296,8 +296,8 @@ public class ResponseBuilder {
     public MetadataInformation extracMetadataInformation(JsonObject invObj) {
         String doi = invObj.getString("doi", null);
         ArrayList<MetadataUser> investigationUsers = new ArrayList<MetadataUser>();
-        for (JsonValue user : invObj.getJsonArray("investigationUsers")) {
-            JsonObject userObj = (JsonObject) user;
+        for (JsonValue invUser : invObj.getJsonArray("investigationUsers")) {
+            JsonObject userObj = ((JsonObject) invUser).getJsonObject("user");
             String fullName = userObj.getString("fullName", null);
             String givenName = userObj.getString("givenName", null);
             String familyName = userObj.getString("familyName", null);
