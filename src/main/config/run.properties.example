@@ -5,9 +5,6 @@
 !icat.url = https://example.com:443
 !icat.auth = simple username nick password 123456
 
-# A human readable name for the repository
-!repositoryName = Repository1
-
 # The e-mail address(es) of the repository administrator
 !adminEmails = someone@example.com another@example.org
 

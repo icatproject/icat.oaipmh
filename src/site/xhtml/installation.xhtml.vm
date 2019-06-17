@@ -93,10 +93,6 @@
 			Space separated icat plugin name and credentials for a user
 			permitted to read all investigations, datasets, and datafiles.
 		</dd>
-		<dt>repositoryName</dt>
-		<dd>
-			A human readable name for the repository.
-		</dd>
 		<dt>adminEmails</dt>
 		<dd>
 			A space separated list of e-mail addresses of the repository administrator.

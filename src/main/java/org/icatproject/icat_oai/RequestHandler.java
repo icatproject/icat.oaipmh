@@ -1,30 +1,26 @@
 package org.icatproject.icat_oai;
 
-import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.Templates;
 
 import org.icatproject.icat_oai.exceptions.InternalException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RequestHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-
     private ResponseBuilder rb;
+    private boolean debug;
 
-    public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails)
-            throws InternalException {
-        rb = new ResponseBuilder(repositoryName, adminEmails);
+    public RequestHandler(String icatUrl, String[] icatAuth, String[] adminEmails, DataConfiguration dataConfiguration,
+            boolean debug) throws InternalException {
+        rb = new ResponseBuilder(new ArrayList<String>(Arrays.asList(adminEmails)), dataConfiguration);
         rb.performIcatLogin(icatUrl, icatAuth);
+
+        this.debug = debug;
     }
 
     public void registerMetadataFormat(MetadataFormat format) {
@@ -34,93 +30,107 @@ public class RequestHandler {
     public String request(HttpServletRequest req) throws InternalException {
         XmlResponse res = new XmlResponse();
         String verb = req.getParameter("verb");
+        Templates template = null;
 
         if (verb.equals("Identify"))
-            handleIdentify(req, res);
+            return handleIdentify(req, res, template);
         else if (verb.equals("ListIdentifiers"))
-            handleListIdentifiers(req, res);
+            return handleListIdentifiers(req, res, template);
         else if (verb.equals("ListRecords"))
-            handleListRecords(req, res);
+            return handleListRecords(req, res, template);
         else if (verb.equals("ListSets"))
-            handleListSets(req, res);
+            return handleListSets(req, res, template);
         else if (verb.equals("ListMetadataFormats"))
-            handleListMetadataFormats(req, res);
+            return handleListMetadataFormats(req, res, template);
         else if (verb.equals("GetRecord"))
-            handleGetRecord(req, res);
+            return handleGetRecord(req, res, template);
         else
-            handleIllegalVerb(req, res);
-
-        String output = "";
-        try {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(res.getDocument());
-            StringWriter writer = new StringWriter();
-            transformer.transform(source, new StreamResult(writer));
-            output = writer.getBuffer().toString();
-        } catch (TransformerException e) {
-            logger.error(e.getMessage());
-        }
-        return output;
+            return handleIllegalVerb(req, res, template);
     }
 
-    private void handleIdentify(HttpServletRequest req, XmlResponse res) throws InternalException {
+    private String handleIdentify(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
             rb.buildIdentifyResponse(req, res);
         }
+
+        return res.transformXml(template);
     }
 
-    private void handleListIdentifiers(HttpServletRequest req, XmlResponse res) throws InternalException {
+    private String handleListIdentifiers(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         String[] allowedParameters = { "verb", "from", "until", "metadataPrefix", "set", "resumptionToken" };
         String[] requiredParameters = { "metadataPrefix" };
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
-            rb.buildListIdentifiersResponse(req, res);
+            template = getMetadataTemplate(req, res);
+            if (template != null)
+                rb.buildListIdentifiersResponse(req, res);
         }
+
+        return res.transformXml(debug ? null : template);
     }
 
-    private void handleListRecords(HttpServletRequest req, XmlResponse res) throws InternalException {
+    private String handleListRecords(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         String[] allowedParameters = { "verb", "from", "until", "set", "resumptionToken", "metadataPrefix" };
         String[] requiredParameters = { "metadataPrefix" };
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
-            rb.buildListRecordsResponse(req, res);
+            template = getMetadataTemplate(req, res);
+            if (template != null)
+                rb.buildListRecordsResponse(req, res);
         }
+
+        return res.transformXml(debug ? null : template);
     }
 
-    private void handleListSets(HttpServletRequest req, XmlResponse res) {
+    private String handleListSets(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         String[] allowedParameters = { "verb", "resumptionToken" };
         String[] requiredParameters = {};
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
             rb.buildListSetsResponse(req, res);
         }
+
+        return res.transformXml(template);
     }
 
-    private void handleListMetadataFormats(HttpServletRequest req, XmlResponse res) {
+    private String handleListMetadataFormats(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         String[] allowedParameters = { "verb", "identifier" };
         String[] requiredParameters = {};
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
             rb.buildListMetadataFormatsResponse(req, res);
         }
+
+        return res.transformXml(template);
     }
 
-    private void handleGetRecord(HttpServletRequest req, XmlResponse res) throws InternalException {
+    private String handleGetRecord(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
-            rb.buildGetRecordResponse(req, res);
+            template = getMetadataTemplate(req, res);
+            if (template != null)
+                rb.buildGetRecordResponse(req, res);
         }
+
+        return res.transformXml(debug ? null : template);
     }
 
-    private void handleIllegalVerb(HttpServletRequest req, XmlResponse res) {
+    private String handleIllegalVerb(HttpServletRequest req, XmlResponse res, Templates template)
+            throws InternalException {
         res.makeResponseOutline(rb.getRequestUrl(req), new HashMap<String, String>());
         res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
+        return res.transformXml(template);
     }
 
     private boolean checkParameters(String[] allowedParameters, String[] requiredParameters, HttpServletRequest req,
@@ -172,5 +182,16 @@ public class RequestHandler {
         }
 
         return allParamsOk;
+    }
+
+    private Templates getMetadataTemplate(HttpServletRequest req, XmlResponse res) {
+        String metadataPrefix = req.getParameter("metadataPrefix");
+        for (MetadataFormat format : rb.getMetadataFormats()) {
+            if (metadataPrefix.equals(format.getMetadataPrefix())) {
+                return format.getTemplate();
+            }
+        }
+        res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
+        return null;
     }
 }

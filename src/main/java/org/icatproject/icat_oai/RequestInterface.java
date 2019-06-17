@@ -2,6 +2,7 @@ package org.icatproject.icat_oai;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -43,10 +44,71 @@ public class RequestInterface {
 			String icatUrl = props.getString("icat.url");
 			String[] icatAuth = props.getString("icat.auth").split("\\s+");
 
-			String repositoryName = props.getString("repositoryName");
 			String[] adminEmails = props.getString("adminEmails").split("\\s+");
 
-			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails);
+			// TESTDATA BEGIN
+			boolean debug = false;
+
+			ArrayList<String> stringProperties = new ArrayList<String>();
+			stringProperties.add("doi");
+			stringProperties.add("title");
+			stringProperties.add("name");
+			stringProperties.add("visitId");
+			stringProperties.add("summary");
+
+			ArrayList<String> numericProperties = new ArrayList<String>();
+			numericProperties.add("id");
+
+			ArrayList<String> dateProperties = new ArrayList<String>();
+			dateProperties.add("releaseDate");
+			dateProperties.add("startDate");
+			dateProperties.add("endDate");
+
+			ArrayList<RequestedProperties> subPropertyLists = new ArrayList<RequestedProperties>();
+			ArrayList<String> userStringProperties = new ArrayList<String>();
+			userStringProperties.add("fullName");
+			userStringProperties.add("givenName");
+			userStringProperties.add("familyName");
+			userStringProperties.add("orcidId");
+			RequestedProperties userProps = new RequestedProperties("user", userStringProperties, null, null, null);
+			ArrayList<RequestedProperties> investigationUsersSubPropertyLists = new ArrayList<RequestedProperties>();
+			investigationUsersSubPropertyLists.add(userProps);
+			ArrayList<String> investigationUserStringProperties = new ArrayList<String>();
+			investigationUserStringProperties.add("role");
+			RequestedProperties investigationUsersProps = new RequestedProperties("investigationUsers",
+					investigationUserStringProperties, null, null, investigationUsersSubPropertyLists);
+			subPropertyLists.add(investigationUsersProps);
+
+			ArrayList<String> datafilesStringProperties = new ArrayList<String>();
+			datafilesStringProperties.add("location");
+			RequestedProperties datafilesProps = new RequestedProperties("datafiles", datafilesStringProperties, null,
+					null, null);
+			ArrayList<RequestedProperties> datasetsSubPropertyLists = new ArrayList<RequestedProperties>();
+			datasetsSubPropertyLists.add(datafilesProps);
+			RequestedProperties datasetsProps = new RequestedProperties("datasets", null, null, null,
+					datasetsSubPropertyLists);
+			subPropertyLists.add(datasetsProps);
+
+			RequestedProperties requestedProperties = new RequestedProperties("Investigation", stringProperties,
+					numericProperties, dateProperties, subPropertyLists);
+
+			String mainObject = "Investigation";
+
+			ArrayList<String> includedObjects = new ArrayList<String>();
+			includedObjects.add("investigationUsers.user");
+			includedObjects.add("datasets.datafiles");
+
+			ArrayList<String> deletedIfAllNull = new ArrayList<String>();
+			deletedIfAllNull.add("Investigation");
+			deletedIfAllNull.add("datasets");
+			deletedIfAllNull.add("datafiles");
+			deletedIfAllNull.add("location");
+
+			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, includedObjects, deletedIfAllNull,
+					requestedProperties);
+			// TESTDATA END
+
+			bean = new RequestHandler(icatUrl, icatAuth, adminEmails, dataConfiguration, debug);
 
 			String[] prefixes = props.getString("metadataPrefixes").split("\\s+");
 			for (String prefix : prefixes) {
