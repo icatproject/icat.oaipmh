@@ -127,15 +127,10 @@ public class ResponseBuilder {
                 listIdentifiers = res.addRecordInformation(results.getResults(), "ListIdentifiers", false);
             }
 
-            // fixme: move to shared function
             if (results.getIncomplete()) {
                 String metadataPrefix = getMetadataPrefix(req);
                 String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
-
-                HashMap<String, String> singleProperties = new HashMap<String, String>();
-                singleProperties.put("resumptionToken", resumptionToken);
-                XmlInformation info = new XmlInformation(singleProperties, null, null);
-                res.addXmlInformation(info, null, listIdentifiers);
+                res.addResumptionToken(listIdentifiers, resumptionToken);
             }
         }
     }
@@ -154,14 +149,10 @@ public class ResponseBuilder {
                 listRecords = res.addRecordInformation(results.getResults(), "ListRecords", true);
             }
 
-            // fixme: move to shared function
             if (results.getIncomplete()) {
                 String metadataPrefix = getMetadataPrefix(req);
                 String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
-                HashMap<String, String> singleProperties = new HashMap<String, String>();
-                singleProperties.put("resumptionToken", resumptionToken);
-                XmlInformation info = new XmlInformation(singleProperties, null, null);
-                res.addXmlInformation(info, null, listRecords);
+                res.addResumptionToken(listRecords, resumptionToken);
             }
         }
     }

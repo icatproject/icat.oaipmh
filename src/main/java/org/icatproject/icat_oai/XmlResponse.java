@@ -138,6 +138,12 @@ public class XmlResponse {
         return xmlElement;
     }
 
+    public void addResumptionToken(Element xmlElement, String resumptionToken) {
+        Element el = document.createElement("resumptionToken");
+        el.appendChild(document.createTextNode(resumptionToken));
+        xmlElement.appendChild(el);
+    }
+
     public String transformXml(Templates template) throws InternalException {
         Transformer transformer = null;
         Document doc = null;
