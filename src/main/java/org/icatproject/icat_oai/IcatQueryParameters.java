@@ -12,17 +12,17 @@ public class IcatQueryParameters {
     private int offset;
     private String from;
     private String until;
+    private String fromTime;
+    private String untilTime;
     private String identifierId;
     private String identifierPrefix;
 
     public IcatQueryParameters(int offset, String from, String until, String identifier, String identifierPrefix) {
         this.offset = offset;
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
-        if (from != null)
-            this.from = OffsetDateTime.parse(from).format(dtf);
-        if (until != null)
-            this.until = OffsetDateTime.parse(until).format(dtf);
+        this.from = from;
+        this.until = until;
+        this.setFromUntilTimes();
 
         if (identifier != null)
             this.identifierId = identifier.split(":")[2];
@@ -36,9 +36,18 @@ public class IcatQueryParameters {
 
         this.from = token[2].equals("null") ? null : token[2];
         this.until = token[3].equals("null") ? null : token[3];
+        this.setFromUntilTimes();
 
         this.identifierId = null;
         this.identifierPrefix = identifierPrefix;
+    }
+
+    private void setFromUntilTimes() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+        if (this.from != null)
+            this.fromTime = OffsetDateTime.parse(from).format(dtf);
+        if (this.until != null)
+            this.untilTime = OffsetDateTime.parse(until).format(dtf);
     }
 
     public String makeResumptionToken(String metadataPrefix) {
@@ -48,11 +57,11 @@ public class IcatQueryParameters {
 
     public String makeWhereCondition() {
         ArrayList<String> constraints = new ArrayList<String>();
-        if (from != null) {
-            constraints.add(String.format("d.modTime >= '%s'", from));
+        if (fromTime != null) {
+            constraints.add(String.format("d.modTime >= '%s'", fromTime));
         }
-        if (until != null) {
-            constraints.add(String.format("d.modTime <= '%s'", until));
+        if (untilTime != null) {
+            constraints.add(String.format("d.modTime <= '%s'", untilTime));
         }
         if (identifierId != null)
             constraints.add(String.format("d.id = %s", identifierId));

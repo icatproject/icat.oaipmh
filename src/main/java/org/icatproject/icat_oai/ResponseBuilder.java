@@ -206,7 +206,7 @@ public class ResponseBuilder {
         if (resumptionToken != null) {
             try {
                 parameters = new IcatQueryParameters(resumptionToken, identifierPrefix);
-            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            } catch (ArrayIndexOutOfBoundsException | DateTimeException | NumberFormatException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
         } else {
