@@ -428,15 +428,18 @@ public class ResponseBuilder {
         int serverPort = req.getServerPort();
         String contextPath = req.getContextPath();
         String servletPath = req.getServletPath();
+        String pathInfo = req.getPathInfo();
 
         StringBuilder url = new StringBuilder();
         url.append(scheme).append("://").append(serverName);
 
-        if (serverPort != 80 && serverPort != 443) {
+        if (serverPort != 80 && serverPort != 443)
             url.append(":").append(serverPort);
-        }
 
         url.append(contextPath).append(servletPath);
+
+        if (pathInfo != null)
+            url.append(pathInfo);
 
         return url.toString();
     }
