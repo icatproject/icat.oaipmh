@@ -1,6 +1,7 @@
 package org.icatproject.icat_oai;
 
 import java.net.URISyntaxException;
+import java.time.DateTimeException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.icatproject.icat.client.Session;
 import org.icatproject.icat_oai.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 public class ResponseBuilder {
 
@@ -112,24 +114,55 @@ public class ResponseBuilder {
     }
 
     public void buildListIdentifiersResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
-        ArrayList<RecordInformation> results = getIcatHeaders(req, res);
+        IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
-        if (results.size() == 0) {
-            res.addError("noRecordsMatch",
-                    "The combination of the values of the from, until, and set arguments results in an empty list");
-        } else {
-            res.addRecordInformation(results, "ListIdentifiers", false);
+        if (parameters != null) {
+            IcatQueryResults results = getIcatHeaders(parameters);
+
+            Element listIdentifiers = null;
+            if (results.getResults().isEmpty()) {
+                res.addError("noRecordsMatch",
+                        "The combination of the values of the from, until, and set arguments results in an empty list");
+            } else {
+                listIdentifiers = res.addRecordInformation(results.getResults(), "ListIdentifiers", false);
+            }
+
+            // fixme: move to shared function
+            if (results.getIncomplete()) {
+                String metadataPrefix = getMetadataPrefix(req);
+                String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
+
+                HashMap<String, String> singleProperties = new HashMap<String, String>();
+                singleProperties.put("resumptionToken", resumptionToken);
+                XmlInformation info = new XmlInformation(singleProperties, null, null);
+                res.addXmlInformation(info, null, listIdentifiers);
+            }
         }
     }
 
     public void buildListRecordsResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
-        ArrayList<RecordInformation> results = getIcatRecords(req, res);
+        IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
-        if (results.size() == 0) {
-            res.addError("noRecordsMatch",
-                    "The combination of the values of the from, until, and set arguments results in an empty list");
-        } else {
-            res.addRecordInformation(results, "ListRecords", true);
+        if (parameters != null) {
+            IcatQueryResults results = getIcatRecords(parameters);
+
+            Element listRecords = null;
+            if (results.getResults().isEmpty()) {
+                res.addError("noRecordsMatch",
+                        "The combination of the values of the from, until, and set arguments results in an empty list");
+            } else {
+                listRecords = res.addRecordInformation(results.getResults(), "ListRecords", true);
+            }
+
+            // fixme: move to shared function
+            if (results.getIncomplete()) {
+                String metadataPrefix = getMetadataPrefix(req);
+                String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
+                HashMap<String, String> singleProperties = new HashMap<String, String>();
+                singleProperties.put("resumptionToken", resumptionToken);
+                XmlInformation info = new XmlInformation(singleProperties, null, null);
+                res.addXmlInformation(info, null, listRecords);
+            }
         }
     }
 
@@ -159,70 +192,105 @@ public class ResponseBuilder {
     }
 
     public void buildGetRecordResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
-        ArrayList<RecordInformation> result = getIcatRecords(req, res);
+        IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
-        if (result.size() == 0) {
-            res.addError("idDoesNotExist",
-                    "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
-        } else {
-            res.addRecordInformation(result, "GetRecord", true);
+        if (parameters != null) {
+            IcatQueryResults result = getIcatRecords(parameters);
+
+            if (result.getResults().isEmpty()) {
+                res.addError("idDoesNotExist",
+                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
+            } else {
+                res.addRecordInformation(result.getResults(), "GetRecord", true);
+            }
         }
     }
 
-    public ArrayList<RecordInformation> getIcatHeaders(HttpServletRequest req, XmlResponse res)
+    private IcatQueryParameters getIcatQueryParameters(HttpServletRequest req, XmlResponse res)
             throws InternalException {
+        IcatQueryParameters parameters = null;
+
+        String identifierPrefix = req.getServerName();
+        String resumptionToken = req.getParameter("resumptionToken");
+        if (resumptionToken != null) {
+            try {
+                parameters = new IcatQueryParameters(resumptionToken, identifierPrefix);
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
+            }
+        } else {
+            String identifier = req.getParameter("identifier");
+            String from = req.getParameter("from");
+            String until = req.getParameter("until");
+            try {
+                parameters = new IcatQueryParameters(0, from, until, identifier, identifierPrefix);
+            } catch (ArrayIndexOutOfBoundsException | DateTimeException e) {
+                res.addError("badArgument", "The request includes illegally formatted arguments");
+            }
+        }
+
+        return parameters;
+    }
+
+    public IcatQueryResults getIcatHeaders(IcatQueryParameters parameters) throws InternalException {
         ArrayList<RecordInformation> headers = new ArrayList<RecordInformation>();
 
-        try {
-            String includes = String.join(", d.", dataConfiguration.getIncludedObjects());
-            String query = String.format("SELECT d FROM %s d ORDER BY d.modTime INCLUDE d.%s",
-                    dataConfiguration.getMainObject(), includes);
-            String result = icatSession.search(query);
-
-            JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
-            JsonArray jsonArray = jsonReader.readArray();
-            jsonReader.close();
-            for (JsonValue data : jsonArray) {
-                boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
-                XmlInformation header = extractHeaderInformation(data, req);
-                headers.add(new RecordInformation(deleted, header, null));
-            }
-        } catch (IcatException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
+        IcatQuery query = performIcatQuery(parameters);
+        for (JsonValue data : query.getResults()) {
+            boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
+            XmlInformation header = extractHeaderInformation(data, parameters.getIdentifierPrefix());
+            headers.add(new RecordInformation(deleted, header, null));
         }
 
-        return headers;
+        return new IcatQueryResults(headers, query.getIncomplete());
     }
 
-    public ArrayList<RecordInformation> getIcatRecords(HttpServletRequest req, XmlResponse res)
-            throws InternalException {
+    public IcatQueryResults getIcatRecords(IcatQueryParameters parameters) throws InternalException {
         ArrayList<RecordInformation> records = new ArrayList<RecordInformation>();
 
+        IcatQuery query = performIcatQuery(parameters);
+        for (JsonValue data : query.getResults()) {
+            boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
+            XmlInformation header = extractHeaderInformation(data, parameters.getIdentifierPrefix());
+            XmlInformation metadata = null;
+            if (!deleted)
+                metadata = extractMetadataInformation(data, dataConfiguration.getRequestedProperties()).get(0);
+
+            records.add(new RecordInformation(deleted, header, metadata));
+        }
+
+        return new IcatQueryResults(records, query.getIncomplete());
+    }
+
+    private IcatQuery performIcatQuery(IcatQueryParameters parameters) throws InternalException {
+        String includes = String.join(", d.", dataConfiguration.getIncludedObjects());
+        String where = parameters.makeWhereCondition();
+        String query = String.format("SELECT d FROM %s d %s ORDER BY d.modTime INCLUDE d.%s",
+                dataConfiguration.getMainObject(), where, includes);
+
+        JsonArray resultsArray = null;
         try {
-            String includes = String.join(", d.", dataConfiguration.getIncludedObjects());
-            String query = String.format("SELECT d FROM %s d ORDER BY d.modTime INCLUDE d.%s",
-                    dataConfiguration.getMainObject(), includes);
             String result = icatSession.search(query);
-
             JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
-            JsonArray jsonArray = jsonReader.readArray();
+            resultsArray = jsonReader.readArray();
             jsonReader.close();
-            for (JsonValue data : jsonArray) {
-                boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
-                XmlInformation header = extractHeaderInformation(data, req);
-                XmlInformation metadata = null;
-                if (!deleted)
-                    metadata = extractMetadataInformation(data, dataConfiguration.getRequestedProperties()).get(0);
-
-                records.add(new RecordInformation(deleted, header, metadata));
-            }
         } catch (IcatException e) {
             logger.error(e.getMessage());
             throw new InternalException();
         }
 
-        return records;
+        boolean incomplete = false;
+        List<JsonValue> results = null;
+        results = resultsArray.subList(parameters.getOffset(), resultsArray.size());
+        if (results.size() > parameters.getOffsetSize()) {
+            incomplete = true;
+            int limit = parameters.getOffsetSize();
+            if (limit > results.size())
+                limit = results.size();
+            results = results.subList(0, limit);
+        }
+
+        return new IcatQuery(results, incomplete);
     }
 
     private boolean extractDeletedStatus(JsonValue data, List<String> deletedIfAllNull) {
@@ -251,14 +319,13 @@ public class ResponseBuilder {
         }
     }
 
-    private XmlInformation extractHeaderInformation(JsonValue data, HttpServletRequest req) {
+    private XmlInformation extractHeaderInformation(JsonValue data, String identifierPrefix) {
         HashMap<String, String> singleProperties = new HashMap<String, String>();
 
         JsonObject icatObject = ((JsonObject) data)
                 .getJsonObject(dataConfiguration.getRequestedProperties().getIcatObject());
 
-        singleProperties.put("identifier",
-                getFormattedIdentifier(req.getServerName(), icatObject.get("id").toString()));
+        singleProperties.put("identifier", getFormattedIdentifier(identifierPrefix, icatObject.get("id").toString()));
         singleProperties.put("datestamp", getFormattedDateTime(icatObject.getString("modTime", null)));
 
         XmlInformation headers = new XmlInformation(singleProperties, null, null);
@@ -372,5 +439,14 @@ public class ResponseBuilder {
         url.append(contextPath).append(servletPath);
 
         return url.toString();
+    }
+
+    public String getMetadataPrefix(HttpServletRequest req) {
+        if (req.getParameter("metadataPrefix") != null) {
+            return req.getParameter("metadataPrefix");
+        } else {
+            String resumptionToken = req.getParameter("resumptionToken");
+            return resumptionToken.split(",")[0];
+        }
     }
 }

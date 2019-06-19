@@ -163,21 +163,23 @@ public class RequestHandler {
         res.makeResponseOutline(rb.getRequestUrl(req), checkedParameters);
 
         if (parameters.size() != checkedParameters.size())
-            res.addError("badArgument", "The request includes illegal arguments, or includes a repeated argument.");
+            res.addError("badArgument", "The request includes illegal arguments, or includes a repeated argument");
         if (includesResumptionToken && parameters.size() != 2)
-            res.addError("badArgument", "The request includes illegal arguments in addition to the resumptionToken.");
+            res.addError("badArgument", "The request includes illegal arguments in addition to the resumptionToken");
 
-        for (String requiredParameter : requiredParameters) {
-            paramOk = false;
-            for (String param : parameters.keySet()) {
-                if (requiredParameter.contains(param)) {
-                    paramOk = true;
-                    break;
+        if (!includesResumptionToken) {
+            for (String requiredParameter : requiredParameters) {
+                paramOk = false;
+                for (String param : parameters.keySet()) {
+                    if (requiredParameter.contains(param)) {
+                        paramOk = true;
+                        break;
+                    }
                 }
-            }
-            if (!paramOk) {
-                res.addError("badArgument", "The request is missing the required argument: " + requiredParameter);
-                allParamsOk = false;
+                if (!paramOk) {
+                    res.addError("badArgument", "The request is missing the required argument: " + requiredParameter);
+                    allParamsOk = false;
+                }
             }
         }
 
@@ -185,7 +187,7 @@ public class RequestHandler {
     }
 
     private Templates getMetadataTemplate(HttpServletRequest req, XmlResponse res) {
-        String metadataPrefix = req.getParameter("metadataPrefix");
+        String metadataPrefix = rb.getMetadataPrefix(req);
         for (MetadataFormat format : rb.getMetadataFormats()) {
             if (metadataPrefix.equals(format.getMetadataPrefix())) {
                 return format.getTemplate();

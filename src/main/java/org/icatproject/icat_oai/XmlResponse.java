@@ -110,7 +110,8 @@ public class XmlResponse {
         return xmlElement;
     }
 
-    public void addRecordInformation(List<RecordInformation> records, String xmlElementName, boolean includeMetadata) {
+    public Element addRecordInformation(List<RecordInformation> records, String xmlElementName,
+            boolean includeMetadata) {
         Element xmlElement = document.createElement(xmlElementName);
 
         for (RecordInformation record : records) {
@@ -134,6 +135,7 @@ public class XmlResponse {
         }
 
         document.getDocumentElement().appendChild(xmlElement);
+        return xmlElement;
     }
 
     public String transformXml(Templates template) throws InternalException {
