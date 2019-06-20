@@ -3,6 +3,7 @@ package org.icatproject.icat_oai;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -33,6 +34,8 @@ public class RequestInterface {
 	private static final Logger logger = LoggerFactory.getLogger(RequestInterface.class);
 	private static final Marker fatal = MarkerFactory.getMarker("FATAL");
 
+	private static final String[] propertyTypes = { "stringProperties", "numericProperties", "dateProperties" };
+
 	RequestHandler bean;
 
 	@PostConstruct
@@ -46,67 +49,30 @@ public class RequestInterface {
 
 			String[] adminEmails = props.getString("adminEmails").split("\\s+");
 
-			// TESTDATA BEGIN
 			boolean debug = false;
+			if (props.has("debug") && props.getString("debug").equals("true"))
+				debug = true;
 
-			ArrayList<String> stringProperties = new ArrayList<String>();
-			stringProperties.add("doi");
-			stringProperties.add("title");
-			stringProperties.add("name");
-			stringProperties.add("visitId");
-			stringProperties.add("summary");
+			String dataPrefix = String.format("data");
+			String propName;
 
-			ArrayList<String> numericProperties = new ArrayList<String>();
-			numericProperties.add("id");
+			propName = String.format("%s.mainObject", dataPrefix);
+			String mainObject = props.getString(propName);
 
-			ArrayList<String> dateProperties = new ArrayList<String>();
-			dateProperties.add("releaseDate");
-			dateProperties.add("startDate");
-			dateProperties.add("endDate");
+			propName = String.format("%s.includedObjects", dataPrefix);
+			String includedObjects = props.getString(propName);
 
-			ArrayList<RequestedProperties> subPropertyLists = new ArrayList<RequestedProperties>();
-			ArrayList<String> userStringProperties = new ArrayList<String>();
-			userStringProperties.add("fullName");
-			userStringProperties.add("givenName");
-			userStringProperties.add("familyName");
-			userStringProperties.add("orcidId");
-			RequestedProperties userProps = new RequestedProperties("user", userStringProperties, null, null, null);
-			ArrayList<RequestedProperties> investigationUsersSubPropertyLists = new ArrayList<RequestedProperties>();
-			investigationUsersSubPropertyLists.add(userProps);
-			ArrayList<String> investigationUserStringProperties = new ArrayList<String>();
-			investigationUserStringProperties.add("role");
-			RequestedProperties investigationUsersProps = new RequestedProperties("investigationUsers",
-					investigationUserStringProperties, null, null, investigationUsersSubPropertyLists);
-			subPropertyLists.add(investigationUsersProps);
-
-			ArrayList<String> datafilesStringProperties = new ArrayList<String>();
-			datafilesStringProperties.add("location");
-			RequestedProperties datafilesProps = new RequestedProperties("datafiles", datafilesStringProperties, null,
-					null, null);
-			ArrayList<RequestedProperties> datasetsSubPropertyLists = new ArrayList<RequestedProperties>();
-			datasetsSubPropertyLists.add(datafilesProps);
-			RequestedProperties datasetsProps = new RequestedProperties("datasets", null, null, null,
-					datasetsSubPropertyLists);
-			subPropertyLists.add(datasetsProps);
-
-			RequestedProperties requestedProperties = new RequestedProperties("Investigation", stringProperties,
-					numericProperties, dateProperties, subPropertyLists);
-
-			String mainObject = "Investigation";
-
-			ArrayList<String> includedObjects = new ArrayList<String>();
-			includedObjects.add("investigationUsers.user");
-			includedObjects.add("datasets.datafiles");
-
+			propName = String.format("%s.deletedIfAllNull", dataPrefix);
+			String[] deletedIfAllNullList = props.getString(propName).split("\\.");
 			ArrayList<String> deletedIfAllNull = new ArrayList<String>();
-			deletedIfAllNull.add("Investigation");
-			deletedIfAllNull.add("datasets");
-			deletedIfAllNull.add("datafiles");
-			deletedIfAllNull.add("location");
+			deletedIfAllNull.add(mainObject);
+			for (String obj : deletedIfAllNullList)
+				deletedIfAllNull.add(obj);
+
+			RequestedProperties requestedProperties = getRequestedProperties(props, dataPrefix, mainObject);
 
 			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, includedObjects, deletedIfAllNull,
 					requestedProperties);
-			// TESTDATA END
 
 			bean = new RequestHandler(icatUrl, icatAuth, adminEmails, dataConfiguration, debug);
 
@@ -124,6 +90,39 @@ public class RequestInterface {
 		}
 
 		logger.info("Initialised RequestInterface");
+	}
+
+	private RequestedProperties getRequestedProperties(CheckedProperties props, String prefix, String object)
+			throws CheckedPropertyException {
+		String propsName;
+
+		HashMap<String, ArrayList<String>> propertiesMap = new HashMap<String, ArrayList<String>>();
+		for (String propertyType : propertyTypes) {
+			propsName = String.format("%s.%s", prefix, propertyType);
+			if (props.has(propsName)) {
+				ArrayList<String> properties = new ArrayList<String>();
+				String[] propsList = props.getString(propsName).split("\\s+");
+				for (String prop : propsList)
+					properties.add(prop);
+				propertiesMap.put(propertyType, properties);
+			}
+		}
+
+		ArrayList<RequestedProperties> subPropertyLists = new ArrayList<RequestedProperties>();
+		propsName = String.format("%s.subPropertyLists", prefix);
+		if (props.has(propsName)) {
+			String[] subPropertyObjects = props.getString(propsName).split("\\s+");
+			for (String subObject : subPropertyObjects) {
+				String extendedPrefix = String.format("%s.%s", prefix, subObject);
+				RequestedProperties requestedProperties = getRequestedProperties(props, extendedPrefix, subObject);
+				subPropertyLists.add(requestedProperties);
+			}
+		}
+
+		RequestedProperties requestedProperties = new RequestedProperties(object, propertiesMap.get("stringProperties"),
+				propertiesMap.get("numericProperties"), propertiesMap.get("dateProperties"), subPropertyLists);
+
+		return requestedProperties;
 	}
 
 	@GET

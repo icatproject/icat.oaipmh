@@ -229,7 +229,8 @@ public class ResponseBuilder {
         IcatQuery query = performIcatQuery(parameters);
         for (JsonValue data : query.getResults()) {
             boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
-            XmlInformation header = extractHeaderInformation(data, parameters.getIdentifierPrefix());
+            XmlInformation header = extractHeaderInformation(data, dataConfiguration.getRequestedProperties(),
+                    parameters.getIdentifierPrefix());
             headers.add(new RecordInformation(deleted, header, null));
         }
 
@@ -242,7 +243,8 @@ public class ResponseBuilder {
         IcatQuery query = performIcatQuery(parameters);
         for (JsonValue data : query.getResults()) {
             boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
-            XmlInformation header = extractHeaderInformation(data, parameters.getIdentifierPrefix());
+            XmlInformation header = extractHeaderInformation(data, dataConfiguration.getRequestedProperties(),
+                    parameters.getIdentifierPrefix());
             XmlInformation metadata = null;
             if (!deleted)
                 metadata = extractMetadataInformation(data, dataConfiguration.getRequestedProperties()).get(0);
@@ -254,10 +256,11 @@ public class ResponseBuilder {
     }
 
     private IcatQuery performIcatQuery(IcatQueryParameters parameters) throws InternalException {
-        String includes = String.join(", d.", dataConfiguration.getIncludedObjects());
+        String mainObject = dataConfiguration.getMainObject();
+        String includes = dataConfiguration.getIncludedObjects();
         String where = parameters.makeWhereCondition();
-        String query = String.format("SELECT d FROM %s d %s ORDER BY d.modTime INCLUDE d.%s",
-                dataConfiguration.getMainObject(), where, includes);
+        String query = String.format("SELECT d FROM %s d %s ORDER BY d.modTime INCLUDE %s", mainObject, where,
+                includes);
 
         JsonArray resultsArray = null;
         try {
@@ -310,11 +313,11 @@ public class ResponseBuilder {
         }
     }
 
-    private XmlInformation extractHeaderInformation(JsonValue data, String identifierPrefix) {
+    private XmlInformation extractHeaderInformation(JsonValue data, RequestedProperties requestedProperties,
+            String identifierPrefix) {
         HashMap<String, String> singleProperties = new HashMap<String, String>();
 
-        JsonObject icatObject = ((JsonObject) data)
-                .getJsonObject(dataConfiguration.getRequestedProperties().getIcatObject());
+        JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
 
         singleProperties.put("identifier", getFormattedIdentifier(identifierPrefix, icatObject.get("id").toString()));
         singleProperties.put("datestamp", getFormattedDateTime(icatObject.getString("modTime", null)));
@@ -404,7 +407,7 @@ public class ResponseBuilder {
     }
 
     private String getFormattedIdentifier(String url, String id) {
-        return "oai:" + url.toString() + ":" + id.toString();
+        return String.format("oai:%s:%s", url, id);
     }
 
     private String getFormattedDateTime(String dateTime) {

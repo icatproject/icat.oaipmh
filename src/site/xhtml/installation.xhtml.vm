@@ -1,7 +1,9 @@
 <html>
+
 <head>
-<title>installation</title>
+	<title>installation</title>
 </head>
+
 <body>
 
 	<h1>Installation</h1>
@@ -50,7 +52,8 @@
 		<dt>container</dt>
 		<dd>
 			Values must be chosen from:
-			<a target="_blank" href="http://www.eclipse.org/eclipselink/api/2.6/org/eclipse/persistence/config/TargetServer.html">
+			<a target="_blank"
+				href="http://www.eclipse.org/eclipselink/api/2.6/org/eclipse/persistence/config/TargetServer.html">
 				TargetServer
 			</a>
 			Though only Glassfish is working properly at the moment.
@@ -88,31 +91,144 @@
 			The url of the machine hosting the icat service.
 			It should normally just have the scheme, the hostname and the port.
 		</dd>
+		<dd>
+			Example value: <b>"https://example.com:443"</b>
+		</dd>
 		<dt>icat.auth</dt>
 		<dd>
 			Space separated icat plugin name and credentials for a user
-			permitted to read all investigations, datasets, and datafiles.
+			permitted to read all the ICAT tables that are of interest.
+		</dd>
+		<dd>
+			Example value: <b>"simple username nick password 123456"</b>
 		</dd>
 		<dt>adminEmails</dt>
 		<dd>
 			A space separated list of e-mail addresses of the repository administrator.
+			The email addressed will be returned as part of the OAI-PMH "Identify" response.
+		</dd>
+		<dd>
+			Example value: <b>"someone@example.com another@example.org"</b>
+		</dd>
+		<dt>data.mainObject</dt>
+		<dd>
+			The main ICAT object (from ICAT metadata schema) which the repository is about.
+		</dd>
+		<dd>
+			Example value: <b>"Investigation"</b>
+		</dd>
+		<dt>data.includedObjects</dt>
+		<dd>
+			Other ICAT objects which are to be included when making queries for OAI-PMH.
+			This string must use the normal ICAT query syntax for "INCLUDE", as in
+			<b>"SELECT x FROM ExampleObject x INCLUDE x.sub.objects"</b>.
+		</dd>
+		<dd>
+			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
+			one might use the <code>includedObjects</code>
+			<b>"d.datasets.datafiles, d.investigationUsers.user"</b>.
+		</dd>
+		<dd>
+			Please note the usage of <b>"d"</b> as variable for the main object,
+			this in mandatory.
+		</dd>
+		<dt>data.deletedIfAllNull</dt>
+		<dd>
+			ICAT properties which need to be all equal to NULL for a record
+			in oder to be considered "deleted" as defined by OAI-PMH.
+		</dd>
+		<dd>
+			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
+			and <code>deletedIfAllNull</code> is <b>"datasets.datafiles.location"</b>,
+			this means that an investigation will be considered "deleted"
+			when all <code>datafiles</code> of all its <code>datasets</code>
+			have an empty <code>location</code> attribute.
+		</dd>
+		<dd>
+			All the listed objects (datasets and datafiles in the example above)
+			must be included in <code>data.includedObjects</code> for this to work.
+		</dd>
+		<dt>data.&lt;icatObject&gt;.&lt;dataTypeProperties&gt;</dt>
+		<dd>
+			A space separated list of ICAT properties to be retrieved from ICAT
+			for the <code>&lt;icatObject&gt;</code> when making queries for OAI-PMH.
+			Possible <code>&lt;dataTypeProperties&gt;</code> are:
+			"stringProperties", "numericProperties", or "dateProperties",
+			depending on the data type within ICAT.
+		</dd>
+		<dd>
+			The <code>&lt;icatObject&gt;</code> must be included in
+			<code>data.includedObjects</code> for this to work.
+		</dd>
+		<dd>
+			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
+			and <code>includedObjects</code> are <b>"d.datasets.datafiles"</b>, one might use
+			<b>"data.stringProperties = doi title summary"</b> and
+			<b>"data.dateProperties = startDate endDate"</b> as properties for the investigation; and
+			<b>"data.investigationUsers.stringProperties = role"</b>, and
+			<b>"data.investigationUsers.user.stringProperties = fullName orcidId"</b>
+			as properties for the other included objects.
+		</dd>
+		<dt>data.&lt;icatObject&gt;.subPropertyLists</dt>
+		<dd>
+			A space separated list of ICAT sub-objects which are to be included in the property hierarchy
+			below the <code>&lt;icatObject&gt;</code>.
+		</dd>
+		<dd>
+			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
+			and <code>includedObjects</code> are <b>"d.datasets.datafiles"</b>, one might use
+			<b>"data.subPropertyLists = datasets"</b> and
+			<b>"data.datasets.subPropertyLists = datafiles"</b>
+			to include the datasets as part an investigation, and the datafiles as part of a dataset.
 		</dd>
 		<dt>metadataPrefixes</dt>
 		<dd>
 			A space separated list of metadata formats to be supported.
-			At minimum, support for the Dublin Core format (oai_dc) is required.
+			At minimum, support for the Dublin Core format ("oai_dc") is required.
+		</dd>
+		<dd>
+			Example value: <b>"oai_dc oai_datacite"</b>
 		</dd>
 		<dt>&lt;metadataPrefix&gt;.xslt</dt>
 		<dd>
-			For each metadata format, specify the absolute path to an xslt definition.
+			For each metadata format, specify the absolute path to an XSLT definition.
+			This XSLT file must be able to transform metadata from the generic XML format
+			(as defined by the <code>data.xxx</code> properties above)
+			into some other well defined metadata format (such as Dublin Core).
+		</dd>
+		<dd>
+			Example: <b>"oai_dc.xslt = /home/icat/xslt/dublin_core.xslt"</b>
 		</dd>
 		<dt>&lt;metadataPrefix&gt;.namespace</dt>
 		<dd>
 			For each metadata format, specify the namespace.
 		</dd>
+		<dd>
+			Example (official Dublin Core namespace): <b>"oai_dc.namespace =
+				http://www.openarchives.org/OAI/2.0/oai_dc/"</b>
+		</dd>
 		<dt>&lt;metadataPrefix&gt;.schema</dt>
 		<dd>
 			For each metadata format, specify the link to a schema definition.
+		</dd>
+		<dd>
+			Example (official Dublin Core schema definition): <b>"oai_dc.schema =
+				http://www.openarchives.org/OAI/2.0/oai_dc.xsd"</b>
+		</dd>
+		<dt>debug</dt>
+		<dd>
+			If this (optional) parameter is included and set to <b>"true"</b>, the metadata
+			received when making OAI-PMH calls won't be transformed into another format.
+		</dd>
+		<dd>
+			This means, the metadata will stay in the generic XML format
+			(as defined by the <code>data.xxx</code> properties above);
+			and the defined <code>metadataPrefixes</code> properties are ignored.
+		</dd>
+		<dd>
+			This is particularly helpful for the development of custom XSLT files,
+			in order to understand the structure of the generic XML format before
+			attempting to transform it into some other metadata format.
 		</dd>
 	</dl>
 
@@ -127,4 +243,5 @@
 	</p>
 
 </body>
+
 </html>
