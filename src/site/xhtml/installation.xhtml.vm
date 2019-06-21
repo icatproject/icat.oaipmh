@@ -197,7 +197,10 @@
 			into some other well defined metadata format (such as Dublin Core).
 		</dd>
 		<dd>
-			Example: <b>"oai_dc.xslt = /home/icat/xslt/dublin_core.xslt"</b>
+			For more information, see the example files located at "src/main/config/".
+		</dd>
+		<dd>
+			Example: <b>"oai_dc.xslt = /home/icat/xslt/dublin_core.xsl"</b>
 		</dd>
 		<dt>&lt;metadataPrefix&gt;.namespace</dt>
 		<dd>

@@ -18,6 +18,7 @@
 !data.dateProperties = releaseDate startDate endDate
 !data.subPropertyLists = investigationUsers
 
+!data.investigationUsers.stringProperties = role
 !data.investigationUsers.subPropertyLists = user
 
 !data.investigationUsers.user.stringProperties = fullName givenName familyName orcidId
@@ -25,7 +26,7 @@
 # The metadata formats to be supported: Dublin Core (oai_dc) is required
 !metadataPrefixes = oai_dc oai_datacite
 
-# The path to the xslt definition for each metadata format
+# The path to the XSLT definition for each metadata format
 !oai_dc.xslt        = /path/to/oai_dc.xsl
 !oai_datacite.xslt  = /path/to/oai_datacite.xsl
 
