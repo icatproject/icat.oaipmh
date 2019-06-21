@@ -349,9 +349,8 @@ public class ResponseBuilder {
 
                 for (String prop : requestedProperties.getStringProperties()) {
                     String value = ((JsonObject) element).getString(prop, null);
-                    if (value != null) {
+                    if (value != null)
                         elementSingleProperties.put(prop, value);
-                    }
                 }
 
                 for (String prop : requestedProperties.getNumericProperties()) {
