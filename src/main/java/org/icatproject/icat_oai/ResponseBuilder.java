@@ -314,7 +314,7 @@ public class ResponseBuilder {
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, RequestedProperties requestedProperties,
-            String identifierPrefix) {
+            String identifierPrefix) throws InternalException {
         HashMap<String, String> singleProperties = new HashMap<String, String>();
 
         JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
@@ -409,9 +409,15 @@ public class ResponseBuilder {
         return String.format("oai:%s:%s", url, id);
     }
 
-    private String getFormattedDateTime(String dateTime) {
-        if (dateTime != null)
-            return OffsetDateTime.parse(dateTime).format(DateTimeFormatter.ISO_INSTANT);
+    private String getFormattedDateTime(String dateTime) throws InternalException {
+        if (dateTime != null) {
+            try {
+                return OffsetDateTime.parse(dateTime).format(DateTimeFormatter.ISO_INSTANT);
+            } catch (DateTimeException e) {
+                logger.error(e.getMessage());
+                throw new InternalException();
+            }
+        }
         return null;
     }
 
