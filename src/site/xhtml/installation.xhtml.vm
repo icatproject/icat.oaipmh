@@ -102,10 +102,18 @@
 		<dd>
 			Example value: <b>"simple username nick password 123456"</b>
 		</dd>
+		<dt>repositoryName</dt>
+		<dd>
+			A human readable name for the repository.
+			The name will be returned as part of the OAI-PMH "Identify" response.
+		</dd>
+		<dd>
+			Example value: <b>"Example experimental data repository"</b>
+		</dd>
 		<dt>adminEmails</dt>
 		<dd>
 			A space separated list of e-mail addresses of the repository administrator.
-			The email addressed will be returned as part of the OAI-PMH "Identify" response.
+			The email addresses will be returned as part of the OAI-PMH "Identify" response.
 		</dd>
 		<dd>
 			Example value: <b>"someone@example.com another@example.org"</b>

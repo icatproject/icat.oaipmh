@@ -47,6 +47,7 @@ public class RequestInterface {
 			String icatUrl = props.getString("icat.url");
 			String[] icatAuth = props.getString("icat.auth").split("\\s+");
 
+			String repositoryName = props.getString("repositoryName");
 			String[] adminEmails = props.getString("adminEmails").split("\\s+");
 
 			boolean debug = false;
@@ -74,7 +75,7 @@ public class RequestInterface {
 			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, includedObjects, deletedIfAllNull,
 					requestedProperties);
 
-			bean = new RequestHandler(icatUrl, icatAuth, adminEmails, dataConfiguration, debug);
+			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, dataConfiguration, debug);
 
 			String[] prefixes = props.getString("metadataPrefixes").split("\\s+");
 			for (String prefix : prefixes) {

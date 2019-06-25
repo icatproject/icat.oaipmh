@@ -15,9 +15,11 @@ public class RequestHandler {
     private ResponseBuilder rb;
     private boolean debug;
 
-    public RequestHandler(String icatUrl, String[] icatAuth, String[] adminEmails, DataConfiguration dataConfiguration,
-            boolean debug) throws InternalException {
-        rb = new ResponseBuilder(new ArrayList<String>(Arrays.asList(adminEmails)), dataConfiguration);
+    public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails,
+            DataConfiguration dataConfiguration, boolean debug) throws InternalException {
+        ArrayList<String> emails = new ArrayList<String>(Arrays.asList(adminEmails));
+
+        rb = new ResponseBuilder(repositoryName, emails, dataConfiguration);
         rb.performIcatLogin(icatUrl, icatAuth);
 
         this.debug = debug;

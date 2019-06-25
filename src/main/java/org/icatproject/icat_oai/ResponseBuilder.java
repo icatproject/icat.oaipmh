@@ -29,12 +29,14 @@ public class ResponseBuilder {
     private static final Logger logger = LoggerFactory.getLogger(ResponseBuilder.class);
 
     private Session icatSession;
+    private final String repositoryName;
     private final ArrayList<String> adminEmails;
     private final DataConfiguration dataConfiguration;
     private ArrayList<MetadataFormat> metadataFormats;
 
-    public ResponseBuilder(ArrayList<String> adminEmails, DataConfiguration dataConfiguration) {
+    public ResponseBuilder(String repositoryName, ArrayList<String> adminEmails, DataConfiguration dataConfiguration) {
         metadataFormats = new ArrayList<MetadataFormat>();
+        this.repositoryName = repositoryName;
         this.adminEmails = adminEmails;
         this.dataConfiguration = dataConfiguration;
     }
@@ -72,24 +74,13 @@ public class ResponseBuilder {
         HashMap<String, String> singleProperties = new HashMap<String, String>();
         HashMap<String, ArrayList<String>> repeatedProperties = new HashMap<String, ArrayList<String>>();
 
-        String repositoryName = "Facility Repository";
         String earliestDatestamp = "1000-01-01T00:00:00Z";
         try {
-            String result;
-            JsonReader jsonReader;
-            JsonArray jsonArray;
-
-            result = icatSession.search("SELECT f.fullName FROM Facility f");
-            jsonReader = Json.createReader(new java.io.StringReader(result));
-            jsonArray = jsonReader.readArray();
-            jsonReader.close();
-            repositoryName = jsonArray.getJsonString(0).getString();
-
             String query = String.format("SELECT d.modTime FROM %s d ORDER BY d.modTime",
                     dataConfiguration.getMainObject());
-            result = icatSession.search(query);
-            jsonReader = Json.createReader(new java.io.StringReader(result));
-            jsonArray = jsonReader.readArray();
+            String result = icatSession.search(query);
+            JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
+            JsonArray jsonArray = jsonReader.readArray();
             jsonReader.close();
             String earliestDate = jsonArray.getJsonString(0).getString();
             earliestDatestamp = getFormattedDateTime(earliestDate);
@@ -100,7 +91,7 @@ public class ResponseBuilder {
             throw new InternalException();
         }
 
-        singleProperties.put("repositoryName", repositoryName);
+        singleProperties.put("repositoryName", this.repositoryName);
         singleProperties.put("baseURL", getRequestUrl(req));
         singleProperties.put("protocolVersion", "2.0");
         singleProperties.put("earliestDatestamp", earliestDatestamp);
