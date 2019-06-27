@@ -95,7 +95,7 @@ public class ResponseBuilder {
         singleProperties.put("baseURL", getRequestUrl(req));
         singleProperties.put("protocolVersion", "2.0");
         singleProperties.put("earliestDatestamp", earliestDatestamp);
-        singleProperties.put("deletedRecord", "transient");
+        singleProperties.put("deletedRecord", "no");
         singleProperties.put("granularity", "YYYY-MM-DDThh:mm:ssZ");
 
         repeatedProperties.put("adminEmail", adminEmails);
@@ -219,10 +219,9 @@ public class ResponseBuilder {
 
         IcatQuery query = performIcatQuery(parameters);
         for (JsonValue data : query.getResults()) {
-            boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
             XmlInformation header = extractHeaderInformation(data, dataConfiguration.getRequestedProperties(),
                     parameters.getIdentifierPrefix());
-            headers.add(new RecordInformation(deleted, header, null));
+            headers.add(new RecordInformation(header, null));
         }
 
         return new IcatQueryResults(headers, query.getIncomplete());
@@ -233,14 +232,12 @@ public class ResponseBuilder {
 
         IcatQuery query = performIcatQuery(parameters);
         for (JsonValue data : query.getResults()) {
-            boolean deleted = extractDeletedStatus(data, dataConfiguration.getDeletedIfAllNull());
             XmlInformation header = extractHeaderInformation(data, dataConfiguration.getRequestedProperties(),
                     parameters.getIdentifierPrefix());
-            XmlInformation metadata = null;
-            if (!deleted)
-                metadata = extractMetadataInformation(data, dataConfiguration.getRequestedProperties()).get(0);
+            XmlInformation metadata = extractMetadataInformation(data, dataConfiguration.getRequestedProperties())
+                    .get(0);
 
-            records.add(new RecordInformation(deleted, header, metadata));
+            records.add(new RecordInformation(header, metadata));
         }
 
         return new IcatQueryResults(records, query.getIncomplete());
@@ -276,32 +273,6 @@ public class ResponseBuilder {
         }
 
         return new IcatQuery(results, incomplete);
-    }
-
-    private boolean extractDeletedStatus(JsonValue data, List<String> deletedIfAllNull) {
-        if (deletedIfAllNull.isEmpty())
-            return false;
-
-        List<String> remaining = deletedIfAllNull.subList(1, deletedIfAllNull.size());
-        String current = deletedIfAllNull.get(0);
-
-        if (remaining.isEmpty()) {
-            JsonValue value = ((JsonObject) data).get(current);
-            return (value == null);
-        }
-
-        ValueType valueType = ((JsonObject) data).get(current).getValueType();
-        if (valueType == ValueType.ARRAY) {
-            JsonArray jsonArray = ((JsonObject) data).getJsonArray(current);
-            for (JsonValue subObject : jsonArray) {
-                if (!extractDeletedStatus(subObject, remaining))
-                    return false;
-            }
-            return true;
-        } else {
-            JsonObject jsonObject = ((JsonObject) data).getJsonObject(current);
-            return (extractDeletedStatus(jsonObject, remaining));
-        }
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, RequestedProperties requestedProperties,

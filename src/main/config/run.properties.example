@@ -14,7 +14,6 @@
 # Configuration of the data objects and properties to be retrieved from ICAT
 !data.mainObject = Investigation
 !data.includedObjects = d.investigationUsers.user, d.datasets ds, ds.datafiles, ds.parameters
-!data.deletedIfAllNull = datasets.datafiles.location
 
 !data.stringProperties = doi title name visitId summary
 !data.numericProperties = id

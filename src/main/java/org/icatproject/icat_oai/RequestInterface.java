@@ -63,16 +63,9 @@ public class RequestInterface {
 			propName = String.format("%s.includedObjects", dataPrefix);
 			String includedObjects = props.getString(propName);
 
-			propName = String.format("%s.deletedIfAllNull", dataPrefix);
-			String[] deletedIfAllNullList = props.getString(propName).split("\\.");
-			ArrayList<String> deletedIfAllNull = new ArrayList<String>();
-			deletedIfAllNull.add(mainObject);
-			for (String obj : deletedIfAllNullList)
-				deletedIfAllNull.add(obj);
-
 			RequestedProperties requestedProperties = getRequestedProperties(props, dataPrefix, mainObject);
 
-			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, includedObjects, deletedIfAllNull,
+			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, includedObjects,
 					requestedProperties);
 
 			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, dataConfiguration, debug);

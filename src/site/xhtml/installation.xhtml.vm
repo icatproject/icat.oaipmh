@@ -140,22 +140,6 @@
 			Please note the usage of <b>"d"</b> as variable for the main object,
 			this in mandatory.
 		</dd>
-		<dt>data.deletedIfAllNull</dt>
-		<dd>
-			ICAT properties which need to be all equal to NULL for a record
-			in oder to be considered "deleted" as defined by OAI-PMH.
-		</dd>
-		<dd>
-			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
-			and <code>deletedIfAllNull</code> is <b>"datasets.datafiles.location"</b>,
-			this means that an investigation will be considered "deleted"
-			when all <code>datafiles</code> of all its <code>datasets</code>
-			have an empty <code>location</code> attribute.
-		</dd>
-		<dd>
-			All the listed objects (datasets and datafiles in the example above)
-			must be included in <code>data.includedObjects</code> for this to work.
-		</dd>
 		<dt>data.&lt;icatObject&gt;.&lt;dataTypeProperties&gt;</dt>
 		<dd>
 			A space separated list of ICAT properties to be retrieved from ICAT

@@ -119,16 +119,11 @@ public class XmlResponse {
 
             if (includeMetadata) {
                 recordElement = document.createElement("record");
-                Element headerElement = addXmlInformation(record.getHeader(), "header", recordElement);
-                if (record.getMetadata() != null)
-                    addXmlInformation(record.getMetadata(), "metadata", recordElement);
-                if (record.getDeleted())
-                    headerElement.setAttribute("status", "deleted");
+                addXmlInformation(record.getHeader(), "header", recordElement);
+                addXmlInformation(record.getMetadata(), "metadata", recordElement);
             } else {
                 recordElement = document.createElement("header");
                 addXmlInformation(record.getHeader(), null, recordElement);
-                if (record.getDeleted())
-                    recordElement.setAttribute("status", "deleted");
             }
 
             xmlElement.appendChild(recordElement);
