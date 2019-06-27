@@ -1,4 +1,4 @@
-package org.icatproject.icat_oai.exceptions;
+package org.icatproject.icat_oaipmh.exceptions;
 
 @SuppressWarnings("serial")
 public class InternalException extends Exception {

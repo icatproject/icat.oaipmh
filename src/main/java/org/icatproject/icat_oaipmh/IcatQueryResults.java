@@ -1,25 +1,23 @@
-package org.icatproject.icat_oai;
+package org.icatproject.icat_oaipmh;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.JsonValue;
+public class IcatQueryResults {
 
-public class IcatQuery {
-
-    private List<JsonValue> results;
+    private List<RecordInformation> results;
     private boolean incomplete;
 
-    public IcatQuery(List<JsonValue> results, boolean incomplete) {
+    public IcatQueryResults(List<RecordInformation> results, boolean incomplete) {
         this.incomplete = incomplete;
 
         if (results != null)
             this.results = results;
         else
-            this.results = new ArrayList<JsonValue>();
+            this.results = new ArrayList<RecordInformation>();
     }
 
-    public List<JsonValue> getResults() {
+    public List<RecordInformation> getResults() {
         return results;
     }
 

@@ -1,4 +1,4 @@
-package org.icatproject.icat_oai;
+package org.icatproject.icat_oaipmh;
 
 import java.io.StringWriter;
 import java.time.Instant;
@@ -19,7 +19,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.icatproject.icat_oai.exceptions.InternalException;
+import org.icatproject.icat_oaipmh.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

@@ -15,9 +15,9 @@
 
 	<ul>
 		<li>
-			The icat_oai distribution:
-			<a href="${repoUrl}/org/icatproject/icat.oai/${project.version}/icat.oai-${project.version}-distro.zip">
-				icat_oai-${project.version}-distro.zip
+			The icat_oaipmh distribution:
+			<a href="${repoUrl}/org/icatproject/icat.oaipmh/${project.version}/icat.oaipmh-${project.version}-distro.zip">
+				icat_oaipmh-${project.version}-distro.zip
 			</a>
 		</li>
 		<li>
@@ -232,7 +232,7 @@
 	<p>
 		A simple standalone test is to run:
 		<blockquote>
-			<code>curl -k https://localhost:8181/icat.oai/request?verb=Identify -w "\n"</code>
+			<code>curl -k https://localhost:8181/oaipmh/request?verb=Identify -w "\n"</code>
 			which should return the OAI-PMH Identify response
 		</blockquote>
 	</p>

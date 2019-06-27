@@ -1,4 +1,4 @@
-package org.icatproject.icat_oai;
+package org.icatproject.icat_oaipmh;
 
 public class RecordInformation {
 

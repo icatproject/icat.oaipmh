@@ -1,4 +1,4 @@
-package org.icatproject.icat_oai;
+package org.icatproject.icat_oaipmh;
 
 import java.net.URISyntaxException;
 import java.time.DateTimeException;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
 import org.icatproject.icat.client.Session;
-import org.icatproject.icat_oai.exceptions.InternalException;
+import org.icatproject.icat_oaipmh.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;

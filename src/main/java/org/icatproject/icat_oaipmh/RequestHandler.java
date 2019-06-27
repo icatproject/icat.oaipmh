@@ -1,4 +1,4 @@
-package org.icatproject.icat_oai;
+package org.icatproject.icat_oaipmh;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Templates;
 
-import org.icatproject.icat_oai.exceptions.InternalException;
+import org.icatproject.icat_oaipmh.exceptions.InternalException;
 
 public class RequestHandler {
 

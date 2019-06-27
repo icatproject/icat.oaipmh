@@ -1,4 +1,4 @@
-package org.icatproject.icat_oai;
+package org.icatproject.icat_oaipmh;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -19,7 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerConfigurationException;
 
-import org.icatproject.icat_oai.exceptions.InternalException;
+import org.icatproject.icat_oaipmh.exceptions.InternalException;
 import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.CheckedProperties.CheckedPropertyException;
 import org.slf4j.Logger;
