@@ -16,7 +16,8 @@
 	<ul>
 		<li>
 			The icat_oaipmh distribution:
-			<a href="${repoUrl}/org/icatproject/icat.oaipmh/${project.version}/icat.oaipmh-${project.version}-distro.zip">
+			<a
+				href="${repoUrl}/org/icatproject/icat.oaipmh/${project.version}/icat.oaipmh-${project.version}-distro.zip">
 				icat_oaipmh-${project.version}-distro.zip
 			</a>
 		</li>
@@ -125,20 +126,17 @@
 		<dd>
 			Example value: <b>"Investigation"</b>
 		</dd>
-		<dt>data.includedObjects</dt>
+		<dt>data.&lt;icatObject&gt;.subPropertyLists</dt>
 		<dd>
-			Other ICAT objects which are to be included when making queries for OAI-PMH.
-			This string must use the normal ICAT query syntax for "INCLUDE", as in
-			<b>"SELECT x FROM ExampleObject x INCLUDE x.sub.objects"</b>.
+			A space separated list of ICAT sub-objects which are to be included in the property hierarchy
+			below the <code>&lt;icatObject&gt;</code>.
 		</dd>
 		<dd>
-			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
-			one might use the <code>includedObjects</code>
-			<b>"d.datasets.datafiles, d.investigationUsers.user"</b>.
-		</dd>
-		<dd>
-			Please note the usage of <b>"d"</b> as variable for the main object,
-			this in mandatory.
+			For example, if the <code>mainObject</code> is <b>"Investigation"</b>, one might use
+			<b>"data.subPropertyLists = datasets"</b> and
+			<b>"data.datasets.subPropertyLists = datafiles parameters"</b>
+			to include the datasets as part an investigation,
+			and the datafiles and parameters as part of a dataset.
 		</dd>
 		<dt>data.&lt;icatObject&gt;.&lt;dataTypeProperties&gt;</dt>
 		<dd>
@@ -149,29 +147,15 @@
 			depending on the data type within ICAT.
 		</dd>
 		<dd>
-			The <code>&lt;icatObject&gt;</code> must be included in
-			<code>data.includedObjects</code> for this to work.
-		</dd>
-		<dd>
-			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
-			and <code>includedObjects</code> are <b>"d.datasets.datafiles"</b>, one might use
-			<b>"data.stringProperties = doi title summary"</b> and
-			<b>"data.dateProperties = startDate endDate"</b> as properties for the investigation; and
-			<b>"data.investigationUsers.stringProperties = role"</b>, and
+			For example, if the <code>mainObject</code> is <b>"Investigation"</b>, and
+			<code>data.subPropertyLists</code> is set to <b>"investigationUsers"</b> and
+			<code>data.investigationUsers.subPropertyLists</code> is set to <b>"user"</b>,
+			one might use <b>"data.stringProperties = doi title summary"</b> and
+			<b>"data.dateProperties = startDate endDate"</b> as properties for the investigation;
+			<b>"data.investigationUsers.stringProperties = role"</b>
+			as properties for the investigationUser; and
 			<b>"data.investigationUsers.user.stringProperties = fullName orcidId"</b>
-			as properties for the other included objects.
-		</dd>
-		<dt>data.&lt;icatObject&gt;.subPropertyLists</dt>
-		<dd>
-			A space separated list of ICAT sub-objects which are to be included in the property hierarchy
-			below the <code>&lt;icatObject&gt;</code>.
-		</dd>
-		<dd>
-			For example, if the <code>mainObject</code> is <b>"Investigation"</b>,
-			and <code>includedObjects</code> are <b>"d.datasets.datafiles"</b>, one might use
-			<b>"data.subPropertyLists = datasets"</b> and
-			<b>"data.datasets.subPropertyLists = datafiles"</b>
-			to include the datasets as part an investigation, and the datafiles as part of a dataset.
+			as properties for the user.
 		</dd>
 		<dt>metadataPrefixes</dt>
 		<dd>

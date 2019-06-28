@@ -97,7 +97,7 @@ public class ResponseBuilder {
 
         String earliestDatestamp = "1000-01-01T00:00:00Z";
 
-        String query = String.format("SELECT d.modTime FROM %s d ORDER BY d.modTime",
+        String query = String.format("SELECT a.modTime FROM %s a ORDER BY a.modTime",
                 dataConfiguration.getMainObject());
         String result = queryIcat(query);
         JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
@@ -266,7 +266,7 @@ public class ResponseBuilder {
         String mainObject = dataConfiguration.getMainObject();
         String includes = dataConfiguration.getIncludedObjects();
         String where = parameters.makeWhereCondition();
-        String query = String.format("SELECT d FROM %s d %s ORDER BY d.modTime INCLUDE %s", mainObject, where,
+        String query = String.format("SELECT a FROM %s a %s ORDER BY a.modTime INCLUDE %s", mainObject, where,
                 includes);
 
         JsonArray resultsArray = null;

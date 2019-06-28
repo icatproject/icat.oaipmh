@@ -58,13 +58,13 @@ public class IcatQueryParameters {
     public String makeWhereCondition() {
         ArrayList<String> constraints = new ArrayList<String>();
         if (fromTime != null) {
-            constraints.add(String.format("d.modTime >= '%s'", fromTime));
+            constraints.add(String.format("a.modTime >= '%s'", fromTime));
         }
         if (untilTime != null) {
-            constraints.add(String.format("d.modTime <= '%s'", untilTime));
+            constraints.add(String.format("a.modTime <= '%s'", untilTime));
         }
         if (identifierId != null)
-            constraints.add(String.format("d.id = %s", identifierId));
+            constraints.add(String.format("a.id = %s", identifierId));
 
         return constraints.isEmpty() ? "" : String.format("WHERE %s", String.join(" AND ", constraints));
     }
