@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
 import org.icatproject.icat.client.Session;
+import org.icatproject.icat.client.IcatException.IcatExceptionType;
 import org.icatproject.icat_oaipmh.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,37 +30,21 @@ public class ResponseBuilder {
     private static final Logger logger = LoggerFactory.getLogger(ResponseBuilder.class);
 
     private Session icatSession;
+    private final String icatUrl;
+    private final String[] icatAuth;
     private final String repositoryName;
     private final ArrayList<String> adminEmails;
     private final DataConfiguration dataConfiguration;
     private ArrayList<MetadataFormat> metadataFormats;
 
-    public ResponseBuilder(String repositoryName, ArrayList<String> adminEmails, DataConfiguration dataConfiguration) {
+    public ResponseBuilder(String icatUrl, String[] icatAuth, String repositoryName, ArrayList<String> adminEmails,
+            DataConfiguration dataConfiguration) {
         metadataFormats = new ArrayList<MetadataFormat>();
+        this.icatUrl = icatUrl;
+        this.icatAuth = icatAuth;
         this.repositoryName = repositoryName;
         this.adminEmails = adminEmails;
         this.dataConfiguration = dataConfiguration;
-    }
-
-    public void performIcatLogin(String icatUrl, String[] icatAuth) throws InternalException {
-        ICAT restIcat = null;
-        try {
-            restIcat = new ICAT(icatUrl);
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
-        }
-
-        HashMap<String, String> credentials = new HashMap<String, String>();
-        credentials.put(icatAuth[1], icatAuth[2]);
-        credentials.put(icatAuth[3], icatAuth[4]);
-
-        try {
-            icatSession = restIcat.login(icatAuth[0], credentials);
-        } catch (IcatException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
-        }
     }
 
     public void addMetadataFormat(MetadataFormat format) {
@@ -70,25 +55,59 @@ public class ResponseBuilder {
         return metadataFormats;
     }
 
+    public void loginIcat() throws InternalException {
+        ICAT restIcat = null;
+        try {
+            restIcat = new ICAT(icatUrl);
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage());
+            throw new InternalException();
+        }
+
+        HashMap<String, String> credentials = new HashMap<String, String>();
+        for (int i = 1; i < icatAuth.length; i += 2) {
+            credentials.put(icatAuth[i], icatAuth[i + 1]);
+        }
+
+        try {
+            icatSession = restIcat.login(icatAuth[0], credentials);
+        } catch (IcatException e) {
+            logger.error(e.getMessage());
+            throw new InternalException();
+        }
+    }
+
+    public String queryIcat(String query) throws InternalException {
+        try {
+            return icatSession.search(query);
+        } catch (IcatException e) {
+            if (e.getType().equals(IcatExceptionType.SESSION)) {
+                this.loginIcat();
+                return queryIcat(query);
+            } else {
+                logger.error(e.getMessage());
+                throw new InternalException();
+            }
+        }
+    }
+
     public void buildIdentifyResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
         HashMap<String, String> singleProperties = new HashMap<String, String>();
         HashMap<String, ArrayList<String>> repeatedProperties = new HashMap<String, ArrayList<String>>();
 
         String earliestDatestamp = "1000-01-01T00:00:00Z";
+
+        String query = String.format("SELECT d.modTime FROM %s d ORDER BY d.modTime",
+                dataConfiguration.getMainObject());
+        String result = queryIcat(query);
+        JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
+        JsonArray jsonArray = jsonReader.readArray();
+        jsonReader.close();
         try {
-            String query = String.format("SELECT d.modTime FROM %s d ORDER BY d.modTime",
-                    dataConfiguration.getMainObject());
-            String result = icatSession.search(query);
-            JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
-            JsonArray jsonArray = jsonReader.readArray();
-            jsonReader.close();
             String earliestDate = jsonArray.getJsonString(0).getString();
             earliestDatestamp = getFormattedDateTime(earliestDate);
         } catch (IndexOutOfBoundsException e) {
             logger.error(e.getMessage());
-        } catch (IcatException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
         }
 
         singleProperties.put("repositoryName", this.repositoryName);
@@ -251,15 +270,10 @@ public class ResponseBuilder {
                 includes);
 
         JsonArray resultsArray = null;
-        try {
-            String result = icatSession.search(query);
-            JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
-            resultsArray = jsonReader.readArray();
-            jsonReader.close();
-        } catch (IcatException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
-        }
+        String result = queryIcat(query);
+        JsonReader jsonReader = Json.createReader(new java.io.StringReader(result));
+        resultsArray = jsonReader.readArray();
+        jsonReader.close();
 
         boolean incomplete = false;
         List<JsonValue> results = null;

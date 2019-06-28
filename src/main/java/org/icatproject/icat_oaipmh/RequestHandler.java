@@ -19,8 +19,8 @@ public class RequestHandler {
             DataConfiguration dataConfiguration, boolean debug) throws InternalException {
         ArrayList<String> emails = new ArrayList<String>(Arrays.asList(adminEmails));
 
-        rb = new ResponseBuilder(repositoryName, emails, dataConfiguration);
-        rb.performIcatLogin(icatUrl, icatAuth);
+        rb = new ResponseBuilder(icatUrl, icatAuth, repositoryName, emails, dataConfiguration);
+        rb.loginIcat();
 
         this.debug = debug;
     }
