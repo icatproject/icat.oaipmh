@@ -34,16 +34,18 @@ public class ResponseBuilder {
     private final String[] icatAuth;
     private final String repositoryName;
     private final ArrayList<String> adminEmails;
+    private final String requestUrl;
     private final DataConfiguration dataConfiguration;
     private ArrayList<MetadataFormat> metadataFormats;
 
     public ResponseBuilder(String icatUrl, String[] icatAuth, String repositoryName, ArrayList<String> adminEmails,
-            DataConfiguration dataConfiguration) {
+            String requestUrl, DataConfiguration dataConfiguration) {
         metadataFormats = new ArrayList<MetadataFormat>();
         this.icatUrl = icatUrl;
         this.icatAuth = icatAuth;
         this.repositoryName = repositoryName;
         this.adminEmails = adminEmails;
+        this.requestUrl = requestUrl;
         this.dataConfiguration = dataConfiguration;
     }
 
@@ -110,8 +112,8 @@ public class ResponseBuilder {
             logger.error(e.getMessage());
         }
 
-        singleProperties.put("repositoryName", this.repositoryName);
-        singleProperties.put("baseURL", getRequestUrl(req));
+        singleProperties.put("repositoryName", repositoryName);
+        singleProperties.put("baseURL", requestUrl);
         singleProperties.put("protocolVersion", "2.0");
         singleProperties.put("earliestDatestamp", earliestDatestamp);
         singleProperties.put("deletedRecord", "no");
@@ -211,11 +213,10 @@ public class ResponseBuilder {
             throws InternalException {
         IcatQueryParameters parameters = null;
 
-        String identifierPrefix = req.getServerName();
         String resumptionToken = req.getParameter("resumptionToken");
         if (resumptionToken != null) {
             try {
-                parameters = new IcatQueryParameters(resumptionToken, identifierPrefix);
+                parameters = new IcatQueryParameters(resumptionToken);
             } catch (ArrayIndexOutOfBoundsException | DateTimeException | NumberFormatException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
@@ -224,7 +225,7 @@ public class ResponseBuilder {
             String from = req.getParameter("from");
             String until = req.getParameter("until");
             try {
-                parameters = new IcatQueryParameters(0, from, until, identifier, identifierPrefix);
+                parameters = new IcatQueryParameters(0, from, until, identifier);
             } catch (ArrayIndexOutOfBoundsException | DateTimeException e) {
                 res.addError("badArgument", "The request includes illegally formatted arguments");
             }
@@ -278,9 +279,9 @@ public class ResponseBuilder {
         boolean incomplete = false;
         List<JsonValue> results = null;
         results = resultsArray.subList(parameters.getOffset(), resultsArray.size());
-        if (results.size() > parameters.getOffsetSize()) {
+        if (results.size() > parameters.getMaxResults()) {
             incomplete = true;
-            int limit = parameters.getOffsetSize();
+            int limit = parameters.getMaxResults();
             if (limit > results.size())
                 limit = results.size();
             results = results.subList(0, limit);
@@ -397,26 +398,8 @@ public class ResponseBuilder {
         return null;
     }
 
-    public String getRequestUrl(HttpServletRequest req) {
-        String scheme = req.getScheme();
-        String serverName = req.getServerName();
-        int serverPort = req.getServerPort();
-        String contextPath = req.getContextPath();
-        String servletPath = req.getServletPath();
-        String pathInfo = req.getPathInfo();
-
-        StringBuilder url = new StringBuilder();
-        url.append(scheme).append("://").append(serverName);
-
-        if (serverPort != 80 && serverPort != 443)
-            url.append(":").append(serverPort);
-
-        url.append(contextPath).append(servletPath);
-
-        if (pathInfo != null)
-            url.append(pathInfo);
-
-        return url.toString();
+    public String getRequestUrl() {
+        return requestUrl;
     }
 
     public String getMetadataPrefix(HttpServletRequest req) {

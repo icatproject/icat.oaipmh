@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 public class IcatQueryParameters {
 
-    private static int offsetSize = 50;
+    private static int maxResults;
+    private static String identifierPrefix;
 
     private int offset;
     private String from;
@@ -15,9 +16,8 @@ public class IcatQueryParameters {
     private String fromTime;
     private String untilTime;
     private String identifierId;
-    private String identifierPrefix;
 
-    public IcatQueryParameters(int offset, String from, String until, String identifier, String identifierPrefix) {
+    public IcatQueryParameters(int offset, String from, String until, String identifier) {
         this.offset = offset;
 
         this.from = from;
@@ -26,10 +26,9 @@ public class IcatQueryParameters {
 
         if (identifier != null)
             this.identifierId = identifier.split(":")[2];
-        this.identifierPrefix = identifierPrefix;
     }
 
-    public IcatQueryParameters(String resumptionToken, String identifierPrefix) {
+    public IcatQueryParameters(String resumptionToken) {
         String[] token = resumptionToken.split(",");
 
         this.offset = Integer.parseInt(token[1]);
@@ -39,7 +38,6 @@ public class IcatQueryParameters {
         this.setFromUntilTimes();
 
         this.identifierId = null;
-        this.identifierPrefix = identifierPrefix;
     }
 
     private void setFromUntilTimes() {
@@ -51,7 +49,7 @@ public class IcatQueryParameters {
     }
 
     public String makeResumptionToken(String metadataPrefix) {
-        Integer offset = this.offset + offsetSize;
+        Integer offset = this.offset + maxResults;
         return String.join(",", metadataPrefix, offset.toString(), from, until);
     }
 
@@ -69,15 +67,23 @@ public class IcatQueryParameters {
         return constraints.isEmpty() ? "" : String.format("WHERE %s", String.join(" AND ", constraints));
     }
 
-    public int getOffsetSize() {
-        return offsetSize;
+    public static void setMaxResults(int maxResults) {
+        IcatQueryParameters.maxResults = maxResults;
     }
 
-    public int getOffset() {
-        return offset;
+    public static void setIdentifierPrefix(String identifierPrefix) {
+        IcatQueryParameters.identifierPrefix = identifierPrefix;
+    }
+
+    public int getMaxResults() {
+        return maxResults;
     }
 
     public String getIdentifierPrefix() {
         return identifierPrefix;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 }

@@ -119,6 +119,24 @@
 		<dd>
 			Example value: <b>"someone@example.com another@example.org"</b>
 		</dd>
+		<dt>requestUrl</dt>
+		<dd>
+			The Base URL of the OAI-PMH interface.
+			Must be a well-formed URL.
+			This will be returned as part of the OAI-PMH "Identify" response,
+			and is being used for the unique identifiers of records.
+		</dd>
+		<dd>
+			Example value: <b>"https://www.example.org/oaipmh/request"</b>
+		</dd>
+		<dt>maxResults</dt>
+		<dd>
+			The maximum number of results per page for incomplete responses.
+			Must be an integer greater than 0.
+		</dd>
+		<dd>
+			Example value: <b>"50"</b>
+		</dd>
 		<dt>data.mainObject</dt>
 		<dd>
 			The main ICAT object (from ICAT metadata schema) which the repository is about.

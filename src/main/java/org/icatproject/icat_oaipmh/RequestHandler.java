@@ -16,10 +16,10 @@ public class RequestHandler {
     private boolean debug;
 
     public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails,
-            DataConfiguration dataConfiguration, boolean debug) throws InternalException {
+            String requestUrl, DataConfiguration dataConfiguration, boolean debug) throws InternalException {
         ArrayList<String> emails = new ArrayList<String>(Arrays.asList(adminEmails));
 
-        rb = new ResponseBuilder(icatUrl, icatAuth, repositoryName, emails, dataConfiguration);
+        rb = new ResponseBuilder(icatUrl, icatAuth, repositoryName, emails, requestUrl, dataConfiguration);
         rb.loginIcat();
 
         this.debug = debug;
@@ -130,7 +130,7 @@ public class RequestHandler {
 
     private String handleIllegalVerb(HttpServletRequest req, XmlResponse res, Templates template)
             throws InternalException {
-        res.makeResponseOutline(rb.getRequestUrl(req), new HashMap<String, String>());
+        res.makeResponseOutline(rb.getRequestUrl(), new HashMap<String, String>());
         res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
         return res.transformXml(template);
     }
@@ -162,7 +162,7 @@ public class RequestHandler {
                 allParamsOk = false;
         }
 
-        res.makeResponseOutline(rb.getRequestUrl(req), checkedParameters);
+        res.makeResponseOutline(rb.getRequestUrl(), checkedParameters);
 
         if (parameters.size() != checkedParameters.size())
             res.addError("badArgument", "The request includes illegal arguments, or includes a repeated argument");

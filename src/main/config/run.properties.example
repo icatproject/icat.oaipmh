@@ -11,6 +11,12 @@
 # The e-mail address(es) of the repository administrator
 !adminEmails = someone@example.com another@example.org
 
+# The Base URL of the OAI-PMH interface
+!requestUrl = https://www.example.org/oaipmh/request
+
+# The maximum number of results per page for incomplete responses
+!maxResults = 50
+
 # Configuration of the data objects and properties to be retrieved from ICAT
 !data.mainObject = Investigation
 

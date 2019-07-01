@@ -2,6 +2,8 @@ package org.icatproject.icat_oaipmh;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,6 +51,16 @@ public class RequestInterface {
 
 			String repositoryName = props.getString("repositoryName");
 			String[] adminEmails = props.getString("adminEmails").split("\\s+");
+			String requestUrl = props.getString("requestUrl");
+
+			String maxResultsString = props.getString("maxResults");
+			int maxResults = Integer.parseInt(maxResultsString);
+
+			URI requestUri = new URI(requestUrl);
+			String identifierPrefix = requestUri.getHost();
+
+			IcatQueryParameters.setMaxResults(maxResults);
+			IcatQueryParameters.setIdentifierPrefix(identifierPrefix);
 
 			boolean debug = false;
 			if (props.has("debug") && props.getString("debug").equals("true"))
@@ -64,7 +76,8 @@ public class RequestInterface {
 
 			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, requestedProperties);
 
-			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, dataConfiguration, debug);
+			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, requestUrl, dataConfiguration,
+					debug);
 
 			String[] prefixes = props.getString("metadataPrefixes").split("\\s+");
 			for (String prefix : prefixes) {
@@ -72,7 +85,8 @@ public class RequestInterface {
 						props.getString(prefix + ".namespace"), props.getString(prefix + ".schema"));
 				bean.registerMetadataFormat(format);
 			}
-		} catch (CheckedPropertyException | FileNotFoundException | TransformerConfigurationException e) {
+		} catch (CheckedPropertyException | FileNotFoundException | NumberFormatException
+				| TransformerConfigurationException | URISyntaxException e) {
 			logger.error(fatal, e.getMessage());
 			throw new IllegalStateException(e.getMessage());
 		} catch (InternalException e) {
