@@ -42,10 +42,23 @@ public class IcatQueryParameters {
 
     private void setFromUntilTimes() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
-        if (this.from != null)
-            this.fromTime = OffsetDateTime.parse(from).format(dtf);
-        if (this.until != null)
-            this.untilTime = OffsetDateTime.parse(until).format(dtf);
+        OffsetDateTime dtFrom = null;
+        OffsetDateTime dtUntil = null;
+
+        if (this.from != null) {
+            dtFrom = OffsetDateTime.parse(from);
+            this.fromTime = dtFrom.format(dtf);
+        }
+        if (this.until != null) {
+            dtUntil = OffsetDateTime.parse(until);
+            this.untilTime = dtUntil.format(dtf);
+        }
+
+        if (dtFrom != null && dtUntil != null) {
+            if (dtFrom.compareTo(dtUntil) > 0) {
+                throw new IllegalArgumentException();
+            }
+        }
     }
 
     public String makeResumptionToken(String metadataPrefix) {

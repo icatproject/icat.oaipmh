@@ -217,7 +217,7 @@ public class ResponseBuilder {
         if (resumptionToken != null) {
             try {
                 parameters = new IcatQueryParameters(resumptionToken);
-            } catch (ArrayIndexOutOfBoundsException | DateTimeException | NumberFormatException e) {
+            } catch (ArrayIndexOutOfBoundsException | DateTimeException | IllegalArgumentException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
         } else {
@@ -226,8 +226,8 @@ public class ResponseBuilder {
             String until = req.getParameter("until");
             try {
                 parameters = new IcatQueryParameters(0, from, until, identifier);
-            } catch (ArrayIndexOutOfBoundsException | DateTimeException e) {
-                res.addError("badArgument", "The request includes illegally formatted arguments");
+            } catch (ArrayIndexOutOfBoundsException | DateTimeException | IllegalArgumentException e) {
+                res.addError("badArgument", "The request includes arguments with illegal values or syntax");
             }
         }
 
