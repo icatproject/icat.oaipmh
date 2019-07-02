@@ -212,7 +212,7 @@
 			Example (official Dublin Core schema definition): <b>"oai_dc.schema =
 				http://www.openarchives.org/OAI/2.0/oai_dc.xsd"</b>
 		</dd>
-		<dt>debug</dt>
+		<dt>responseDebug</dt>
 		<dd>
 			If this (optional) parameter is included and set to <b>"true"</b>, the metadata
 			received when making OAI-PMH calls won't be transformed into another format.
@@ -226,6 +226,15 @@
 			This is particularly helpful for the development of custom XSLT files,
 			in order to understand the structure of the generic XML format before
 			attempting to transform it into some other metadata format.
+		</dd>
+		<dt>responseStyle</dt>
+		<dd>
+			Set this (optional) parameter to the URL of an XSL document which you
+			want to apply to all XML responses.
+		</dd>
+		<dd>
+			One particular use for this would be to have the XML responses transform
+			into HTML documents when making OAI-PMH calls from a web browser.
 		</dd>
 	</dl>
 

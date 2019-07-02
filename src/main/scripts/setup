@@ -24,6 +24,13 @@ if arg == "INSTALL":
     if len(properties["icat.auth"].split()) != 5:
         abort("Invalid value for 'icat.auth' in run.properties")
 
+    try:
+        val = int(properties["maxResults"])
+        if val < 1:
+            abort("The value for 'maxResults' is less than 1 in run.properties")
+    except ValueError:
+        abort("The value for 'maxResults' is no integer in run.properties")
+
     if "oai_dc" not in properties["metadataPrefixes"].split():
         abort("Support for the metadataPrefix 'oai_dc' is missing in run.properties")
 

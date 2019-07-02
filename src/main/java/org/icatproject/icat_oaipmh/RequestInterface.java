@@ -62,9 +62,13 @@ public class RequestInterface {
 			IcatQueryParameters.setMaxResults(maxResults);
 			IcatQueryParameters.setIdentifierPrefix(identifierPrefix);
 
-			boolean debug = false;
-			if (props.has("debug") && props.getString("debug").equals("true"))
-				debug = true;
+			boolean responseDebug = false;
+			if (props.has("responseDebug") && props.getString("responseDebug").equals("true"))
+				responseDebug = true;
+
+			String responseStyle = null;
+			if (props.has("responseStyle"))
+				responseStyle = props.getString("responseStyle");
 
 			String dataPrefix = String.format("data");
 			String propName;
@@ -77,7 +81,7 @@ public class RequestInterface {
 			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, requestedProperties);
 
 			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, requestUrl, dataConfiguration,
-					debug);
+					responseDebug, responseStyle);
 
 			String[] prefixes = props.getString("metadataPrefixes").split("\\s+");
 			for (String prefix : prefixes) {

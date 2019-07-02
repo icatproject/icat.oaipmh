@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.ProcessingInstruction;
 
 public class XmlResponse {
 
@@ -46,13 +47,19 @@ public class XmlResponse {
         document = builder.newDocument();
     }
 
-    public void makeResponseOutline(String requestUrl, Map<String, String> params) {
+    public void makeResponseOutline(String requestUrl, Map<String, String> params, String responseStyle) {
         Element rootElement = document.createElement("OAI-PMH");
         rootElement.setAttribute("xmlns", "http://www.openarchives.org/OAI/2.0/");
         rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         rootElement.setAttribute("xsi:schemaLocation",
                 "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd");
         document.appendChild(rootElement);
+
+        if (responseStyle != null) {
+            ProcessingInstruction styleSheet = document.createProcessingInstruction("xml-stylesheet",
+                    String.format("type=\"text/xsl\" href=\"%s\"", responseStyle));
+            document.insertBefore(styleSheet, rootElement);
+        }
 
         String strDate = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString();
         Element responseDate = document.createElement("responseDate");

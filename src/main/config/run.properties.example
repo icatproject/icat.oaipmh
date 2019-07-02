@@ -46,4 +46,7 @@
 !oai_datacite.schema    = http://schema.datacite.org/oai/oai-1.1/oai.xsd
 
 # If set to 'true', metadata won't be transformed into another format
-!debug = true
+!responseDebug = true
+
+# The URL to an XSL document to be applied to all XML responses
+!responseStyle = https://oai.datacite.org/xsl/oaitohtml.xsl

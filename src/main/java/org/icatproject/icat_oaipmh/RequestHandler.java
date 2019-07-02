@@ -13,16 +13,20 @@ import org.icatproject.icat_oaipmh.exceptions.InternalException;
 public class RequestHandler {
 
     private ResponseBuilder rb;
-    private boolean debug;
+
+    private final boolean responseDebug;
+    private final String responseStyle;
 
     public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails,
-            String requestUrl, DataConfiguration dataConfiguration, boolean debug) throws InternalException {
+            String requestUrl, DataConfiguration dataConfiguration, boolean responseDebug, String responseStyle)
+            throws InternalException {
         ArrayList<String> emails = new ArrayList<String>(Arrays.asList(adminEmails));
 
         rb = new ResponseBuilder(icatUrl, icatAuth, repositoryName, emails, requestUrl, dataConfiguration);
         rb.loginIcat();
 
-        this.debug = debug;
+        this.responseDebug = responseDebug;
+        this.responseStyle = responseStyle;
     }
 
     public void registerMetadataFormat(MetadataFormat format) {
@@ -73,7 +77,7 @@ public class RequestHandler {
                 rb.buildListIdentifiersResponse(req, res);
         }
 
-        return res.transformXml(debug ? null : template);
+        return res.transformXml(responseDebug ? null : template);
     }
 
     private String handleListRecords(HttpServletRequest req, XmlResponse res, Templates template)
@@ -87,7 +91,7 @@ public class RequestHandler {
                 rb.buildListRecordsResponse(req, res);
         }
 
-        return res.transformXml(debug ? null : template);
+        return res.transformXml(responseDebug ? null : template);
     }
 
     private String handleListSets(HttpServletRequest req, XmlResponse res, Templates template)
@@ -125,12 +129,12 @@ public class RequestHandler {
                 rb.buildGetRecordResponse(req, res);
         }
 
-        return res.transformXml(debug ? null : template);
+        return res.transformXml(responseDebug ? null : template);
     }
 
     private String handleIllegalVerb(HttpServletRequest req, XmlResponse res, Templates template)
             throws InternalException {
-        res.makeResponseOutline(rb.getRequestUrl(), new HashMap<String, String>());
+        res.makeResponseOutline(rb.getRequestUrl(), new HashMap<String, String>(), responseStyle);
         res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
         return res.transformXml(template);
     }
@@ -162,7 +166,7 @@ public class RequestHandler {
                 allParamsOk = false;
         }
 
-        res.makeResponseOutline(rb.getRequestUrl(), checkedParameters);
+        res.makeResponseOutline(rb.getRequestUrl(), checkedParameters, responseStyle);
 
         if (parameters.size() != checkedParameters.size())
             res.addError("badArgument", "The request includes illegal arguments, or includes a repeated argument");
