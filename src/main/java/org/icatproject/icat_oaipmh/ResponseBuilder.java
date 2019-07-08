@@ -139,10 +139,14 @@ public class ResponseBuilder {
                 listIdentifiers = res.addRecordInformation(results.getResults(), "ListIdentifiers", false);
             }
 
+            int size = results.getSize();
+            int cursor = results.getCursor();
             if (results.getIncomplete()) {
                 String metadataPrefix = getMetadataPrefix(req);
                 String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
-                res.addResumptionToken(listIdentifiers, resumptionToken);
+                res.addResumptionToken(listIdentifiers, resumptionToken, size, cursor);
+            } else {
+                res.addResumptionToken(listIdentifiers, "", size, cursor);
             }
         }
     }
@@ -161,10 +165,14 @@ public class ResponseBuilder {
                 listRecords = res.addRecordInformation(results.getResults(), "ListRecords", true);
             }
 
+            int size = results.getSize();
+            int cursor = results.getCursor();
             if (results.getIncomplete()) {
                 String metadataPrefix = getMetadataPrefix(req);
                 String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
-                res.addResumptionToken(listRecords, resumptionToken);
+                res.addResumptionToken(listRecords, resumptionToken, size, cursor);
+            } else {
+                res.addResumptionToken(listRecords, "", size, cursor);
             }
         }
     }
@@ -244,7 +252,7 @@ public class ResponseBuilder {
             headers.add(new RecordInformation(header, null));
         }
 
-        return new IcatQueryResults(headers, query.getIncomplete());
+        return new IcatQueryResults(query, headers);
     }
 
     public IcatQueryResults getIcatRecords(IcatQueryParameters parameters) throws InternalException {
@@ -260,7 +268,7 @@ public class ResponseBuilder {
             records.add(new RecordInformation(header, metadata));
         }
 
-        return new IcatQueryResults(records, query.getIncomplete());
+        return new IcatQueryResults(query, records);
     }
 
     private IcatQuery performIcatQuery(IcatQueryParameters parameters) throws InternalException {
@@ -287,7 +295,7 @@ public class ResponseBuilder {
             results = results.subList(0, limit);
         }
 
-        return new IcatQuery(results, incomplete);
+        return new IcatQuery(results, incomplete, resultsArray.size(), parameters.getOffset());
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, RequestedProperties requestedProperties,

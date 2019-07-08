@@ -5,11 +5,11 @@ import java.util.List;
 
 public class IcatQueryResults {
 
+    private IcatQuery query;
     private List<RecordInformation> results;
-    private boolean incomplete;
 
-    public IcatQueryResults(List<RecordInformation> results, boolean incomplete) {
-        this.incomplete = incomplete;
+    public IcatQueryResults(IcatQuery query, List<RecordInformation> results) {
+        this.query = query;
 
         if (results != null)
             this.results = results;
@@ -22,6 +22,14 @@ public class IcatQueryResults {
     }
 
     public boolean getIncomplete() {
-        return incomplete;
+        return query.getIncomplete();
+    }
+
+    public int getSize() {
+        return query.getSize();
+    }
+
+    public int getCursor() {
+        return query.getCursor();
     }
 }
