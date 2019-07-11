@@ -20,10 +20,12 @@
 # Configuration of the data objects and properties to be retrieved from ICAT
 !data.mainObject = Investigation
 
-!data.stringProperties = doi title name visitId summary
+!data.stringProperties = summary doi title
 !data.numericProperties = id
 !data.dateProperties = releaseDate startDate endDate
-!data.subPropertyLists = investigationUsers
+!data.subPropertyLists = keywords investigationUsers
+
+!data.keywords.stringProperties = name
 
 !data.investigationUsers.stringProperties = role
 !data.investigationUsers.subPropertyLists = user

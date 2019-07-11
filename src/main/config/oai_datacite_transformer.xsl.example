@@ -81,15 +81,29 @@
 
             <publisher>Example Institute</publisher>
 
-            <xsl:if test="doi and releaseDate">
+            <xsl:if test="releaseDate">
               <publicationYear>
-                <xsl:value-of select="substring(releaseDate,1,4)"/>
+                <xsl:value-of select="substring-before(releaseDate, '-')"/>
               </publicationYear>
             </xsl:if>
-            <xsl:if test="not(doi) or not(releaseDate)">
+            <xsl:if test="not(releaseDate)">
               <publicationYear>
                 <xsl:text>(:tba)</xsl:text>
               </publicationYear>
+            </xsl:if>
+
+            <resourceType resourceTypeGeneral="Collection">
+              <xsl:text>Data from large facility measurement</xsl:text>
+            </resourceType>
+
+            <xsl:if test="keywords/instance">
+              <subjects>
+                <xsl:for-each select="keywords/instance">
+                  <subject>
+                    <xsl:value-of select="name"/>
+                  </subject>
+                </xsl:for-each>
+              </subjects>
             </xsl:if>
 
             <xsl:if test="startDate and endDate">
@@ -119,12 +133,8 @@
               </dates>
             </xsl:if>
 
-            <resourceType resourceTypeGeneral="Collection">
-              <xsl:text>Experiment Measurement Data</xsl:text>
-            </resourceType>
-
             <rightsList>
-              <rights rightsURI="https://creativecommons.org/publicdomain/zero/1.0/">
+              <rights rightsURI="https://creativecommons.org/publicdomain/zero/1.0/" rightsIdentifier="CC0-1.0">
                 <xsl:text>CC0 Public Domain Dedication</xsl:text>
               </rights>
             </rightsList>
