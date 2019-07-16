@@ -248,6 +248,9 @@ public class ResponseBuilder {
                 parameters = new IcatQueryParameters(0, from, until, identifier);
             } catch (ArrayIndexOutOfBoundsException | DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
+            } catch (InternalException e) {
+                res.addError("idDoesNotExist",
+                        "Identifier '" + identifier + "' is unknown or illegal in this repository");
             }
         }
 

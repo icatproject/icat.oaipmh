@@ -5,6 +5,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import org.icatproject.icat_oaipmh.exceptions.InternalException;
+
 public class IcatQueryParameters {
 
     private static int maxResults;
@@ -17,15 +19,29 @@ public class IcatQueryParameters {
     private String untilTime;
     private String identifierId;
 
-    public IcatQueryParameters(int offset, String from, String until, String identifier) {
+    public IcatQueryParameters(int offset, String from, String until, String identifier) throws InternalException {
         this.offset = offset;
 
         this.from = from;
         this.until = until;
         this.setFromUntilTimes();
 
-        if (identifier != null)
-            this.identifierId = identifier.split(":")[2];
+        if (identifier != null) {
+            String[] identifierParts = identifier.split(":");
+            String schema, namespace, id;
+
+            try {
+                schema = identifierParts[0];
+                namespace = identifierParts[1];
+                id = identifierParts[2];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new InternalException();
+            }
+
+            if (!schema.equals("oai") || !namespace.equals(identifierPrefix))
+                throw new InternalException();
+            this.identifierId = id;
+        }
     }
 
     public IcatQueryParameters(String resumptionToken) {
