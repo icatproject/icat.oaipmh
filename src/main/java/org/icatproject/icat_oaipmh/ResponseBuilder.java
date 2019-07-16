@@ -137,16 +137,17 @@ public class ResponseBuilder {
                         "The combination of the values of the from, until, and set arguments results in an empty list");
             } else {
                 listIdentifiers = res.addRecordInformation(results.getResults(), "ListIdentifiers", false);
-            }
 
-            int size = results.getSize();
-            int cursor = results.getCursor();
-            if (results.getIncomplete()) {
-                String metadataPrefix = getMetadataPrefix(req);
-                String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
-                res.addResumptionToken(listIdentifiers, resumptionToken, size, cursor);
-            } else {
-                res.addResumptionToken(listIdentifiers, "", size, cursor);
+                int size = results.getSize();
+                int cursor = results.getCursor();
+                if (results.getIncomplete()) {
+
+                    String metadataPrefix = getMetadataPrefix(req);
+                    String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
+                    res.addResumptionToken(listIdentifiers, resumptionToken, size, cursor);
+                } else {
+                    res.addResumptionToken(listIdentifiers, "", size, cursor);
+                }
             }
         }
     }
@@ -163,16 +164,16 @@ public class ResponseBuilder {
                         "The combination of the values of the from, until, and set arguments results in an empty list");
             } else {
                 listRecords = res.addRecordInformation(results.getResults(), "ListRecords", true);
-            }
 
-            int size = results.getSize();
-            int cursor = results.getCursor();
-            if (results.getIncomplete()) {
-                String metadataPrefix = getMetadataPrefix(req);
-                String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
-                res.addResumptionToken(listRecords, resumptionToken, size, cursor);
-            } else {
-                res.addResumptionToken(listRecords, "", size, cursor);
+                int size = results.getSize();
+                int cursor = results.getCursor();
+                if (results.getIncomplete()) {
+                    String metadataPrefix = getMetadataPrefix(req);
+                    String resumptionToken = parameters.makeResumptionToken(metadataPrefix);
+                    res.addResumptionToken(listRecords, resumptionToken, size, cursor);
+                } else {
+                    res.addResumptionToken(listRecords, "", size, cursor);
+                }
             }
         }
     }
