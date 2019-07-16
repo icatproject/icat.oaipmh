@@ -181,25 +181,36 @@ public class ResponseBuilder {
         res.addError("noSetHierarchy", "This repository does not support sets");
     }
 
-    public void buildListMetadataFormatsResponse(HttpServletRequest req, XmlResponse res) {
-        HashMap<String, ArrayList<XmlInformation>> informationLists = new HashMap<String, ArrayList<XmlInformation>>();
+    public void buildListMetadataFormatsResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
+        IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
-        ArrayList<XmlInformation> metadataFormatInfo = new ArrayList<XmlInformation>();
+        if (parameters != null) {
+            IcatQueryResults result = getIcatHeaders(parameters);
 
-        for (MetadataFormat format : metadataFormats) {
-            HashMap<String, String> singleProperties = new HashMap<String, String>();
+            if (result.getResults().isEmpty()) {
+                res.addError("idDoesNotExist",
+                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
+            } else {
+                HashMap<String, ArrayList<XmlInformation>> informationLists = new HashMap<String, ArrayList<XmlInformation>>();
 
-            singleProperties.put("metadataPrefix", format.getMetadataPrefix());
-            singleProperties.put("metadataNamespace", format.getMetadataNamespace());
-            singleProperties.put("schema", format.getMetadataSchema());
+                ArrayList<XmlInformation> metadataFormatInfo = new ArrayList<XmlInformation>();
 
-            metadataFormatInfo.add(new XmlInformation(singleProperties, null, null));
+                for (MetadataFormat format : metadataFormats) {
+                    HashMap<String, String> singleProperties = new HashMap<String, String>();
+
+                    singleProperties.put("metadataPrefix", format.getMetadataPrefix());
+                    singleProperties.put("metadataNamespace", format.getMetadataNamespace());
+                    singleProperties.put("schema", format.getMetadataSchema());
+
+                    metadataFormatInfo.add(new XmlInformation(singleProperties, null, null));
+                }
+
+                informationLists.put("metadataFormat", metadataFormatInfo);
+
+                XmlInformation info = new XmlInformation(null, null, informationLists);
+                res.addXmlInformation(info, "ListMetadataFormats", null);
+            }
         }
-
-        informationLists.put("metadataFormat", metadataFormatInfo);
-
-        XmlInformation info = new XmlInformation(null, null, informationLists);
-        res.addXmlInformation(info, "ListMetadataFormats", null);
     }
 
     public void buildGetRecordResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
