@@ -240,6 +240,8 @@ public class ResponseBuilder {
             } catch (ArrayIndexOutOfBoundsException | DateTimeException | IllegalArgumentException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
+        } else if (req.getParameter("set") != null) {
+            res.addError("noSetHierarchy", "This repository does not support sets");
         } else {
             String identifier = req.getParameter("identifier");
             String from = req.getParameter("from");
