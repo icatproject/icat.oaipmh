@@ -237,7 +237,9 @@ public class ResponseBuilder {
         if (resumptionToken != null) {
             try {
                 parameters = new IcatQueryParameters(resumptionToken);
-            } catch (ArrayIndexOutOfBoundsException | DateTimeException | IllegalArgumentException e) {
+            } catch (DateTimeException | IllegalArgumentException e) {
+                res.addError("badArgument", "The request includes arguments with illegal values or syntax");
+            } catch (InternalException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
         } else if (req.getParameter("set") != null) {
@@ -248,7 +250,7 @@ public class ResponseBuilder {
             String until = req.getParameter("until");
             try {
                 parameters = new IcatQueryParameters(0, from, until, identifier);
-            } catch (ArrayIndexOutOfBoundsException | DateTimeException | IllegalArgumentException e) {
+            } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
             } catch (InternalException e) {
                 res.addError("idDoesNotExist",

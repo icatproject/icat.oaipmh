@@ -28,24 +28,22 @@ public class IcatQueryParameters {
 
         if (identifier != null) {
             String[] identifierParts = identifier.split(":");
-            String schema, namespace, id;
 
-            try {
-                schema = identifierParts[0];
-                namespace = identifierParts[1];
-                id = identifierParts[2];
-            } catch (ArrayIndexOutOfBoundsException e) {
+            if (identifierParts.length != 3)
                 throw new InternalException();
-            }
 
-            if (!schema.equals("oai") || !namespace.equals(identifierPrefix))
+            if (!identifierParts[0].equals("oai") || !identifierParts[1].equals(identifierPrefix))
                 throw new InternalException();
-            this.identifierId = id;
+
+            this.identifierId = identifierParts[2];
         }
     }
 
-    public IcatQueryParameters(String resumptionToken) {
+    public IcatQueryParameters(String resumptionToken) throws InternalException {
         String[] token = resumptionToken.split(",");
+
+        if (token.length != 4)
+            throw new InternalException();
 
         this.offset = Integer.parseInt(token[1]);
 
