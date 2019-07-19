@@ -339,8 +339,7 @@ public class ResponseBuilder {
 
         JsonValue icatObject = ((JsonObject) data).get(requestedProperties.getIcatObject());
         if (icatObject == null) {
-            logger.error("The requested ICAT object '" + requestedProperties.getIcatObject() + "' was not found");
-            throw new InternalException();
+            return result;
         }
 
         if (icatObject.getValueType() == ValueType.ARRAY) {
