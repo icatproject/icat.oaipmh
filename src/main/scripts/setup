@@ -21,9 +21,6 @@ if arg in ["CONFIGURE", "INSTALL"]:
 
 if arg == "INSTALL":
 
-    if len(properties["icat.auth"].split()) != 5:
-        abort("Invalid value for 'icat.auth' in run.properties")
-
     try:
         val = int(properties["maxResults"])
         if val < 1:
