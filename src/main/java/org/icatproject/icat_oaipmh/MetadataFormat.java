@@ -10,16 +10,14 @@ import javax.xml.transform.stream.StreamSource;
 
 public class MetadataFormat {
 
-    private String metadataPrefix;
     private String metadataXslt;
     private String metadataNamespace;
     private String metadataSchema;
 
     private Templates template;
 
-    public MetadataFormat(String metadataPrefix, String metadataXslt, String metadataNamespace, String metadataSchema)
+    public MetadataFormat(String metadataXslt, String metadataNamespace, String metadataSchema)
             throws FileNotFoundException, TransformerConfigurationException {
-        this.metadataPrefix = metadataPrefix;
         this.metadataXslt = metadataXslt;
         this.metadataNamespace = metadataNamespace;
         this.metadataSchema = metadataSchema;
@@ -27,10 +25,6 @@ public class MetadataFormat {
         TransformerFactory factory = TransformerFactory.newInstance();
         StreamSource xsl = new StreamSource(new FileInputStream(metadataXslt));
         this.template = factory.newTemplates(xsl);
-    }
-
-    public String getMetadataPrefix() {
-        return metadataPrefix;
     }
 
     public String getMetadataXslt() {

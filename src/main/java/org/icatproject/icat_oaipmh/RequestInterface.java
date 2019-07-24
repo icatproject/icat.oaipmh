@@ -70,24 +70,32 @@ public class RequestInterface {
 			if (props.has("responseStyle"))
 				responseStyle = props.getString("responseStyle");
 
-			String dataPrefix = String.format("data");
-			String propName;
+			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, requestUrl, responseDebug,
+					responseStyle);
 
-			propName = String.format("%s.mainObject", dataPrefix);
-			String mainObject = props.getString(propName);
+			String[] metadataFormats = props.getString("metadataPrefixes").split("\\s+");
+			for (String identifier : metadataFormats) {
+				MetadataFormat metadataFormat = new MetadataFormat(props.getString(identifier + ".xslt"),
+						props.getString(identifier + ".namespace"), props.getString(identifier + ".schema"));
+				bean.registerMetadataFormat(identifier, metadataFormat);
+			}
 
-			RequestedProperties requestedProperties = getRequestedProperties(props, dataPrefix, mainObject);
+			String dataPrefix, propName;
+			String[] dataConfigurations = props.getString("data.configurations").split("\\s+");
+			for (String identifier : dataConfigurations) {
+				dataPrefix = String.format("data.%s", identifier);
 
-			DataConfiguration dataConfiguration = new DataConfiguration(mainObject, requestedProperties);
+				propName = String.format("%s.metadataPrefixes", dataPrefix);
+				String[] metadataPrefixes = props.getString(propName).split("\\s+");
 
-			bean = new RequestHandler(icatUrl, icatAuth, repositoryName, adminEmails, requestUrl, dataConfiguration,
-					responseDebug, responseStyle);
+				propName = String.format("%s.mainObject", dataPrefix);
+				String mainObject = props.getString(propName);
 
-			String[] prefixes = props.getString("metadataPrefixes").split("\\s+");
-			for (String prefix : prefixes) {
-				MetadataFormat format = new MetadataFormat(prefix, props.getString(prefix + ".xslt"),
-						props.getString(prefix + ".namespace"), props.getString(prefix + ".schema"));
-				bean.registerMetadataFormat(format);
+				RequestedProperties requestedProperties = getRequestedProperties(props, dataPrefix, mainObject);
+
+				DataConfiguration dataConfiguration = new DataConfiguration(metadataPrefixes, mainObject,
+						requestedProperties);
+				bean.registerDataConfiguration(identifier, dataConfiguration);
 			}
 		} catch (CheckedPropertyException | FileNotFoundException | NumberFormatException
 				| TransformerConfigurationException | URISyntaxException e) {

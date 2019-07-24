@@ -127,7 +127,11 @@ public class XmlResponse {
             if (includeMetadata) {
                 recordElement = document.createElement("record");
                 addXmlInformation(record.getHeader(), "header", recordElement);
-                addXmlInformation(record.getMetadata(), "metadata", recordElement);
+                Element metadata = addXmlInformation(record.getMetadata(), "metadata", recordElement);
+
+                Element identifier = document.createElement("dataConfigurationIdentifier");
+                identifier.appendChild(document.createTextNode(record.getDataConfigurationIdentifier()));
+                metadata.appendChild(identifier);
             } else {
                 recordElement = document.createElement("header");
                 addXmlInformation(record.getHeader(), null, recordElement);

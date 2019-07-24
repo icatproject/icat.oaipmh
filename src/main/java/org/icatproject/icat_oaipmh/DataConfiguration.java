@@ -1,17 +1,20 @@
 package org.icatproject.icat_oaipmh;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DataConfiguration {
 
+    private ArrayList<String> metadataPrefixes;
     private String mainObject;
     private String includedObjects;
     private RequestedProperties requestedProperties;
 
     private Character variable;
 
-    public DataConfiguration(String mainObject, RequestedProperties requestedProperties) {
+    public DataConfiguration(String[] metadataPrefixes, String mainObject, RequestedProperties requestedProperties) {
+        this.metadataPrefixes = new ArrayList<>(Arrays.asList(metadataPrefixes));
         this.mainObject = mainObject;
         this.requestedProperties = requestedProperties;
 
@@ -29,6 +32,10 @@ public class DataConfiguration {
             includesList.addAll(extractIncludedObjects(props));
         }
         return includesList;
+    }
+
+    public ArrayList<String> getMetadataPrefixes() {
+        return metadataPrefixes;
     }
 
     public String getMainObject() {

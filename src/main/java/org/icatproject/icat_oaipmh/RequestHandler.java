@@ -18,19 +18,22 @@ public class RequestHandler {
     private final String responseStyle;
 
     public RequestHandler(String icatUrl, String[] icatAuth, String repositoryName, String[] adminEmails,
-            String requestUrl, DataConfiguration dataConfiguration, boolean responseDebug, String responseStyle)
-            throws InternalException {
+            String requestUrl, boolean responseDebug, String responseStyle) throws InternalException {
         ArrayList<String> emails = new ArrayList<String>(Arrays.asList(adminEmails));
 
-        rb = new ResponseBuilder(icatUrl, icatAuth, repositoryName, emails, requestUrl, dataConfiguration);
+        rb = new ResponseBuilder(icatUrl, icatAuth, repositoryName, emails, requestUrl);
         rb.loginIcat();
 
         this.responseDebug = responseDebug;
         this.responseStyle = responseStyle;
     }
 
-    public void registerMetadataFormat(MetadataFormat format) {
-        rb.addMetadataFormat(format);
+    public void registerMetadataFormat(String identifier, MetadataFormat format) {
+        rb.addMetadataFormat(identifier, format);
+    }
+
+    public void registerDataConfiguration(String identifier, DataConfiguration configuration) {
+        rb.addDataConfiguration(identifier, configuration);
     }
 
     public String request(HttpServletRequest req) throws InternalException {
@@ -38,20 +41,21 @@ public class RequestHandler {
         String verb = req.getParameter("verb");
         Templates template = null;
 
-        if (verb.equals("Identify"))
-            return handleIdentify(req, res, template);
-        else if (verb.equals("ListIdentifiers"))
-            return handleListIdentifiers(req, res, template);
-        else if (verb.equals("ListRecords"))
-            return handleListRecords(req, res, template);
-        else if (verb.equals("ListSets"))
-            return handleListSets(req, res, template);
-        else if (verb.equals("ListMetadataFormats"))
-            return handleListMetadataFormats(req, res, template);
-        else if (verb.equals("GetRecord"))
-            return handleGetRecord(req, res, template);
-        else
-            return handleIllegalVerb(req, res, template);
+        if (verb != null) {
+            if (verb.equals("Identify"))
+                return handleIdentify(req, res, template);
+            if (verb.equals("ListIdentifiers"))
+                return handleListIdentifiers(req, res, template);
+            if (verb.equals("ListRecords"))
+                return handleListRecords(req, res, template);
+            if (verb.equals("ListSets"))
+                return handleListSets(req, res, template);
+            if (verb.equals("ListMetadataFormats"))
+                return handleListMetadataFormats(req, res, template);
+            if (verb.equals("GetRecord"))
+                return handleGetRecord(req, res, template);
+        }
+        return handleIllegalVerb(req, res, template);
     }
 
     private String handleIdentify(HttpServletRequest req, XmlResponse res, Templates template)
@@ -193,13 +197,20 @@ public class RequestHandler {
     }
 
     private Templates getMetadataTemplate(HttpServletRequest req, XmlResponse res) {
-        String metadataPrefix = rb.getMetadataPrefix(req);
-        for (MetadataFormat format : rb.getMetadataFormats()) {
-            if (metadataPrefix.equals(format.getMetadataPrefix())) {
-                return format.getTemplate();
-            }
-        }
+        String metadataPrefix = getMetadataPrefix(req);
+        MetadataFormat metadataFormat = rb.getMetadataFormats().get(metadataPrefix);
+        if (metadataFormat != null)
+            return metadataFormat.getTemplate();
         res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
         return null;
+    }
+
+    private String getMetadataPrefix(HttpServletRequest req) {
+        if (req.getParameter("metadataPrefix") != null) {
+            return req.getParameter("metadataPrefix");
+        } else {
+            String resumptionToken = req.getParameter("resumptionToken");
+            return resumptionToken.split(",")[0];
+        }
     }
 }

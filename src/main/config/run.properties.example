@@ -2,35 +2,20 @@
 # are marked with '!'
 
 # ICAT Client configuration
-!icat.url = https://example.com:443
+!icat.url = https://example.org:443
 !icat.auth = simple username nick password 123456
 
 # A human readable name for the repository
 !repositoryName = Example experimental data repository
 
 # The e-mail address(es) of the repository administrator
-!adminEmails = someone@example.com another@example.org
+!adminEmails = someone@example.org another@example.org
 
 # The Base URL of the OAI-PMH interface
 !requestUrl = https://www.example.org/oaipmh/request
 
 # The maximum number of results per page for incomplete responses
 !maxResults = 50
-
-# Configuration of the data objects and properties to be retrieved from ICAT
-!data.mainObject = Investigation
-
-!data.stringProperties = summary doi title
-!data.numericProperties = id
-!data.dateProperties = releaseDate startDate endDate
-!data.subPropertyLists = keywords investigationUsers
-
-!data.keywords.stringProperties = name
-
-!data.investigationUsers.stringProperties = role
-!data.investigationUsers.subPropertyLists = user
-
-!data.investigationUsers.user.stringProperties = fullName givenName familyName orcidId
 
 # The metadata formats to be supported: Dublin Core (oai_dc) is required
 !metadataPrefixes = oai_dc oai_datacite
@@ -46,6 +31,47 @@
 # A schema definition for each metadata format
 !oai_dc.schema          = http://www.openarchives.org/OAI/2.0/oai_dc.xsd
 !oai_datacite.schema    = http://schema.datacite.org/oai/oai-1.1/oai.xsd
+
+# Identifiers for the configuration of metadata to be retrieved from ICAT
+!data.configurations = inv stud
+
+# The metadata formats to be supported for each data configuration
+!data.inv.metadataPrefixes = oai_dc oai_datacite
+!data.stud.metadataPrefixes = oai_dc
+
+# Relevant data objects and properties for each data configuration
+!data.inv.mainObject = Investigation
+
+!data.inv.stringProperties = summary doi title
+!data.inv.numericProperties = id
+!data.inv.dateProperties = releaseDate startDate endDate
+!data.inv.subPropertyLists = keywords investigationUsers
+
+!data.inv.keywords.stringProperties = name
+
+!data.inv.investigationUsers.stringProperties = role
+!data.inv.investigationUsers.subPropertyLists = user
+
+!data.inv.investigationUsers.user.stringProperties = fullName givenName familyName orcidId
+
+!data.stud.mainObject = Study
+
+!data.stud.stringProperties = pid description
+!data.stud.numericProperties = id
+!data.stud.dateProperties = startDate endDate
+!data.stud.subPropertyLists = user studyInvestigations
+
+!data.stud.user.stringProperties = fullName givenName familyName orcidId
+
+!data.stud.studyInvestigations.subPropertyLists = investigation
+
+!data.stud.studyInvestigations.investigation.subPropertyLists = keywords investigationUsers
+
+!data.stud.studyInvestigations.investigation.keywords.stringProperties = name
+
+!data.stud.studyInvestigations.investigation.investigationUsers.stringProperties = role
+!data.stud.studyInvestigations.investigation.investigationUsers.subPropertyLists = user
+!data.stud.studyInvestigations.investigation.investigationUsers.user.stringProperties = fullName givenName familyName orcidId
 
 # If set to 'true', metadata won't be transformed into another format
 !responseDebug = true

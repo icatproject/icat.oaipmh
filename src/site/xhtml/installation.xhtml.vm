@@ -93,7 +93,7 @@
 			It should normally just have the scheme, the hostname and the port.
 		</dd>
 		<dd>
-			Example value: <b>"https://example.com:443"</b>
+			Example value: <b>"https://example.org:443"</b>
 		</dd>
 		<dt>icat.auth</dt>
 		<dd>
@@ -117,7 +117,7 @@
 			The email addresses will be returned as part of the OAI-PMH "Identify" response.
 		</dd>
 		<dd>
-			Example value: <b>"someone@example.com another@example.org"</b>
+			Example value: <b>"someone@example.org another@example.org"</b>
 		</dd>
 		<dt>requestUrl</dt>
 		<dd>
@@ -137,47 +137,11 @@
 		<dd>
 			Example value: <b>"50"</b>
 		</dd>
-		<dt>data.mainObject</dt>
-		<dd>
-			The main ICAT object (from ICAT metadata schema) which the repository is about.
-		</dd>
-		<dd>
-			Example value: <b>"Investigation"</b>
-		</dd>
-		<dt>data.&lt;icatObject&gt;.subPropertyLists</dt>
-		<dd>
-			A space separated list of ICAT sub-objects which are to be included in the property hierarchy
-			below the <code>&lt;icatObject&gt;</code>.
-		</dd>
-		<dd>
-			For example, if the <code>mainObject</code> is <b>"Investigation"</b>, one might use
-			<b>"data.subPropertyLists = datasets"</b> and
-			<b>"data.datasets.subPropertyLists = datafiles parameters"</b>
-			to include the datasets as part an investigation,
-			and the datafiles and parameters as part of a dataset.
-		</dd>
-		<dt>data.&lt;icatObject&gt;.&lt;dataTypeProperties&gt;</dt>
-		<dd>
-			A space separated list of ICAT properties to be retrieved from ICAT
-			for the <code>&lt;icatObject&gt;</code> when making queries for OAI-PMH.
-			Possible <code>&lt;dataTypeProperties&gt;</code> are:
-			"stringProperties", "numericProperties", or "dateProperties",
-			depending on the data type within ICAT.
-		</dd>
-		<dd>
-			For example, if the <code>mainObject</code> is <b>"Investigation"</b>, and
-			<code>data.subPropertyLists</code> is set to <b>"investigationUsers"</b> and
-			<code>data.investigationUsers.subPropertyLists</code> is set to <b>"user"</b>,
-			one might use <b>"data.stringProperties = doi title summary"</b> and
-			<b>"data.dateProperties = startDate endDate"</b> as properties for the investigation;
-			<b>"data.investigationUsers.stringProperties = role"</b>
-			as properties for the investigationUser; and
-			<b>"data.investigationUsers.user.stringProperties = fullName orcidId"</b>
-			as properties for the user.
-		</dd>
 		<dt>metadataPrefixes</dt>
 		<dd>
 			A space separated list of metadata formats to be supported.
+		</dd>
+		<dd>
 			At minimum, support for the Dublin Core format ("oai_dc") is required.
 		</dd>
 		<dd>
@@ -187,7 +151,7 @@
 		<dd>
 			For each metadata format, specify the absolute path to an XSLT definition.
 			This XSLT file must be able to transform metadata from the generic XML format
-			(as defined by the <code>data.xxx</code> properties above)
+			(as defined by the <code>data.*</code> properties below)
 			into some other well defined metadata format (such as Dublin Core).
 		</dd>
 		<dd>
@@ -212,6 +176,105 @@
 			Example (official Dublin Core schema definition): <b>"oai_dc.schema =
 				http://www.openarchives.org/OAI/2.0/oai_dc.xsd"</b>
 		</dd>
+		<dt>data.configurations</dt>
+		<dd>
+			A space separated list of identifiers for the configuration of
+			metadata to be retrieved from ICAT.
+		</dd>
+		<dd>
+			Each listed data configuration must use a unique identifier.
+			It is recommended to use short human readable identifiers, such as
+			'inv' for the data object Investigation, or 'stud' for Study.
+		</dd>
+		<dd>
+			Example value: <b>"inv stud"</b>
+		</dd>
+		<dt>data.&lt;configuration&gt;.metadataPrefixes</dt>
+		<dd>
+			For each data configuration, specify a space separated list of supported metadata formats
+			(as defined in the list of <code>metadataPrefixes</code> above).
+		</dd>
+		<dd>
+			At minimum, support for the Dublin Core format ("oai_dc") is required.
+		</dd>
+		<dd>
+			For example, if the <code>metadataPrefixes</code> are <b>"oai_dc oai_datacite"</b>, and
+			the <code>data.configurations</code> are <b>"inv stud"</b>, one might use:
+			<ul>
+				<li>
+					<b>"data.inv.metadataPrefixes = oai_dc oai_datacite"</b>, and
+				</li>
+				<li>
+					<b>"data.stud.metadataPrefixes = oai_dc"</b>
+				</li>
+			</ul>
+		</dd>
+		<dt>data.&lt;configuration&gt;.mainObject</dt>
+		<dd>
+			For each data configuration, specify the ICAT object (from the ICAT metadata schema)
+			which will be the main source of information when retrieving metadata from ICAT.
+		</dd>
+		<dd>
+			For example, if the <code>data.configurations</code> are <b>"inv stud"</b>, one might use:
+			<ul>
+				<li>
+					<b>"data.inv.mainObject = Investigation"</b>, and
+				</li>
+				<li>
+					<b>"data.stud.mainObject = Study"</b>
+				</li>
+			</ul>
+		</dd>
+		<dt>data.&lt;configuration&gt;.&lt;icatObject&gt;.subPropertyLists</dt>
+		<dd>
+			A space separated list of ICAT sub-objects which are to be included in the property hierarchy
+			below the <code>&lt;icatObject&gt;</code> for the respective <code>&lt;configuration&gt;</code>.
+		</dd>
+		<dd>
+			For example, if the <code>data.configurations</code> include <b>"inv"</b>, and
+			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b>, one might use:
+			<ul>
+				<li>
+					<b>"data.inv.subPropertyLists = datasets"</b>
+					to include the datasets as part an investigation, and
+				</li>
+				<li>
+					<b>"data.inv.datasets.subPropertyLists = datafiles parameters"</b>
+					to include the datafiles and parameters as part of a dataset.
+				</li>
+			</ul>
+		</dd>
+		<dt>data.&lt;configuration&gt;.&lt;icatObject&gt;.&lt;dataTypeProperties&gt;</dt>
+		<dd>
+			A space separated list of ICAT properties to be retrieved from ICAT
+			for the <code>&lt;icatObject&gt;</code> when retrieving metadata from ICAT.
+		</dd>
+		<dd>
+			Possible <code>&lt;dataTypeProperties&gt;</code> are:
+			"stringProperties", "numericProperties", or "dateProperties",
+			depending on the data type within ICAT.
+		</dd>
+		<dd>
+			For example, if the <code>data.configurations</code> include <b>"inv"</b>,
+			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b>,
+			<code>data.inv.subPropertyLists</code> is set to <b>"investigationUsers"</b>, and
+			<code>data.inv.investigationUsers.subPropertyLists</code> is set to <b>"user"</b>,
+			one might use:
+			<ul>
+				<li>
+					<b>"data.inv.stringProperties = doi title summary"</b> and
+					<b>"data.inv.dateProperties = startDate endDate"</b> as properties for the investigation,
+				</li>
+				<li>
+					<b>"data.inv.investigationUsers.stringProperties = role"</b>
+					as properties for the investigationUser, and
+				</li>
+				<li>
+					<b>"data.inv.investigationUsers.user.stringProperties = fullName orcidId"</b>
+					as properties for the user.
+				</li>
+			</ul>
+		</dd>
 		<dt>responseDebug</dt>
 		<dd>
 			If this (optional) parameter is included and set to <b>"true"</b>, the metadata
@@ -219,7 +282,7 @@
 		</dd>
 		<dd>
 			This means, the metadata will stay in the generic XML format
-			(as defined by the <code>data.xxx</code> properties above);
+			(as defined by the <code>data.*</code> properties above),
 			and the defined <code>metadataPrefixes</code> properties are ignored.
 		</dd>
 		<dd>
