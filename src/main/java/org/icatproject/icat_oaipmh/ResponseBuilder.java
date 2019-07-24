@@ -311,8 +311,7 @@ public class ResponseBuilder {
             String mainObject = dataConfiguration.getMainObject();
             String includes = dataConfiguration.getIncludedObjects();
             String where = parameters.makeWhereCondition();
-            String query = String.format("SELECT a FROM %s a %s ORDER BY a.modTime INCLUDE %s", mainObject, where,
-                    includes);
+            String query = String.format("SELECT a FROM %s a %s ORDER BY a.modTime %s", mainObject, where, includes);
 
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));

@@ -19,8 +19,11 @@ public class DataConfiguration {
         this.requestedProperties = requestedProperties;
 
         this.variable = 'a';
-        String includedObjects = String.join(", ", extractIncludedObjects(requestedProperties));
-        this.includedObjects = includedObjects;
+        List<String> includedObjectsList = extractIncludedObjects(requestedProperties);
+        if (includedObjectsList.isEmpty())
+            this.includedObjects = "";
+        else
+            this.includedObjects = String.format("INCLUDE %s", String.join(", ", includedObjectsList));
     }
 
     private List<String> extractIncludedObjects(RequestedProperties properties) {
