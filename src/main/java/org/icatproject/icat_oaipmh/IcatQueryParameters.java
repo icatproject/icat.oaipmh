@@ -93,6 +93,8 @@ public class IcatQueryParameters {
 
     public String makeResumptionToken() {
         Integer offset = this.offset + maxResults;
+        if (until == null)
+            until = formatDateTime(OffsetDateTime.now().withNano(0));
         return String.join(",", metadataPrefix, offset.toString(), from, until);
     }
 
@@ -110,22 +112,26 @@ public class IcatQueryParameters {
         return constraints.isEmpty() ? "" : String.format("WHERE %s", String.join(" AND ", constraints));
     }
 
-    public static void setMaxResults(int maxResults) {
-        IcatQueryParameters.maxResults = maxResults;
-    }
-
-    public static void setIdentifierPrefix(String identifierPrefix) {
-        IcatQueryParameters.identifierPrefix = identifierPrefix;
-    }
-
     public static String makeUniqueIdentifier(String config, String id) {
         return String.format("oai:%s:%s/%s", identifierPrefix, config, id);
     }
 
     public static String makeFormattedDateTime(String dateTime) {
         if (dateTime != null)
-            return OffsetDateTime.parse(dateTime).format(DateTimeFormatter.ISO_INSTANT);
+            return formatDateTime(OffsetDateTime.parse(dateTime));
         return null;
+    }
+
+    private static String formatDateTime(OffsetDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ISO_INSTANT);
+    }
+
+    public static void setMaxResults(int maxResults) {
+        IcatQueryParameters.maxResults = maxResults;
+    }
+
+    public static void setIdentifierPrefix(String identifierPrefix) {
+        IcatQueryParameters.identifierPrefix = identifierPrefix;
     }
 
     public String getMetadataPrefix() {
