@@ -119,7 +119,9 @@ public class ResponseBuilder {
                     earliestDateTime = earliest;
                     earliestDatestamp = IcatQueryParameters.makeFormattedDateTime(earliestString);
                 }
-            } catch (IndexOutOfBoundsException | DateTimeException e) {
+            } catch (IndexOutOfBoundsException e) {
+                logger.warn("No objects of type " + dataConfiguration.getMainObject() + " exist in ICAT");
+            } catch (DateTimeException e) {
                 logger.error(e.getMessage());
                 throw new InternalException();
             }
