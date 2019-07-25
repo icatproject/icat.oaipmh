@@ -7,13 +7,9 @@ public class IcatQueryResults {
 
     private List<RecordInformation> results;
     private boolean incomplete;
-    private int size;
-    private int cursor;
 
-    public IcatQueryResults(List<RecordInformation> results, boolean incomplete, int size, int cursor) {
+    public IcatQueryResults(List<RecordInformation> results, boolean incomplete) {
         this.incomplete = incomplete;
-        this.size = size;
-        this.cursor = cursor;
 
         if (results != null)
             this.results = results;
@@ -27,13 +23,5 @@ public class IcatQueryResults {
 
     public boolean getIncomplete() {
         return incomplete;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public int getCursor() {
-        return cursor;
     }
 }

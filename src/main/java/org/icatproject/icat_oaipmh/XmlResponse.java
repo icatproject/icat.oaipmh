@@ -144,10 +144,8 @@ public class XmlResponse {
         return xmlElement;
     }
 
-    public void addResumptionToken(Element xmlElement, String resumptionToken, Integer size, Integer cursor) {
+    public void addResumptionToken(Element xmlElement, String resumptionToken) {
         Element el = document.createElement("resumptionToken");
-        el.setAttribute("completeListSize", size.toString());
-        el.setAttribute("cursor", cursor.toString());
         el.appendChild(document.createTextNode(resumptionToken));
         xmlElement.appendChild(el);
     }

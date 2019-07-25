@@ -153,13 +153,11 @@ public class ResponseBuilder {
             } else {
                 listIdentifiers = res.addRecordInformation(results.getResults(), "ListIdentifiers", false);
 
-                int size = results.getSize();
-                int cursor = results.getCursor();
                 if (results.getIncomplete()) {
                     String resumptionToken = parameters.makeResumptionToken();
-                    res.addResumptionToken(listIdentifiers, resumptionToken, size, cursor);
+                    res.addResumptionToken(listIdentifiers, resumptionToken);
                 } else {
-                    res.addResumptionToken(listIdentifiers, "", size, cursor);
+                    res.addResumptionToken(listIdentifiers, "");
                 }
             }
         }
@@ -178,13 +176,11 @@ public class ResponseBuilder {
             } else {
                 listRecords = res.addRecordInformation(results.getResults(), "ListRecords", true);
 
-                int size = results.getSize();
-                int cursor = results.getCursor();
                 if (results.getIncomplete()) {
                     String resumptionToken = parameters.makeResumptionToken();
-                    res.addResumptionToken(listRecords, resumptionToken, size, cursor);
+                    res.addResumptionToken(listRecords, resumptionToken);
                 } else {
-                    res.addResumptionToken(listRecords, "", size, cursor);
+                    res.addResumptionToken(listRecords, "");
                 }
             }
         }
@@ -348,7 +344,7 @@ public class ResponseBuilder {
             results = results.subList(0, limit);
         }
 
-        return new IcatQueryResults(results, incomplete, records.size(), parameters.getOffset());
+        return new IcatQueryResults(results, incomplete);
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
