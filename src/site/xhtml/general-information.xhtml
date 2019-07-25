@@ -1,0 +1,59 @@
+<html>
+
+<head>
+	<title>general information</title>
+</head>
+
+<body>
+
+	<h1>General Information</h1>
+
+	<h2>Introduction</h2>
+	<p>
+		The icat.oaipmh component provides an interface for <a target="_blank"
+			href="https://en.wikipedia.org/wiki/Open_Archives_Initiative_Protocol_for_Metadata_Harvesting">OAI-PMH</a>.
+		For this purpose, once it is deployed in Payara, it listens for requests at a dedicated endpoint URL.
+		It then connects to ICAT as a normal client to gather the information needed to answer those requests.
+	</p>
+
+	<h2>Accessing ICAT</h2>
+	<p>
+		The component will disseminate all relevant information from ICAT.
+		This can be regulated using the normal ICAT access rules:
+		The user that icat.oaipmh connects as must have read permission for all relevant ICAT objects.
+		It shouldn't be given read access to any private information, and no write permissions.
+		For instance, one might configure icat.oaipmh to connect as the anonymous user.
+	</p>
+
+	<h2>Flexibility</h2>
+	<p>
+		The major value of this component is the ability to provide flexibility on both ends:
+		<ul>
+			<li>
+				Each facility uses ICAT differently. Hence, the relevant information needed to reply to
+				OAI-PMH requests may be found at different places in the ICAT schema for different facilities.
+			</li>
+			<li>
+				OAI-PMH is designed to serve metadata in different formats (Dublin Core, DataCite etc.).
+				Thus, the content and the structure of the reply may need to be different depending on
+				what the harvester is able to digest or wants to see.
+			</li>
+		</ul>
+	</p>
+	<p>
+		In order to overcome this challenge, icat.oaipmh in a fist step
+		compiles the information from ICAT into a generic XML format.
+		The information that gets into this XML file can be controlled using
+		the various "data.*" directives in run.properties (see <a href="installation.html">installation notes</a>).
+		One may tweak these directives according to where the relevant information is to be found in ICAT.
+	</p>
+	<p>
+		In a second step, icat.oaipmh transforms the generic XML file into the metadata format
+		requested by the harvester using <a target="_blank" href="https://en.wikipedia.org/wiki/XSLT">XSLT</a>.
+		For each metadata format which a facility wants to support, a corresponding XSLT stylesheet must be created.
+		These stylesheets will also depend on the way the information is stored in the ICAT schema.
+	</p>
+
+</body>
+
+</html>
