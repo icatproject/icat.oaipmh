@@ -59,8 +59,13 @@ public class RequestInterface {
 			URI requestUri = new URI(requestUrl);
 			String identifierPrefix = requestUri.getHost();
 
+			String icatDateTimeFormat = props.getString("icatDateTimeFormat");
+			String icatDateTimeZone = props.getString("icatDateTimeZone");
+
 			IcatQueryParameters.setMaxResults(maxResults);
 			IcatQueryParameters.setIdentifierPrefix(identifierPrefix);
+			IcatQueryParameters.setIcatDateTimeFormat(icatDateTimeFormat);
+			IcatQueryParameters.setIcatDateTimeZone(icatDateTimeZone);
 
 			boolean responseDebug = false;
 			if (props.has("responseDebug") && props.getString("responseDebug").equals("true"))

@@ -11,7 +11,7 @@ def undeploy():
 actions, arg, props = getActions("setup.properties", [])
 
 prop_name = "run.properties"
-prop_list = ["icat.url", "icat.auth", "repositoryName", "adminEmails", "requestUrl", "maxResults", "metadataPrefixes", "data.configurations"]
+prop_list = ["icat.url", "icat.auth", "repositoryName", "adminEmails", "requestUrl", "maxResults", "icatDateTimeFormat", "icatDateTimeZone", "metadataPrefixes", "data.configurations"]
 
 properties = getProperties(prop_name, prop_list)
 

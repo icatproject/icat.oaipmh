@@ -137,6 +137,40 @@
 		<dd>
 			Example value: <b>"50"</b>
 		</dd>
+		<dt>icatDateTimeFormat</dt>
+		<dd>
+			A pattern for the Java <a target="_blank"
+				href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">
+				DateTimeFormatter</a>.
+		</dd>
+		<dd>
+			Example values: <b>"yyyy-MM-dd HH:mm:ss"</b> or <b>"MM/dd/yyyy HH:mm.ss"</b>
+		</dd>
+		<dd>
+			This will be used to format date/time values when querying ICAT
+			(see <code>icatDateTimeZone</code> below for details).
+		</dd>
+		<dt>icatDateTimeZone</dt>
+		<dd>
+			A zoneId (or time zone offset) for the <code>of(String zoneId)</code> method of the Java
+			<a target="_blank" href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html">
+				ZoneId</a>.
+		</dd>
+		<dd>
+			Example values: <b>"Z"</b> or <b>"Europe/Berlin"</b> or <b>"+02:00"</b>
+		</dd>
+		<dd>
+			This will be used to format date/time values when querying ICAT.
+			Make sure both the <code>icatDateTimeFormat</code> and the <code>icatDateTimeZone</code>
+			match with the way date/time values are stored in your ICAT.
+		</dd>
+		<dd>
+			For example, if a harvester requests the records from 2018-08-31 07:45:20 (UTC),
+			<code>icatDateTimeFormat</code> is set to <b>"MM/dd/yyyy HH:mm.ss"</b>, and
+			<code>icatDateTimeZone</code> is set to <b>"+02:00"</b>,
+			the query sent to ICAT by icat.oaipmh would use the following condition:
+			<b>"WHERE a.modTime >= '08/31/2018 09:45.20'"</b>.
+		</dd>
 		<dt>metadataPrefixes</dt>
 		<dd>
 			A space separated list of metadata formats to be supported.

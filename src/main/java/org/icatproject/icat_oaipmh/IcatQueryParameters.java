@@ -1,17 +1,23 @@
 package org.icatproject.icat_oaipmh;
 
+import java.time.DateTimeException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Set;
 
 import org.icatproject.icat_oaipmh.exceptions.InternalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IcatQueryParameters {
 
     private static int maxResults;
     private static String identifierPrefix;
+    private static String icatDateTimeFormat;
+    private static String icatDateTimeZone;
 
     private String metadataPrefix;
     private String lastDataConfiguration;
@@ -23,8 +29,10 @@ public class IcatQueryParameters {
     private String identifierDataConfiguration;
     private String identifierId;
 
+    private static final Logger logger = LoggerFactory.getLogger(XmlResponse.class);
+
     public IcatQueryParameters(String metadataPrefix, String from, String until, String uniqueIdentifier,
-            Set<String> dataConfigurations) throws InternalException {
+            Set<String> dataConfigurations) throws ParseException, InternalException {
         this.metadataPrefix = metadataPrefix;
 
         this.lastDataConfiguration = null;
@@ -38,25 +46,26 @@ public class IcatQueryParameters {
             String[] identifierParts = uniqueIdentifier.split(":");
 
             if (identifierParts.length != 3)
-                throw new InternalException();
+                throw new ParseException(uniqueIdentifier, 0);
 
             if (!identifierParts[0].equals("oai") || !identifierParts[1].equals(identifierPrefix))
-                throw new InternalException();
+                throw new ParseException(uniqueIdentifier, 0);
 
             IcatQueryIdentifier identifier = parseIdentifier(identifierParts[2]);
             this.identifierDataConfiguration = identifier.getDataConfiguration();
             this.identifierId = identifier.getId();
 
             if (!dataConfigurations.contains(this.identifierDataConfiguration))
-                throw new InternalException();
+                throw new ParseException(uniqueIdentifier, 0);
         }
     }
 
-    public IcatQueryParameters(String resumptionToken, Set<String> dataConfigurations) throws InternalException {
+    public IcatQueryParameters(String resumptionToken, Set<String> dataConfigurations)
+            throws ParseException, InternalException {
         String[] token = resumptionToken.split(",");
 
         if (token.length != 4)
-            throw new InternalException();
+            throw new ParseException(resumptionToken, 0);
 
         this.metadataPrefix = token[0];
 
@@ -65,7 +74,7 @@ public class IcatQueryParameters {
         this.lastId = last.getId();
 
         if (!dataConfigurations.contains(this.lastDataConfiguration))
-            throw new InternalException();
+            throw new ParseException(resumptionToken, 0);
 
         this.from = token[2].equals("null") ? null : token[2];
         this.until = token[3].equals("null") ? null : token[3];
@@ -75,10 +84,17 @@ public class IcatQueryParameters {
         this.identifierId = null;
     }
 
-    private void setFromUntilTimes() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+    private void setFromUntilTimes() throws InternalException {
+        DateTimeFormatter dtf = null;
         OffsetDateTime dtFrom = null;
         OffsetDateTime dtUntil = null;
+
+        try {
+            dtf = DateTimeFormatter.ofPattern(icatDateTimeFormat).withZone(ZoneId.of(icatDateTimeZone));
+        } catch (IllegalArgumentException | DateTimeException e) {
+            logger.error(e.getMessage());
+            throw new InternalException();
+        }
 
         if (this.from != null) {
             dtFrom = OffsetDateTime.parse(from);
@@ -96,13 +112,13 @@ public class IcatQueryParameters {
         }
     }
 
-    private IcatQueryIdentifier parseIdentifier(String identifier) throws InternalException {
+    private IcatQueryIdentifier parseIdentifier(String identifier) throws ParseException {
         String[] identifierItemPart = identifier.split("/");
 
         try {
             return new IcatQueryIdentifier(identifierItemPart[0], identifierItemPart[1]);
         } catch (IndexOutOfBoundsException e) {
-            throw new InternalException();
+            throw new ParseException(identifier, 0);
         }
     }
 
@@ -147,6 +163,14 @@ public class IcatQueryParameters {
 
     public static void setIdentifierPrefix(String identifierPrefix) {
         IcatQueryParameters.identifierPrefix = identifierPrefix;
+    }
+
+    public static void setIcatDateTimeFormat(String icatDateTimeFormat) {
+        IcatQueryParameters.icatDateTimeFormat = icatDateTimeFormat;
+    }
+
+    public static void setIcatDateTimeZone(String icatDateTimeZone) {
+        IcatQueryParameters.icatDateTimeZone = icatDateTimeZone;
     }
 
     public int getMaxResults() {

@@ -17,6 +17,12 @@
 # The maximum number of results per page for incomplete responses
 !maxResults = 50
 
+# The date/time format used when querying ICAT
+!icatDateTimeFormat = yyyy-MM-dd HH:mm:ss
+
+# The time zone used when querying ICAT
+!icatDateTimeZone = Z
+
 # The metadata formats to be supported: Dublin Core (oai_dc) is required
 !metadataPrefixes = oai_dc oai_datacite
 

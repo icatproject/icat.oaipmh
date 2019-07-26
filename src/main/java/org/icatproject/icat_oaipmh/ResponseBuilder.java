@@ -2,6 +2,7 @@ package org.icatproject.icat_oaipmh;
 
 import java.io.StringReader;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -259,7 +260,7 @@ public class ResponseBuilder {
                 parameters = new IcatQueryParameters(resumptionToken, dataConfigurations.keySet());
             } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
-            } catch (InternalException e) {
+            } catch (ParseException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
         } else if (req.getParameter("set") != null) {
@@ -274,7 +275,7 @@ public class ResponseBuilder {
                         dataConfigurations.keySet());
             } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
-            } catch (InternalException e) {
+            } catch (ParseException e) {
                 res.addError("idDoesNotExist",
                         "Identifier '" + identifier + "' is unknown or illegal in this repository");
             }
