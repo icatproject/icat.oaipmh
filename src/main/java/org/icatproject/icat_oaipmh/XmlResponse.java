@@ -81,6 +81,25 @@ public class XmlResponse {
         document.getDocumentElement().appendChild(error);
     }
 
+    public Element addXmlElement(Element anker, String xmlElementName) {
+        if (anker == null)
+            anker = document.getDocumentElement();
+
+        Element xmlElement = document.createElement(xmlElementName);
+        anker.appendChild(xmlElement);
+        return xmlElement;
+    }
+
+    public Element addXmlElement(Element anker, String xmlElementName, String xmlElementContent) {
+        if (anker == null)
+            anker = document.getDocumentElement();
+
+        Element xmlElement = document.createElement(xmlElementName);
+        xmlElement.appendChild(document.createTextNode(xmlElementContent));
+        anker.appendChild(xmlElement);
+        return xmlElement;
+    }
+
     public Element addXmlInformation(XmlInformation info, String xmlElementName, Element anker) {
         Element xmlElement = null;
         if (anker == null)
@@ -92,18 +111,10 @@ public class XmlResponse {
             anker.appendChild(xmlElement);
         }
 
-        for (Map.Entry<String, String> property : info.getSingleProperties().entrySet()) {
+        for (Map.Entry<String, String> property : info.getProperties().entrySet()) {
             Element el = document.createElement(property.getKey());
             el.appendChild(document.createTextNode(property.getValue()));
             xmlElement.appendChild(el);
-        }
-
-        for (Map.Entry<String, ? extends List<String>> property : info.getRepeatedProperties().entrySet()) {
-            for (String value : property.getValue()) {
-                Element el = document.createElement(property.getKey());
-                el.appendChild(document.createTextNode(value));
-                xmlElement.appendChild(el);
-            }
         }
 
         for (Map.Entry<String, ? extends List<XmlInformation>> entry : info.getInformationLists().entrySet()) {

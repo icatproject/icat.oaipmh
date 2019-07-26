@@ -99,9 +99,6 @@ public class ResponseBuilder {
     }
 
     public void buildIdentifyResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
-        HashMap<String, String> singleProperties = new HashMap<String, String>();
-        HashMap<String, ArrayList<String>> repeatedProperties = new HashMap<String, ArrayList<String>>();
-
         String earliestDatestamp = "1000-01-01T00:00:00Z";
         OffsetDateTime earliestDateTime = OffsetDateTime.MAX;
 
@@ -127,17 +124,17 @@ public class ResponseBuilder {
             }
         }
 
-        singleProperties.put("repositoryName", repositoryName);
-        singleProperties.put("baseURL", requestUrl);
-        singleProperties.put("protocolVersion", "2.0");
-        singleProperties.put("earliestDatestamp", earliestDatestamp);
-        singleProperties.put("deletedRecord", "no");
-        singleProperties.put("granularity", "YYYY-MM-DDThh:mm:ssZ");
+        Element identify = res.addXmlElement(null, "Identify");
 
-        repeatedProperties.put("adminEmail", adminEmails);
-        XmlInformation info = new XmlInformation(singleProperties, repeatedProperties, null);
-
-        res.addXmlInformation(info, "Identify", null);
+        res.addXmlElement(identify, "repositoryName", repositoryName);
+        res.addXmlElement(identify, "baseURL", requestUrl);
+        res.addXmlElement(identify, "protocolVersion", "2.0");
+        for (String adminEmail : adminEmails) {
+            res.addXmlElement(identify, "adminEmail", adminEmail);
+        }
+        res.addXmlElement(identify, "earliestDatestamp", earliestDatestamp);
+        res.addXmlElement(identify, "deletedRecord", "no");
+        res.addXmlElement(identify, "granularity", "YYYY-MM-DDThh:mm:ssZ");
     }
 
     public void buildListIdentifiersResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
@@ -213,26 +210,18 @@ public class ResponseBuilder {
                     dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
                 }
 
-                HashMap<String, ArrayList<XmlInformation>> informationLists = new HashMap<String, ArrayList<XmlInformation>>();
-                ArrayList<XmlInformation> metadataFormatInfo = new ArrayList<XmlInformation>();
+                Element listMetadataFormats = res.addXmlElement(null, "ListMetadataFormats");
 
                 for (Map.Entry<String, MetadataFormat> format : metadataFormats.entrySet()) {
                     if (!listAllMetadataFormats && !dataConfiguration.getMetadataPrefixes().contains(format.getKey()))
                         continue;
 
-                    HashMap<String, String> singleProperties = new HashMap<String, String>();
+                    Element metadataFormat = res.addXmlElement(listMetadataFormats, "metadataFormat");
 
-                    singleProperties.put("metadataPrefix", format.getKey());
-                    singleProperties.put("metadataNamespace", format.getValue().getMetadataNamespace());
-                    singleProperties.put("schema", format.getValue().getMetadataSchema());
-
-                    metadataFormatInfo.add(new XmlInformation(singleProperties, null, null));
+                    res.addXmlElement(metadataFormat, "metadataPrefix", format.getKey());
+                    res.addXmlElement(metadataFormat, "schema", format.getValue().getMetadataSchema());
+                    res.addXmlElement(metadataFormat, "metadataNamespace", format.getValue().getMetadataNamespace());
                 }
-
-                informationLists.put("metadataFormat", metadataFormatInfo);
-
-                XmlInformation info = new XmlInformation(null, null, informationLists);
-                res.addXmlInformation(info, "ListMetadataFormats", null);
             }
         }
     }
@@ -385,17 +374,17 @@ public class ResponseBuilder {
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
             RequestedProperties requestedProperties) throws InternalException {
-        HashMap<String, String> singleProperties = new HashMap<String, String>();
+        HashMap<String, String> properties = new HashMap<String, String>();
 
         JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
 
         String id = icatObject.get("id").toString();
         String modTime = icatObject.getString("modTime", null);
 
-        singleProperties.put("identifier", IcatQueryParameters.makeUniqueIdentifier(dataConfigurationIdentifier, id));
-        singleProperties.put("datestamp", IcatQueryParameters.makeFormattedDateTime(modTime));
+        properties.put("identifier", IcatQueryParameters.makeUniqueIdentifier(dataConfigurationIdentifier, id));
+        properties.put("datestamp", IcatQueryParameters.makeFormattedDateTime(modTime));
 
-        XmlInformation headers = new XmlInformation(singleProperties, null, null);
+        XmlInformation headers = new XmlInformation(properties, null);
         return headers;
     }
 
@@ -403,7 +392,7 @@ public class ResponseBuilder {
             RequestedProperties requestedProperties) throws InternalException {
         ArrayList<XmlInformation> result = new ArrayList<XmlInformation>();
 
-        HashMap<String, String> singleProperties = new HashMap<String, String>();
+        HashMap<String, String> properties = new HashMap<String, String>();
         HashMap<String, ArrayList<XmlInformation>> informationLists = new HashMap<String, ArrayList<XmlInformation>>();
 
         JsonValue icatObject = ((JsonObject) data).get(requestedProperties.getIcatObject());
@@ -416,25 +405,25 @@ public class ResponseBuilder {
 
             ArrayList<XmlInformation> elementsInfos = new ArrayList<XmlInformation>();
             for (JsonValue element : jsonArray) {
-                HashMap<String, String> elementSingleProperties = new HashMap<String, String>();
+                HashMap<String, String> elementProperties = new HashMap<String, String>();
                 HashMap<String, ArrayList<XmlInformation>> elementInformationLists = new HashMap<String, ArrayList<XmlInformation>>();
 
                 for (String prop : requestedProperties.getStringProperties()) {
                     String value = ((JsonObject) element).getString(prop, null);
                     if (value != null)
-                        elementSingleProperties.put(prop, value);
+                        elementProperties.put(prop, value);
                 }
 
                 for (String prop : requestedProperties.getNumericProperties()) {
                     JsonValue value = ((JsonObject) element).get(prop);
                     if (value != null)
-                        elementSingleProperties.put(prop, value.toString());
+                        elementProperties.put(prop, value.toString());
                 }
 
                 for (String prop : requestedProperties.getDateProperties()) {
                     String value = ((JsonObject) element).getString(prop, null);
                     if (value != null)
-                        elementSingleProperties.put(prop, IcatQueryParameters.makeFormattedDateTime(value));
+                        elementProperties.put(prop, IcatQueryParameters.makeFormattedDateTime(value));
                 }
 
                 for (RequestedProperties requestedSubProperties : requestedProperties.getSubPropertyLists()) {
@@ -443,8 +432,8 @@ public class ResponseBuilder {
                     elementInformationLists.put(requestedSubProperties.getIcatObject(), subInfo);
                 }
 
-                if (elementSingleProperties.size() != 0 || elementInformationLists.size() != 0)
-                    elementsInfos.add(new XmlInformation(elementSingleProperties, null, elementInformationLists));
+                if (elementProperties.size() != 0 || elementInformationLists.size() != 0)
+                    elementsInfos.add(new XmlInformation(elementProperties, elementInformationLists));
             }
             informationLists.put("instance", elementsInfos);
         } else {
@@ -453,19 +442,19 @@ public class ResponseBuilder {
             for (String prop : requestedProperties.getStringProperties()) {
                 String value = jsonObject.getString(prop, null);
                 if (value != null)
-                    singleProperties.put(prop, value);
+                    properties.put(prop, value);
             }
 
             for (String prop : requestedProperties.getNumericProperties()) {
                 JsonValue value = jsonObject.get(prop);
                 if (value != null)
-                    singleProperties.put(prop, value.toString());
+                    properties.put(prop, value.toString());
             }
 
             for (String prop : requestedProperties.getDateProperties()) {
                 String value = jsonObject.getString(prop, null);
                 if (value != null)
-                    singleProperties.put(prop, IcatQueryParameters.makeFormattedDateTime(value));
+                    properties.put(prop, IcatQueryParameters.makeFormattedDateTime(value));
             }
 
             for (RequestedProperties requestedSubProperties : requestedProperties.getSubPropertyLists()) {
@@ -475,7 +464,7 @@ public class ResponseBuilder {
             }
         }
 
-        result.add(new XmlInformation(singleProperties, null, informationLists));
+        result.add(new XmlInformation(properties, informationLists));
         return result;
     }
 

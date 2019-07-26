@@ -6,21 +6,15 @@ import java.util.Map;
 
 public class XmlInformation {
 
-    private Map<String, String> singleProperties;
-    private Map<String, ? extends List<String>> repeatedProperties;
+    private Map<String, String> properties;
     private Map<String, ? extends List<XmlInformation>> informationLists;
 
-    public XmlInformation(Map<String, String> singleProperties, Map<String, ? extends List<String>> repeatedProperties,
+    public XmlInformation(Map<String, String> properties,
             Map<String, ? extends List<XmlInformation>> informationLists) {
-        if (singleProperties != null)
-            this.singleProperties = singleProperties;
+        if (properties != null)
+            this.properties = properties;
         else
-            this.singleProperties = new HashMap<String, String>();
-
-        if (repeatedProperties != null)
-            this.repeatedProperties = repeatedProperties;
-        else
-            this.repeatedProperties = new HashMap<String, List<String>>();
+            this.properties = new HashMap<String, String>();
 
         if (informationLists != null)
             this.informationLists = informationLists;
@@ -28,12 +22,8 @@ public class XmlInformation {
             this.informationLists = new HashMap<String, List<XmlInformation>>();
     }
 
-    public Map<String, String> getSingleProperties() {
-        return singleProperties;
-    }
-
-    public Map<String, ? extends List<String>> getRepeatedProperties() {
-        return repeatedProperties;
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     public Map<String, ? extends List<XmlInformation>> getInformationLists() {
