@@ -199,15 +199,15 @@ public class ResponseBuilder {
 
         if (parameters != null) {
             IcatQueryResults result = getIcatRecords(parameters, false);
+            String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
 
-            if (result.getResults().isEmpty()) {
+            if (dataConfigurationIdentifier != null && result.getResults().isEmpty()) {
                 res.addError("idDoesNotExist",
                         "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
             } else {
                 boolean listAllMetadataFormats = true;
                 DataConfiguration dataConfiguration = null;
 
-                String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
                 if (dataConfigurationIdentifier != null) {
                     listAllMetadataFormats = false;
                     dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
