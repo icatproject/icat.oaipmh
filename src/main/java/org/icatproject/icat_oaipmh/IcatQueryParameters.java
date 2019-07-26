@@ -14,7 +14,8 @@ public class IcatQueryParameters {
     private static String identifierPrefix;
 
     private String metadataPrefix;
-    private int offset;
+    private String lastDataConfiguration;
+    private String lastId;
     private String from;
     private String until;
     private String fromTime;
@@ -22,17 +23,19 @@ public class IcatQueryParameters {
     private String identifierDataConfiguration;
     private String identifierId;
 
-    public IcatQueryParameters(String metadataPrefix, int offset, String from, String until, String identifier,
+    public IcatQueryParameters(String metadataPrefix, String from, String until, String uniqueIdentifier,
             Set<String> dataConfigurations) throws InternalException {
         this.metadataPrefix = metadataPrefix;
-        this.offset = offset;
+
+        this.lastDataConfiguration = null;
+        this.lastId = null;
 
         this.from = from;
         this.until = until;
         this.setFromUntilTimes();
 
-        if (identifier != null) {
-            String[] identifierParts = identifier.split(":");
+        if (uniqueIdentifier != null) {
+            String[] identifierParts = uniqueIdentifier.split(":");
 
             if (identifierParts.length != 3)
                 throw new InternalException();
@@ -40,27 +43,29 @@ public class IcatQueryParameters {
             if (!identifierParts[0].equals("oai") || !identifierParts[1].equals(identifierPrefix))
                 throw new InternalException();
 
-            String[] identifierItemPart = identifierParts[2].split("/");
+            IcatQueryIdentifier identifier = parseIdentifier(identifierParts[2]);
+            this.identifierDataConfiguration = identifier.getDataConfiguration();
+            this.identifierId = identifier.getId();
 
-            if (identifierItemPart.length != 2)
+            if (!dataConfigurations.contains(this.identifierDataConfiguration))
                 throw new InternalException();
-
-            if (!dataConfigurations.contains(identifierItemPart[0]))
-                throw new InternalException();
-
-            this.identifierDataConfiguration = identifierItemPart[0];
-            this.identifierId = identifierItemPart[1];
         }
     }
 
-    public IcatQueryParameters(String resumptionToken) throws InternalException {
+    public IcatQueryParameters(String resumptionToken, Set<String> dataConfigurations) throws InternalException {
         String[] token = resumptionToken.split(",");
 
         if (token.length != 4)
             throw new InternalException();
 
         this.metadataPrefix = token[0];
-        this.offset = Integer.parseInt(token[1]);
+
+        IcatQueryIdentifier last = parseIdentifier(token[1]);
+        this.lastDataConfiguration = last.getDataConfiguration();
+        this.lastId = last.getId();
+
+        if (!dataConfigurations.contains(this.lastDataConfiguration))
+            throw new InternalException();
 
         this.from = token[2].equals("null") ? null : token[2];
         this.until = token[3].equals("null") ? null : token[3];
@@ -91,29 +96,39 @@ public class IcatQueryParameters {
         }
     }
 
-    public String makeResumptionToken() {
-        Integer offset = this.offset + maxResults;
-        if (until == null)
-            until = formatDateTime(OffsetDateTime.now().withNano(0));
-        return String.join(",", metadataPrefix, offset.toString(), from, until);
+    private IcatQueryIdentifier parseIdentifier(String identifier) throws InternalException {
+        String[] identifierItemPart = identifier.split("/");
+
+        try {
+            return new IcatQueryIdentifier(identifierItemPart[0], identifierItemPart[1]);
+        } catch (IndexOutOfBoundsException e) {
+            throw new InternalException();
+        }
     }
 
-    public String makeWhereCondition() {
+    public String makeResumptionToken(String newLastDataConfiguration, String newLastId) {
+        String lastIdentifier = String.format("%s/%s", newLastDataConfiguration, newLastId);
+        if (until == null)
+            until = formatDateTime(OffsetDateTime.now().withNano(0));
+        return String.join(",", metadataPrefix, lastIdentifier, from, until);
+    }
+
+    public String makeWhereCondition(String dataConfiguration) {
         ArrayList<String> constraints = new ArrayList<String>();
-        if (fromTime != null) {
+        if (lastId != null && dataConfiguration.equals(lastDataConfiguration))
+            constraints.add(String.format("a.id > %s", lastId));
+        if (fromTime != null)
             constraints.add(String.format("a.modTime >= '%s'", fromTime));
-        }
-        if (untilTime != null) {
+        if (untilTime != null)
             constraints.add(String.format("a.modTime <= '%s'", untilTime));
-        }
         if (identifierId != null)
             constraints.add(String.format("a.id = %s", identifierId));
 
         return constraints.isEmpty() ? "" : String.format("WHERE %s", String.join(" AND ", constraints));
     }
 
-    public static String makeUniqueIdentifier(String config, String id) {
-        return String.format("oai:%s:%s/%s", identifierPrefix, config, id);
+    public static String makeUniqueIdentifier(String dataConfiguration, String id) {
+        return String.format("oai:%s:%s/%s", identifierPrefix, dataConfiguration, id);
     }
 
     public static String makeFormattedDateTime(String dateTime) {
@@ -134,19 +149,19 @@ public class IcatQueryParameters {
         IcatQueryParameters.identifierPrefix = identifierPrefix;
     }
 
-    public String getMetadataPrefix() {
-        return metadataPrefix;
-    }
-
     public int getMaxResults() {
         return maxResults;
     }
 
-    public int getOffset() {
-        return offset;
+    public String getMetadataPrefix() {
+        return metadataPrefix;
     }
 
-    public String GetIdentifierDataConfiguration() {
+    public String getLastDataConfiguration() {
+        return lastDataConfiguration;
+    }
+
+    public String getIdentifierDataConfiguration() {
         return identifierDataConfiguration;
     }
 }

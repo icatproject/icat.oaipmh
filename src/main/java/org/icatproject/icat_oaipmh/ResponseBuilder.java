@@ -154,7 +154,9 @@ public class ResponseBuilder {
                 listIdentifiers = res.addRecordInformation(results.getResults(), "ListIdentifiers", false);
 
                 if (results.getIncomplete()) {
-                    String resumptionToken = parameters.makeResumptionToken();
+                    String lastDataConfiguration = results.getLastDataConfiguration();
+                    String lastId = results.getLastId();
+                    String resumptionToken = parameters.makeResumptionToken(lastDataConfiguration, lastId);
                     res.addResumptionToken(listIdentifiers, resumptionToken);
                 } else {
                     res.addResumptionToken(listIdentifiers, "");
@@ -177,7 +179,9 @@ public class ResponseBuilder {
                 listRecords = res.addRecordInformation(results.getResults(), "ListRecords", true);
 
                 if (results.getIncomplete()) {
-                    String resumptionToken = parameters.makeResumptionToken();
+                    String lastDataConfiguration = results.getLastDataConfiguration();
+                    String lastId = results.getLastId();
+                    String resumptionToken = parameters.makeResumptionToken(lastDataConfiguration, lastId);
                     res.addResumptionToken(listRecords, resumptionToken);
                 } else {
                     res.addResumptionToken(listRecords, "");
@@ -203,7 +207,7 @@ public class ResponseBuilder {
                 boolean listAllMetadataFormats = true;
                 DataConfiguration dataConfiguration = null;
 
-                String dataConfigurationIdentifier = parameters.GetIdentifierDataConfiguration();
+                String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
                 if (dataConfigurationIdentifier != null) {
                     listAllMetadataFormats = false;
                     dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
@@ -238,7 +242,7 @@ public class ResponseBuilder {
 
         if (parameters != null) {
             String metadataPrefix = parameters.getMetadataPrefix();
-            String dataConfigurationIdentifier = parameters.GetIdentifierDataConfiguration();
+            String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
             DataConfiguration dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
 
             if (!dataConfiguration.getMetadataPrefixes().contains(metadataPrefix)) {
@@ -263,7 +267,7 @@ public class ResponseBuilder {
         String resumptionToken = req.getParameter("resumptionToken");
         if (resumptionToken != null) {
             try {
-                parameters = new IcatQueryParameters(resumptionToken);
+                parameters = new IcatQueryParameters(resumptionToken, dataConfigurations.keySet());
             } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
             } catch (InternalException e) {
@@ -277,7 +281,7 @@ public class ResponseBuilder {
             String from = req.getParameter("from");
             String until = req.getParameter("until");
             try {
-                parameters = new IcatQueryParameters(metadataPrefix, 0, from, until, identifier,
+                parameters = new IcatQueryParameters(metadataPrefix, from, until, identifier,
                         dataConfigurations.keySet());
             } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
@@ -293,58 +297,90 @@ public class ResponseBuilder {
     public IcatQueryResults getIcatRecords(IcatQueryParameters parameters, boolean includeMetadata)
             throws InternalException {
         List<RecordInformation> records = new ArrayList<RecordInformation>();
+        boolean incomplete = false;
+        String lastDataConfiguration = null;
+        String lastId = null;
+
+        int remainingResults = parameters.getMaxResults();
+        boolean skipPreviousDataConfigurations = (parameters.getLastDataConfiguration() != null);
 
         for (Map.Entry<String, DataConfiguration> config : dataConfigurations.entrySet()) {
             String dataConfigurationIdentifier = config.getKey();
             DataConfiguration dataConfiguration = config.getValue();
+            incomplete = true;
 
-            if (parameters.GetIdentifierDataConfiguration() != null)
-                if (!parameters.GetIdentifierDataConfiguration().equals(dataConfigurationIdentifier))
+            // if the harvester requested a specific item,
+            // skip data configurations which don't match with this item
+            if (parameters.getIdentifierDataConfiguration() != null)
+                if (!parameters.getIdentifierDataConfiguration().equals(dataConfigurationIdentifier))
                     continue;
 
+            // if the harvester requested a specific metadataPrefix,
+            // skip data configurations which don't support this metadataPrefix
             if (parameters.getMetadataPrefix() != null)
                 if (!dataConfiguration.getMetadataPrefixes().contains(parameters.getMetadataPrefix()))
                     continue;
 
+            // if the harvester used a resumptionToken,
+            // skip data configurations which come before the 'lastDataConfiguration'
+            // as specified in the resumptionToken
+            if (skipPreviousDataConfigurations) {
+                if (parameters.getLastDataConfiguration().equals(dataConfigurationIdentifier))
+                    skipPreviousDataConfigurations = false;
+                else
+                    continue;
+            }
+
             String mainObject = dataConfiguration.getMainObject();
             String includes = dataConfiguration.getIncludedObjects();
-            String where = parameters.makeWhereCondition();
-            String query = String.format("SELECT a FROM %s a %s ORDER BY a.modTime %s", mainObject, where, includes);
+            String where = parameters.makeWhereCondition(dataConfigurationIdentifier);
+            Integer queryLimit = new Integer(remainingResults + 1);
+            String query = String.format("SELECT a FROM %s a %s ORDER BY a.id LIMIT 0,%s %s", mainObject, where,
+                    queryLimit, includes);
 
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));
             JsonArray resultsArray = jsonReader.readArray();
             jsonReader.close();
 
-            for (JsonValue data : resultsArray) {
+            if (resultsArray.isEmpty()) {
+                incomplete = false;
+                continue;
+            }
+
+            int resultsArrayLimit = resultsArray.size();
+            if (queryLimit.equals(resultsArray.size()))
+                resultsArrayLimit--;
+            else
+                incomplete = false;
+
+            if (incomplete && remainingResults <= 0)
+                break;
+
+            RequestedProperties requestedProperties = dataConfiguration.getRequestedProperties();
+
+            for (JsonValue data : resultsArray.subList(0, resultsArrayLimit)) {
                 XmlInformation header = extractHeaderInformation(data, dataConfigurationIdentifier,
-                        dataConfiguration.getRequestedProperties());
+                        requestedProperties);
 
                 XmlInformation metadata = null;
                 if (includeMetadata)
-                    metadata = extractMetadataInformation(data, dataConfigurationIdentifier,
-                            dataConfiguration.getRequestedProperties()).get(0);
+                    metadata = extractMetadataInformation(data, dataConfigurationIdentifier, requestedProperties)
+                            .get(0);
 
                 records.add(new RecordInformation(dataConfigurationIdentifier, header, metadata));
             }
+
+            JsonObject lastResult = resultsArray.getJsonObject(resultsArrayLimit - 1);
+            lastId = lastResult.getJsonObject(requestedProperties.getIcatObject()).get("id").toString();
+            lastDataConfiguration = dataConfigurationIdentifier;
+
+            remainingResults -= resultsArrayLimit;
+            if (incomplete && remainingResults <= 0)
+                break;
         }
 
-        boolean incomplete = false;
-        List<RecordInformation> results = null;
-        try {
-            results = records.subList(parameters.getOffset(), records.size());
-        } catch (IllegalArgumentException e) {
-            throw new InternalException();
-        }
-        if (results.size() > parameters.getMaxResults()) {
-            incomplete = true;
-            int limit = parameters.getMaxResults();
-            if (limit > results.size())
-                limit = results.size();
-            results = results.subList(0, limit);
-        }
-
-        return new IcatQueryResults(results, incomplete);
+        return new IcatQueryResults(records, incomplete, lastDataConfiguration, lastId);
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
