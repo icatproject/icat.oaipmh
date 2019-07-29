@@ -144,7 +144,7 @@
 				DateTimeFormatter</a>.
 		</dd>
 		<dd>
-			Example values: <b>"yyyy-MM-dd HH:mm:ss"</b> or <b>"MM/dd/yyyy HH:mm.ss"</b>
+			Example values: <b>"yyyy-MM-dd HH:mm:ss Z"</b> or <b>"MM/dd/yyyy HH:mm.ss Z"</b>
 		</dd>
 		<dd>
 			This will be used to format date/time values when querying ICAT
@@ -165,11 +165,21 @@
 			match with the way date/time values are stored in your ICAT.
 		</dd>
 		<dd>
-			For example, if a harvester requests the records from 2018-08-31 07:45:20 (UTC),
-			<code>icatDateTimeFormat</code> is set to <b>"MM/dd/yyyy HH:mm.ss"</b>, and
-			<code>icatDateTimeZone</code> is set to <b>"+02:00"</b>,
-			the query sent to ICAT by icat.oaipmh would use the following condition:
-			<b>"WHERE a.modTime >= '08/31/2018 09:45.20'"</b>.
+			For example, when a harvester requests the records from 2018-08-31 07:45:20 (UTC),
+			<ul>
+				<li>
+					if <code>icatDateTimeFormat</code> is set to <b>"MM/dd/yyyy HH:mm.ss Z"</b>,
+					and <code>icatDateTimeZone</code> is set to <b>"+02:00"</b>,
+					the query sent to ICAT by icat.oaipmh would use the following condition: <br />
+					<b>"WHERE a.modTime >= '08/31/2018 09:45.20 +0200'"</b>.
+				</li>
+				<li>
+					if <code>icatDateTimeFormat</code> is set to <b>"yyyy-MM-dd HH:mm:ss Z"</b>,
+					and <code>icatDateTimeZone</code> is set to <b>"Z"</b>,
+					the query sent to ICAT by icat.oaipmh would use the following condition: <br />
+					<b>"WHERE a.modTime >= '2018-08-31 07:45:20 +0000'"</b>.
+				</li>
+			</ul>
 		</dd>
 		<dt>metadataPrefixes</dt>
 		<dd>

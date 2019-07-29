@@ -18,7 +18,7 @@
 !maxResults = 50
 
 # The date/time format used when querying ICAT
-!icatDateTimeFormat = yyyy-MM-dd HH:mm:ss
+!icatDateTimeFormat = yyyy-MM-dd HH:mm:ss Z
 
 # The time zone used when querying ICAT
 !icatDateTimeZone = Z
