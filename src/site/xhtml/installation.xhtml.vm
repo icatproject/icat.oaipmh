@@ -86,6 +86,12 @@
 
 
 	<h2>The run.properties file</h2>
+	<p>
+		<b>Note:</b> When you are using non-ASCII characters for one or more properties
+		(e.g. for the <code>repositoryName</code>), the <code>run.properties</code> file must
+		either be encoded as ISO 8859-1 (Latin-1), or non-ASCII characters must be represented
+		using Unicode escapes (e.g. <code>\u00fc</code> for the character <code>&uuml;</code>).
+	</p>
 	<dl>
 		<dt>icat.url</dt>
 		<dd>
