@@ -16,15 +16,19 @@ public class MetadataFormat {
 
     private Templates template;
 
-    public MetadataFormat(String metadataXslt, String metadataNamespace, String metadataSchema)
-            throws FileNotFoundException, TransformerConfigurationException {
+    public MetadataFormat(String metadataXslt, String metadataNamespace, String metadataSchema, boolean responseDebug)
+            throws FileNotFoundException, SecurityException, TransformerConfigurationException {
         this.metadataXslt = metadataXslt;
         this.metadataNamespace = metadataNamespace;
         this.metadataSchema = metadataSchema;
 
-        TransformerFactory factory = TransformerFactory.newInstance();
-        StreamSource xsl = new StreamSource(new FileInputStream(metadataXslt));
-        this.template = factory.newTemplates(xsl);
+        if (responseDebug) {
+            this.template = null;
+        } else {
+            TransformerFactory factory = TransformerFactory.newInstance();
+            StreamSource xsl = new StreamSource(new FileInputStream(metadataXslt));
+            this.template = factory.newTemplates(xsl);
+        }
     }
 
     public String getMetadataXslt() {

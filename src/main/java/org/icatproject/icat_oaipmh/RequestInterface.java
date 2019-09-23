@@ -81,7 +81,8 @@ public class RequestInterface {
 			String[] metadataFormats = props.getString("metadataPrefixes").split("\\s+");
 			for (String identifier : metadataFormats) {
 				MetadataFormat metadataFormat = new MetadataFormat(props.getString(identifier + ".xslt"),
-						props.getString(identifier + ".namespace"), props.getString(identifier + ".schema"));
+						props.getString(identifier + ".namespace"), props.getString(identifier + ".schema"),
+						responseDebug);
 				bean.registerMetadataFormat(identifier, metadataFormat);
 			}
 
@@ -102,7 +103,7 @@ public class RequestInterface {
 						requestedProperties);
 				bean.registerDataConfiguration(identifier, dataConfiguration);
 			}
-		} catch (CheckedPropertyException | FileNotFoundException | NumberFormatException
+		} catch (CheckedPropertyException | FileNotFoundException | SecurityException | NumberFormatException
 				| TransformerConfigurationException | URISyntaxException e) {
 			logger.error(fatal, e.getMessage());
 			throw new IllegalStateException(e.getMessage());

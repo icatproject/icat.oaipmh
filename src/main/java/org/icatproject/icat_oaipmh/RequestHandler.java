@@ -77,11 +77,11 @@ public class RequestHandler {
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
             template = getMetadataTemplate(req, res);
-            if (template != null)
+            if (template != null || responseDebug)
                 rb.buildListIdentifiersResponse(req, res);
         }
 
-        return res.transformXml(responseDebug ? null : template);
+        return res.transformXml(template);
     }
 
     private String handleListRecords(HttpServletRequest req, XmlResponse res, Templates template)
@@ -91,11 +91,11 @@ public class RequestHandler {
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
             template = getMetadataTemplate(req, res);
-            if (template != null)
+            if (template != null || responseDebug)
                 rb.buildListRecordsResponse(req, res);
         }
 
-        return res.transformXml(responseDebug ? null : template);
+        return res.transformXml(template);
     }
 
     private String handleListSets(HttpServletRequest req, XmlResponse res, Templates template)
@@ -129,11 +129,11 @@ public class RequestHandler {
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
             template = getMetadataTemplate(req, res);
-            if (template != null)
+            if (template != null || responseDebug)
                 rb.buildGetRecordResponse(req, res);
         }
 
-        return res.transformXml(responseDebug ? null : template);
+        return res.transformXml(template);
     }
 
     private String handleIllegalVerb(HttpServletRequest req, XmlResponse res, Templates template)
@@ -199,10 +199,12 @@ public class RequestHandler {
     private Templates getMetadataTemplate(HttpServletRequest req, XmlResponse res) {
         String metadataPrefix = getMetadataPrefix(req);
         MetadataFormat metadataFormat = rb.getMetadataFormats().get(metadataPrefix);
-        if (metadataFormat != null)
+        if (metadataFormat != null) {
             return metadataFormat.getTemplate();
-        res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
-        return null;
+        } else {
+            res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
+            return null;
+        }
     }
 
     private String getMetadataPrefix(HttpServletRequest req) {
