@@ -1,0 +1,4 @@
+*.war
+setup*
+run*
+logback.xml

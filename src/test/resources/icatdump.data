@@ -1,0 +1,389 @@
+1.0
+
+User(createId:0,createTime:1,modId:2,modTime:3,email:4,fullName:5,name:6,orcidId:7)
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"Aelius Cordus","db/acord",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"Arnold Hau","db/ahau",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"Jean-Baptiste Botul","db/jbotu",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"John Doe","db/jdoe",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"Nicolas Bourbaki","db/nbour",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"Rudolph Beck-Dülmen","db/rbeck",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"IDS reader","simple/idsreader",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"Root","simple/root",NULL
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,NULL,"User Office","simple/useroffice",NULL
+
+Grouping(createId:0,createTime:1,modId:2,modTime:3,name:4)
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_owner"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_reader"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_writer"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_owner"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_reader"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_writer"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_12100409-ST_owner"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_12100409-ST_reader"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_12100409-ST_writer"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"rall"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"scientific_staff"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"useroffice"
+
+UserGroup(createId:0,createTime:1,modId:2,modTime:3,grouping(name:4),user(name:5))
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_owner","db/jbotu"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_reader","db/jdoe"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_writer","db/jbotu"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_writer","db/rbeck"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_08100122-EF_writer","db/nbour"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_owner","db/ahau"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_reader","db/nbour"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_reader","db/jbotu"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_reader","db/jdoe"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_10100601-ST_writer","db/ahau"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_12100409-ST_owner","db/nbour"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_12100409-ST_reader","db/rbeck"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"investigation_12100409-ST_writer","db/nbour"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"rall","simple/idsreader"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"scientific_staff","db/acord"
+"simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"useroffice","simple/useroffice"
+
+Rule(?:0,createId:1,createTime:2,modId:3,modTime:4,crudFlags:5,grouping(name:6),what:7)
+"313","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"Application"
+"314","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"CRUD",NULL,"DataCollection [createId=:user]"
+"315","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"CRUD",NULL,"DataCollectionDatafile <-> DataCollection [createId=:user]"
+"316","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"CRUD",NULL,"DataCollectionDataset <-> DataCollection [createId=:user]"
+"317","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"CRUD",NULL,"DataCollectionParameter <-> DataCollection [createId=:user]"
+"318","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"DatafileFormat"
+"319","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"DatasetType"
+"320","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"Facility"
+"321","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"FacilityCycle"
+"322","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"Grouping <-> UserGroup <-> User [name=:user]"
+"323","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"Instrument"
+"324","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"InvestigationType"
+"325","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"CRUD",NULL,"Job [createId=:user]"
+"326","simple/root",2018-07-24T10:24:01.000+00:00,"simple/root",2018-07-24T10:24:01.000+00:00,"R",NULL,"ParameterType"
+"327","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"PermissibleStringValue"
+"328","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CRUD",NULL,"RelatedDatafile [createId=:user]"
+"329","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Datafile o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN ds.type AS s1 WHERE i.releaseDate < CURRENT_TIMESTAMP AND s1.name = 'raw'"
+"330","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM Datafile o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE ds.complete = False AND s4.name = :user AND s1.role = 'writer'"
+"331","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Datafile o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"332","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM Datafile o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE ds.complete = False AND s4.name = :user"
+"333","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Datafile o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"334","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM DatafileParameter o JOIN o.datafile AS s1 JOIN s1.dataset AS s2 JOIN s2.investigation AS s3 JOIN s3.investigationGroups AS s4 JOIN s4.grouping AS s5 JOIN s5.userGroups AS s6 JOIN s6.user AS s7 WHERE s7.name = :user"
+"335","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM DatafileParameter o JOIN o.datafile AS s1 JOIN s1.dataset AS s2 JOIN s2.investigation AS s3 JOIN s3.investigationGroups AS s4 JOIN s4.grouping AS s5 JOIN s5.userGroups AS s6 JOIN s6.user AS s7 WHERE s7.name = :user AND s4.role = 'writer'"
+"336","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM DatafileParameter o JOIN o.datafile AS s1 JOIN s1.dataset AS s2 JOIN s2.investigation AS s3 JOIN s3.investigationInstruments AS s4 JOIN s4.instrument AS s5 JOIN s5.instrumentScientists AS s6 JOIN s6.user AS s7 WHERE s7.name = :user"
+"337","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM DatafileParameter o JOIN o.datafile AS s1 JOIN s1.dataset AS s2 JOIN s2.investigation AS s3 JOIN s3.investigationInstruments AS s4 JOIN s4.instrument AS s5 JOIN s5.instrumentScientists AS s6 JOIN s6.user AS s7 WHERE s7.name = :user"
+"338","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM Dataset o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE o.complete = False AND s4.name = :user AND s1.role = 'writer'"
+"339","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Dataset o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"340","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM Dataset o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE o.complete = False AND s4.name = :user"
+"341","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Dataset o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"342","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Dataset o JOIN o.investigation AS i JOIN o.type AS t WHERE i.releaseDate < CURRENT_TIMESTAMP AND t.name = 'raw'"
+"343","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM DatasetParameter o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"344","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM DatasetParameter o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user AND s1.role = 'writer'"
+"345","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM DatasetParameter o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"346","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM DatasetParameter o JOIN o.dataset AS ds JOIN ds.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"347","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Grouping o JOIN o.investigationGroups AS ig JOIN ig.investigation AS s1 JOIN s1.investigationGroups AS s2 JOIN s2.grouping AS s3 JOIN s3.userGroups AS s4 JOIN s4.user AS s5 WHERE s5.name = :user AND s2.role = 'owner'"
+"348","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Investigation o JOIN o.investigationGroups AS ig JOIN ig.grouping AS s1 JOIN s1.userGroups AS s2 JOIN s2.user AS s3 WHERE s3.name = :user"
+"349","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Investigation o JOIN o.investigationInstruments AS ii JOIN ii.instrument AS s1 JOIN s1.instrumentScientists AS s2 JOIN s2.user AS s3 WHERE s3.name = :user"
+"350","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Investigation o WHERE o.releaseDate < CURRENT_TIMESTAMP"
+"351","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM InvestigationParameter o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"352","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM InvestigationParameter o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user AND s1.role = 'writer'"
+"353","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM InvestigationParameter o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"354","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM InvestigationParameter o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"355","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Keyword o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"356","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Keyword o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"357","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Publication o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"358","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Publication o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"359","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Sample o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"360","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM Sample o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user AND s1.role = 'writer'"
+"361","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM Sample o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"362","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM Sample o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"363","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM SampleParameter o JOIN o.sample AS s1 JOIN s1.investigation AS s2 JOIN s2.investigationGroups AS s3 JOIN s3.grouping AS s4 JOIN s4.userGroups AS s5 JOIN s5.user AS s6 WHERE s6.name = :user"
+"364","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM SampleParameter o JOIN o.sample AS s1 JOIN s1.investigation AS s2 JOIN s2.investigationGroups AS s3 JOIN s3.grouping AS s4 JOIN s4.userGroups AS s5 JOIN s5.user AS s6 WHERE s6.name = :user AND s3.role = 'writer'"
+"365","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"CUD",NULL,"SELECT o FROM SampleParameter o JOIN o.sample AS s1 JOIN s1.investigation AS s2 JOIN s2.investigationInstruments AS s3 JOIN s3.instrument AS s4 JOIN s4.instrumentScientists AS s5 JOIN s5.user AS s6 WHERE s6.name = :user"
+"366","simple/root",2018-07-24T10:24:02.000+00:00,"simple/root",2018-07-24T10:24:02.000+00:00,"R",NULL,"SELECT o FROM SampleParameter o JOIN o.sample AS s1 JOIN s1.investigation AS s2 JOIN s2.investigationInstruments AS s3 JOIN s3.instrument AS s4 JOIN s4.instrumentScientists AS s5 JOIN s5.user AS s6 WHERE s6.name = :user"
+"367","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R",NULL,"SELECT o FROM Shift o JOIN o.investigation AS i JOIN i.investigationGroups AS s1 JOIN s1.grouping AS s2 JOIN s2.userGroups AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"368","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R",NULL,"SELECT o FROM Shift o JOIN o.investigation AS i JOIN i.investigationInstruments AS s1 JOIN s1.instrument AS s2 JOIN s2.instrumentScientists AS s3 JOIN s3.user AS s4 WHERE s4.name = :user"
+"369","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD",NULL,"SELECT o FROM UserGroup o JOIN o.grouping AS g JOIN g.investigationGroups AS s1 JOIN s1.investigation AS s2 JOIN s2.investigationGroups AS s3 JOIN s3.grouping AS s4 JOIN s4.userGroups AS s5 JOIN s5.user AS s6 WHERE s6.name = :user AND s3.role = 'owner' AND s1.role in ('reader', 'writer')"
+"370","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CR",NULL,"SampleType"
+"371","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R",NULL,"Study <-> User [name=:user]"
+"372","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R",NULL,"User"
+"373","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","DataCollection"
+"374","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","DataCollectionDatafile"
+"375","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","DataCollectionDataset"
+"376","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","DataCollectionParameter"
+"377","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Datafile"
+"378","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","DatafileParameter"
+"379","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Dataset"
+"380","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","DatasetParameter"
+"381","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Grouping"
+"382","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","InstrumentScientist"
+"383","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Investigation"
+"384","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","InvestigationGroup"
+"385","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","InvestigationInstrument"
+"386","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","InvestigationParameter"
+"387","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","InvestigationUser"
+"388","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Job"
+"389","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Keyword"
+"390","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","PublicStep"
+"391","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Publication"
+"392","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","RelatedDatafile"
+"393","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Rule"
+"394","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Sample"
+"395","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","SampleParameter"
+"396","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Shift"
+"397","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","Study"
+"398","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","StudyInvestigation"
+"399","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"R","rall","UserGroup"
+"400","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"RU","scientific_staff","Sample"
+"401","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"UD","scientific_staff","SampleType"
+"402","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD","useroffice","FacilityCycle"
+"403","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD","useroffice","Grouping"
+"404","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD","useroffice","InstrumentScientist"
+"405","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD","useroffice","Investigation"
+"406","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD","useroffice","InvestigationGroup"
+"407","simple/root",2018-07-24T10:24:03.000+00:00,"simple/root",2018-07-24T10:24:03.000+00:00,"CRUD","useroffice","InvestigationInstrument"
+"408","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","InvestigationParameter"
+"409","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","InvestigationUser"
+"410","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","Keyword"
+"411","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","Publication"
+"412","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","Shift"
+"413","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","Study"
+"414","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","StudyInvestigation"
+"415","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","User"
+"416","simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"CRUD","useroffice","UserGroup"
+
+PublicStep(createId:0,createTime:1,modId:2,modTime:3,field:4,origin:5)
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"dataCollectionDatafiles","DataCollection"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"dataCollectionDatasets","DataCollection"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"parameters","DataCollection"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"dataset","Datafile"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"parameters","Datafile"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"datafiles","Dataset"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"investigation","Dataset"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"parameters","Dataset"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"sample","Dataset"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"userGroups","Grouping"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"instrumentScientists","Instrument"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"grouping","InvestigationGroup"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"investigationGroups","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"investigationInstruments","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"investigationUsers","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"keywords","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"parameters","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"publications","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"samples","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"shifts","Investigation"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"inputDataCollection","Job"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"outputDataCollection","Job"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"parameters","Sample"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"studyInvestigations","Study"
+
+Facility(createId:0,createTime:1,modId:2,modTime:3,daysUntilRelease:4,description:5,fullName:6,name:7,url:8)
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,NULL,"ESNF is an example facility","Example Synchrotron and Neutron Facility","ESNF","http://www.esnf.example.org/"
+
+DatafileFormat(createId:0,createTime:1,modId:2,modTime:3,description:4,facility(name:5),name:6,type:7,version:8)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"Comma separated values","ESNF","CSV","text/csv","N/A"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"A common data format for neutron, x-ray and muon science","ESNF","NeXus","application/x-hdf","N/A"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"Plain text file","ESNF","Text","text/plain","N/A"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"XML document text","ESNF","XML","application/xml","N/A"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"Unknown file format","ESNF","other",NULL,"N/A"
+
+Application(createId:0,createTime:1,modId:2,modTime:3,facility(name:4),name:5,version:6)
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","gnomoanalytics","69"
+
+Instrument(createId:0,createTime:1,modId:2,modTime:3,description:4,facility(name:5),fullName:6,name:7,type:8,url:9)
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"A 3-dimensional part of the reciprocal space can be scanned in less then five steps by combining the \"off-plane Bragg-scattering\" and the flat-cone layer concept while using a new computer-controlled tilting axis of the detector bank.\n","ESNF","E2 - Flat-Cone Diffractometer","E2",NULL,NULL
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"The experimental station EDDI (Energy Dispersive Diffraction) is a fixed station at the 7T-MPW-EDDI beamline.  The beamline provides the direct white photon beam emitted by the 7T multipole wiggler and is operated in the energy-dispersive mode of diffraction.  For the experiments two diffractometers with Eularian cradle segments (GE Inspection Technologies) are at the disposal for light and heavy weight samples.  For the acquisition of the diffraction patterns as well as the fluorescence signals two Germanium solid state detectors (Canberra) are available.\n","ESNF","EDDI - Energy Dispersive Diffraction","EDDI",NULL,NULL
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"The system is designed for hard X-ray high kinetic energy photoelectron spectroscopy (HAXPES or HIKE) experiments in the excitation energy range from 2 keV to 12 keV with an optimized recorded kinetic energy range from 150 eV to 10000 eV.  The typical experiments running on the HIKE end station are investigations of bulk electronic properties - core levels and valence band, buried interfaces and x-ray standing waves.\n","ESNF","HIKE - High Kinetic Energy Photoelectron Spectroscopy","HIKE",NULL,NULL
+
+InvestigationType(createId:0,createTime:1,modId:2,modTime:3,description:4,facility(name:5),name:6)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,"ESNF","Calibration"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,"ESNF","Commercial experiment"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,"ESNF","Engineering"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,"ESNF","Experiment"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,"ESNF","Simulation"
+
+DatasetType(createId:0,createTime:1,modId:2,modTime:3,description:4,facility(name:5),name:6)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"data arising from the analysis of other data","ESNF","analyzed"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"data not belonging to any other category","ESNF","other"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"data collected from experiments on instruments","ESNF","raw"
+
+ParameterType(createId:0,createTime:1,modId:2,modTime:3,applicableToDataCollection:4,applicableToDatafile:5,applicableToDataset:6,applicableToInvestigation:7,applicableToSample:8,description:9,enforced:10,facility(name:11),maximumNumericValue:12,minimumNumericValue:13,name:14,units:15,unitsFullName:16,valueType:17,verified:18)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,true,true,true,true,true,NULL,false,"ESNF",NULL,NULL,"Comment","N/A",NULL,STRING,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,true,true,false,false,NULL,false,"ESNF",NULL,NULL,"Last access","N/A",NULL,DATE_AND_TIME,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,true,false,false,NULL,false,"ESNF",NULL,NULL,"Magnetic field","T","Tesla",NUMERIC,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,true,true,false,NULL,false,"ESNF",NULL,NULL,"Probe","N/A",NULL,STRING,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,true,false,false,NULL,false,"ESNF",NULL,NULL,"Reactor power","MW","Megawatt",NUMERIC,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,false,false,true,NULL,false,"ESNF",NULL,NULL,"Sample reference","N/A",NULL,STRING,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,true,false,false,NULL,false,"ESNF",NULL,NULL,"Sample temperature","C","Celsius",NUMERIC,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,true,false,false,NULL,false,"ESNF",NULL,NULL,"Sample temperature","K","Kelvin",NUMERIC,false
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,false,false,false,true,false,NULL,false,"ESNF",NULL,NULL,"Scoundrel","N/A",NULL,STRING,false
+
+SampleType(createId:0,createTime:1,modId:2,modTime:3,facility(name:4),molecularFormula:5,name:6,safetyInformation:7)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","C10H14","Durol SC",NULL
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","NiMnGa","NiMnGa",NULL
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","NiO","Nickel(II) oxide SC",NULL
+
+Investigation(createId:0,createTime:1,modId:2,modTime:3,doi:4,endDate:5,facility(name:6),name:7,releaseDate:8,startDate:9,summary:10,title:11,type(facility(name:12),name:13),visitId:14)
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,NULL,"ESNF","08100122-EF",NULL,2008-03-13T11:39:42.000+01:00,NULL,"Durol single crystal","ESNF","Experiment","1.1-P"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,NULL,2010-10-12T17:00:00.000+00:00,"ESNF","10100601-ST",NULL,2010-09-30T12:27:24.000+00:00,NULL,"Ni-Mn-Ga flat cone","ESNF","Experiment","1.1-N"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,2012-08-06T03:10:08.000+00:00,"ESNF","12100409-ST",NULL,2012-07-26T17:44:24.000+00:00,NULL,"NiO SC OF1 JUH HHL","ESNF","Experiment","1.1-P"
+
+Sample(createId:0,createTime:1,modId:2,modTime:3,investigation(facility(name:4),name:5,visitId:6),name:7,type(facility(name:8),molecularFormula:9,name:10))
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","Durol SC","ESNF","C10H14","Durol SC"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","NiMnGa 991027","ESNF","NiMnGa","NiMnGa"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","Nickel(II) oxide SC","ESNF","NiO","Nickel(II) oxide SC"
+
+Dataset(createId:0,createTime:1,modId:2,modTime:3,complete:4,description:5,doi:6,endDate:7,investigation(facility(name:8),name:9,visitId:10),location:11,name:12,sample(investigation(facility(name:13),name:14,visitId:15),name:16),startDate:17,type(facility(name:18),name:19))
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,false,NULL,NULL,NULL,"ESNF","08100122-EF","1.1-P",NULL,"e201215","ESNF","08100122-EF","1.1-P","Durol SC",2008-03-13T11:39:42.000+01:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,false,NULL,NULL,NULL,"ESNF","08100122-EF","1.1-P",NULL,"e201216","ESNF","08100122-EF","1.1-P","Durol SC",2008-03-20T08:20:00.000+01:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,false,NULL,NULL,2010-10-01T08:17:48.000+00:00,"ESNF","10100601-ST","1.1-N",NULL,"e208339","ESNF","10100601-ST","1.1-N","NiMnGa 991027",2010-09-30T12:27:24.000+00:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,false,NULL,NULL,2010-10-05T10:32:21.000+00:00,"ESNF","10100601-ST","1.1-N",NULL,"e208341","ESNF","10100601-ST","1.1-N","NiMnGa 991027",2010-10-02T04:00:21.000+00:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,false,NULL,NULL,2010-10-12T17:00:00.000+00:00,"ESNF","10100601-ST","1.1-N",NULL,"e208342","ESNF","10100601-ST","1.1-N","NiMnGa 991027",2010-10-09T07:00:00.000+00:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,false,NULL,NULL,2012-07-30T03:10:08.000+00:00,"ESNF","12100409-ST","1.1-P",NULL,"e208945","ESNF","12100409-ST","1.1-P","Nickel(II) oxide SC",2012-07-26T17:44:24.000+00:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,false,NULL,NULL,2012-08-06T03:10:08.000+00:00,"ESNF","12100409-ST","1.1-P",NULL,"e208946","ESNF","12100409-ST","1.1-P","Nickel(II) oxide SC",2012-08-02T07:30:00.000+00:00,"ESNF","raw"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,true,NULL,NULL,2012-07-16T16:30:17.000+00:00,"ESNF","12100409-ST","1.1-P",NULL,"e208947",NULL,NA,NA,NA,2012-07-16T13:42:05.000+00:00,"ESNF","analyzed"
+
+Datafile(createId:0,createTime:1,modId:2,modTime:3,checksum:4,datafileCreateTime:5,datafileFormat(facility(name:6),name:7,version:8),datafileModTime:9,dataset(investigation(facility(name:10),name:11,visitId:12),name:13),description:14,doi:15,fileSize:16,location:17,name:18)
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ac69460a",2008-06-18T09:31:11.000+00:00,"ESNF","NeXus","N/A",2008-06-18T09:31:11.000+00:00,"ESNF","08100122-EF","1.1-P","e201215",NULL,NULL,368369,NULL,"e201215.nxs"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"81c44870",2010-10-01T08:17:48.000+00:00,"ESNF","other","N/A",2010-10-01T08:17:48.000+00:00,"ESNF","10100601-ST","1.1-N","e208339",NULL,NULL,446,NULL,"e208339.dat"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"8b369ddc",2010-10-01T08:52:22.000+00:00,"ESNF","NeXus","N/A",2010-10-01T08:52:22.000+00:00,"ESNF","10100601-ST","1.1-N","e208339",NULL,NULL,73428,NULL,"e208339.nxs"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"284558f4",2010-10-05T10:32:21.000+00:00,"ESNF","other","N/A",2010-10-05T10:32:21.000+00:00,"ESNF","10100601-ST","1.1-N","e208341",NULL,NULL,394,NULL,"e208341.dat"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"7c72b4bc",2010-10-05T11:31:53.000+00:00,"ESNF","NeXus","N/A",2010-10-05T11:31:53.000+00:00,"ESNF","10100601-ST","1.1-N","e208341",NULL,NULL,52857,NULL,"e208341.nxs"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"7c72b4bc",2010-10-05T11:31:53.000+00:00,"ESNF","NeXus","N/A",2010-10-05T11:31:53.000+00:00,"ESNF","12100409-ST","1.1-P","e208945",NULL,NULL,52857,NULL,"e208341.nxs"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,2012-07-16T16:30:17.000+00:00,"ESNF","NeXus","N/A",2012-07-16T16:30:17.000+00:00,"ESNF","12100409-ST","1.1-P","e208945",NULL,NULL,28937,NULL,"e208945-2.nxs"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"bd55affa",2012-07-30T03:10:08.000+00:00,"ESNF","other","N/A",2012-07-30T03:10:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945",NULL,NULL,459,NULL,"e208945.dat"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"1db15f18",2013-06-03T12:22:43.000+00:00,"ESNF","NeXus","N/A",2013-06-03T12:22:43.000+00:00,"ESNF","12100409-ST","1.1-P","e208945",NULL,NULL,396430,NULL,"e208945.nxs"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,2012-07-16T16:30:17.000+00:00,"ESNF","NeXus","N/A",2012-07-16T16:30:17.000+00:00,"ESNF","12100409-ST","1.1-P","e208947",NULL,NULL,14965,NULL,"e208947.nxs"
+
+FacilityCycle(createId:0,createTime:1,modId:2,modTime:3,description:4,endDate:5,facility(name:6),name:7,startDate:8)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2007-08-15T00:00:00.000+00:00,"ESNF","071",2007-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2008-02-15T00:00:00.000+01:00,"ESNF","072",2007-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2008-08-15T00:00:00.000+00:00,"ESNF","081",2008-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2009-02-15T00:00:00.000+01:00,"ESNF","082",2008-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2009-08-15T00:00:00.000+00:00,"ESNF","091",2009-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2010-02-15T00:00:00.000+01:00,"ESNF","092",2009-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2010-08-15T00:00:00.000+00:00,"ESNF","101",2010-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2011-02-15T00:00:00.000+01:00,"ESNF","102",2010-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2011-08-15T00:00:00.000+00:00,"ESNF","111",2011-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2012-02-15T00:00:00.000+01:00,"ESNF","112",2011-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2012-08-15T00:00:00.000+00:00,"ESNF","121",2012-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,NULL,2013-02-15T00:00:00.000+01:00,"ESNF","122",2012-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2013-08-15T00:00:00.000+00:00,"ESNF","131",2013-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2014-02-15T00:00:00.000+01:00,"ESNF","132",2013-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2014-08-15T00:00:00.000+00:00,"ESNF","141",2014-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2015-02-15T00:00:00.000+01:00,"ESNF","142",2014-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2015-08-15T00:00:00.000+00:00,"ESNF","151",2015-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2016-02-15T00:00:00.000+01:00,"ESNF","152",2015-08-15T00:00:00.000+00:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2016-08-15T00:00:00.000+00:00,"ESNF","161",2016-02-15T00:00:00.000+01:00
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,2017-02-15T00:00:00.000+01:00,"ESNF","162",2016-08-15T00:00:00.000+00:00
+
+DataCollection(?:0,createId:1,createTime:2,modId:3,modTime:4,doi:5)
+"7","simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL
+"8","simple/root",2018-07-24T10:24:09.000+00:00,"simple/root",2018-07-24T10:24:09.000+00:00,NULL
+
+DataCollectionDatafile(createId:0,createTime:1,modId:2,modTime:3,dataCollection(?:4),datafile(dataset(investigation(facility(name:5),name:6,visitId:7),name:8),name:9))
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"7","ESNF","12100409-ST","1.1-P","e208945","e208945.nxs"
+"simple/root",2018-07-24T10:24:09.000+00:00,"simple/root",2018-07-24T10:24:09.000+00:00,"8","ESNF","12100409-ST","1.1-P","e208945","e208945-2.nxs"
+
+DataCollectionDataset(createId:0,createTime:1,modId:2,modTime:3,dataCollection(?:4),dataset(investigation(facility(name:5),name:6,visitId:7),name:8))
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"7","ESNF","10100601-ST","1.1-N","e208341"
+"simple/root",2018-07-24T10:24:09.000+00:00,"simple/root",2018-07-24T10:24:09.000+00:00,"8","ESNF","12100409-ST","1.1-P","e208947"
+
+DataCollectionParameter(createId:0,createTime:1,modId:2,modTime:3,dataCollection(?:4),dateTimeValue:5,error:6,numericValue:7,rangeBottom:8,rangeTop:9,stringValue:10,type(facility(name:11),name:12,units:13))
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"7",NULL,NULL,NULL,NULL,NULL,"Make a synthesis of 10100601-ST and 12100409-ST","ESNF","Comment","N/A"
+
+DatafileParameter(createId:0,createTime:1,modId:2,modTime:3,datafile(dataset(investigation(facility(name:4),name:5,visitId:6),name:7),name:8),dateTimeValue:9,error:10,numericValue:11,rangeBottom:12,rangeTop:13,stringValue:14,type(facility(name:15),name:16,units:17))
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","e201215","e201215.nxs",2008-06-18T09:31:11.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208339","e208339.dat",2010-10-01T08:51:56.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208339","e208339.nxs",2012-07-12T16:45:26.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208341","e208341.dat",2010-10-05T11:31:45.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208341","e208341.nxs",2012-07-16T16:12:08.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945","e208341.nxs",2014-10-02T14:32:51.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945","e208945-2.nxs",2014-10-02T14:32:51.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945","e208945.dat",2014-10-02T14:32:51.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945","e208945.nxs",2014-10-02T14:32:51.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208947","e208947.nxs",2012-07-17T09:28:18.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","Last access","N/A"
+
+DatasetParameter(createId:0,createTime:1,modId:2,modTime:3,dataset(investigation(facility(name:4),name:5,visitId:6),name:7),dateTimeValue:8,error:9,numericValue:10,rangeBottom:11,rangeTop:12,stringValue:13,type(facility(name:14),name:15,units:16))
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208339",NULL,NULL,5.0,NULL,NULL,NULL,"ESNF","Reactor power","MW"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208339",NULL,NULL,7.3,NULL,NULL,NULL,"ESNF","Magnetic field","T"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208341",NULL,NULL,2.7,NULL,NULL,NULL,"ESNF","Magnetic field","T"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","e208341",NULL,NULL,5.0,NULL,NULL,NULL,"ESNF","Reactor power","MW"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945",NULL,NULL,277.07,NULL,NULL,NULL,"ESNF","Sample temperature","K"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945",NULL,NULL,3.92,NULL,NULL,NULL,"ESNF","Sample temperature","C"
+
+InvestigationParameter(createId:0,createTime:1,modId:2,modTime:3,dateTimeValue:4,error:5,investigation(facility(name:6),name:7,visitId:8),numericValue:9,rangeBottom:10,rangeTop:11,stringValue:12,type(facility(name:13),name:14,units:15))
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,NULL,"ESNF","08100122-EF","1.1-P",NULL,NULL,NULL,"photon","ESNF","Probe","N/A"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,NULL,NULL,"ESNF","10100601-ST","1.1-N",NULL,NULL,NULL,"neutron","ESNF","Probe","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,NULL,"ESNF","12100409-ST","1.1-P",NULL,NULL,NULL,"photon","ESNF","Probe","N/A"
+
+Job(?:0,createId:1,createTime:2,modId:3,modTime:4,application(facility(name:5),name:6,version:7),arguments:8,inputDataCollection(?:9),outputDataCollection(?:10))
+"1","simple/root",2018-07-24T10:24:09.000+00:00,"simple/root",2018-07-24T10:24:09.000+00:00,"ESNF","gnomoanalytics","69",NULL,"7","8"
+
+Keyword(createId:0,createTime:1,modId:2,modTime:3,investigation(facility(name:4),name:5,visitId:6),name:7)
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","Durol"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","NiMnGa"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","Nickel"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","Gallium"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","Manganese"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","Nickel oxide"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","Nickel"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","NiO"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","oxide"
+
+PermissibleStringValue(createId:0,createTime:1,modId:2,modTime:3,type(facility(name:4),name:5,units:6),value:7)
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","Probe","N/A","neutron"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","Probe","N/A","muon"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","Probe","N/A","photon"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","Scoundrel","N/A","buono"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","Scoundrel","N/A","cattivo"
+"simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","Scoundrel","N/A","brutto"
+
+Publication(?:0,createId:1,createTime:2,modId:3,modTime:4,doi:5,fullReference:6,investigation(facility(name:7),name:8,visitId:9),repository:10,repositoryId:11,url:12)
+"3","simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"0.1002/adma.201101001","A. Hau.  Properties of NiMnGa.  Adv. Mater. 2011, 1","ESNF","10100601-ST","1.1-N",NULL,NULL,NULL
+
+RelatedDatafile(createId:0,createTime:1,modId:2,modTime:3,destDatafile(dataset(investigation(facility(name:4),name:5,visitId:6),name:7),name:8),relation:9,sourceDatafile(dataset(investigation(facility(name:10),name:11,visitId:12),name:13),name:14))
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","e208945","e208341.nxs","copy","ESNF","10100601-ST","1.1-N","e208341","e208341.nxs"
+
+SampleParameter(createId:0,createTime:1,modId:2,modTime:3,dateTimeValue:4,error:5,numericValue:6,rangeBottom:7,rangeTop:8,sample(investigation(facility(name:9),name:10,visitId:11),name:12),stringValue:13,type(facility(name:14),name:15,units:16))
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","10100601-ST","1.1-N","NiMnGa 991027","2046c9a7-ab07-4594-84a2-101617073a79","ESNF","Sample reference","N/A"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,NULL,NULL,NULL,NULL,"ESNF","12100409-ST","1.1-P","Nickel(II) oxide SC","c1b0a101-03aa-4d02-a1a2-e2826ba7871b","ESNF","Sample reference","N/A"
+
+Shift(createId:0,createTime:1,modId:2,modTime:3,comment:4,endDate:5,investigation(facility(name:6),name:7,visitId:8),startDate:9)
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"Beamtime at HIKE",2008-03-13T16:00:00.000+01:00,"ESNF","08100122-EF","1.1-P",2008-03-13T08:00:00.000+01:00
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"Beamtime at E2",2010-10-13T08:00:00.000+00:00,"ESNF","10100601-ST","1.1-N",2010-10-09T08:00:00.000+00:00
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"Beamtime at E2",2010-10-06T08:00:00.000+00:00,"ESNF","10100601-ST","1.1-N",2010-09-29T08:00:00.000+00:00
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"Beamtime at EDDI",2012-08-07T06:00:00.000+00:00,"ESNF","12100409-ST","1.1-P",2012-07-24T06:00:00.000+00:00
+
+Study(?:0,createId:1,createTime:2,modId:3,modTime:4,description:5,name:6,startDate:7,status:8,user(name:9))
+"4","simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,"12-008",2012-07-09T08:00:00.000+00:00,NULL,"db/nbour"
+
+InvestigationUser(createId:0,createTime:1,modId:2,modTime:3,investigation(facility(name:4),name:5,visitId:6),role:7,user(name:8))
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","Principal Investigator","db/jbotu"
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","Investigator","db/nbour"
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","Investigator","db/rbeck"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","10100601-ST","1.1-N","Principal Investigator","db/ahau"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","Principal Investigator","db/nbour"
+
+InvestigationGroup(createId:0,createTime:1,modId:2,modTime:3,grouping(name:4),investigation(facility(name:5),name:6,visitId:7),role:8)
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"investigation_08100122-EF_reader","ESNF","08100122-EF","1.1-P","reader"
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"investigation_08100122-EF_writer","ESNF","08100122-EF","1.1-P","writer"
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"investigation_08100122-EF_owner","ESNF","08100122-EF","1.1-P","owner"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"investigation_10100601-ST_writer","ESNF","10100601-ST","1.1-N","writer"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"investigation_10100601-ST_reader","ESNF","10100601-ST","1.1-N","reader"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"investigation_10100601-ST_owner","ESNF","10100601-ST","1.1-N","owner"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"investigation_12100409-ST_writer","ESNF","12100409-ST","1.1-P","writer"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"investigation_12100409-ST_owner","ESNF","12100409-ST","1.1-P","owner"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"investigation_12100409-ST_reader","ESNF","12100409-ST","1.1-P","reader"
+
+StudyInvestigation(createId:0,createTime:1,modId:2,modTime:3,investigation(facility(name:4),name:5,visitId:6),study(?:7))
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","12100409-ST","1.1-P","4"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","10100601-ST","1.1-N","4"
+
+InvestigationInstrument(createId:0,createTime:1,modId:2,modTime:3,instrument(facility(name:4),name:5),investigation(facility(name:6),name:7,visitId:8))
+"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","HIKE","ESNF","08100122-EF","1.1-P"
+"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,"ESNF","E2","ESNF","10100601-ST","1.1-N"
+"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,"ESNF","EDDI","ESNF","12100409-ST","1.1-P"
+
+InstrumentScientist(createId:0,createTime:1,modId:2,modTime:3,instrument(facility(name:4),name:5),user(name:6))
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"ESNF","E2","db/acord"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"ESNF","EDDI","db/acord"
+"simple/root",2018-07-24T10:24:04.000+00:00,"simple/root",2018-07-24T10:24:04.000+00:00,"ESNF","HIKE","db/acord"
