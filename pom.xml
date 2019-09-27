@@ -22,7 +22,7 @@
 	<repositories>
 		<repository>
 			<id>ICAT Repo</id>
-			<url>http://www.icatproject.org/mvn/repo</url>
+			<url>${repoUrl}</url>
 		</repository>
 	</repositories>
 
