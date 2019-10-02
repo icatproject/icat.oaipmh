@@ -38,9 +38,6 @@ try:
         print("icat.url = %s" % icatUrl, file=f)
         print("oai_dc.xslt = %s/oai_dc.xsl" % resourceDirAbs, file=f)
         print("oai_datacite.xslt = %s/oai_datacite.xsl" % resourceDirAbs, file=f)
-    if (os.path.exists("src/test/install/run.properties") and 
-        cmp(name, "src/test/install/run.properties")):
-        sys.exit(8)
     print("Installing with %s and %s" % (propFile, dataFile))
     shutil.copy(name, "src/test/install/run.properties")
 finally:
