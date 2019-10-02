@@ -22,7 +22,7 @@
 	<repositories>
 		<repository>
 			<id>ICAT Repo</id>
-			<url>http://www.icatproject.org/mvn/repo</url>
+			<url>${repoUrl}</url>
 		</repository>
 	</repositories>
 
@@ -124,33 +124,6 @@
 		<plugins>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
-				<executions>
-					<execution>
-						<id>Install .war</id>
-						<phase>pre-integration-test</phase>
-
-						<configuration>
-							<skip>${maven.install.skip}</skip>
-							<executable>asadmin</executable>
-							<arguments>
-								<argument>--echo</argument>
-								<argument>--port=4848</argument>
-								<argument>deploy</argument>
-								<argument>--force=true</argument>
-								<argument>${project.build.directory}/${project.build.finalName}.war</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -228,7 +201,7 @@
 				<version>2.18.1</version>
 				<configuration>
 					<excludes>
-						<exclude>**/integration/**/*Test.java</exclude>
+						<exclude>**/integration/*.java</exclude>
 					</excludes>
 					<systemPropertyVariables>
 						<javax.net.ssl.trustStore>${javax.net.ssl.trustStore}</javax.net.ssl.trustStore>
@@ -244,7 +217,7 @@
 				<version>2.18.1</version>
 				<configuration>
 					<includes>
-						<include>**/integration/**/*Test.java</include>
+						<include>**/integration/Test*.java</include>
 					</includes>
 					<systemPropertyVariables>
 						<serverUrl>${serverUrl}</serverUrl>

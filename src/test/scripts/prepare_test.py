@@ -10,19 +10,21 @@ import shutil
 from zipfile import ZipFile
 import subprocess
 
-if len(sys.argv) != 7:
+if len(sys.argv) != 8:
     raise RuntimeError("Wrong number of arguments")
 
 resourceDir = sys.argv[1]
 propFile = sys.argv[2]
 dataFile = sys.argv[3]
-containerHome = sys.argv[4]
-icatUrl = sys.argv[5]
-icatAuth = sys.argv[6]
+home = sys.argv[4]
+containerHome = sys.argv[5]
+icatUrl = sys.argv[6]
+icatAuth = sys.argv[7]
 
 resourceDirAbs = os.path.abspath(resourceDir)
 
 subst = dict(os.environ)
+subst['HOME'] = home
 
 try:
     tmpf = tempfile.NamedTemporaryFile(delete=False)
@@ -38,9 +40,6 @@ try:
         print("icat.url = %s" % icatUrl, file=f)
         print("oai_dc.xslt = %s/oai_dc.xsl" % resourceDirAbs, file=f)
         print("oai_datacite.xslt = %s/oai_datacite.xsl" % resourceDirAbs, file=f)
-    if (os.path.exists("src/test/install/run.properties") and 
-        cmp(name, "src/test/install/run.properties")):
-        sys.exit(8)
     print("Installing with %s and %s" % (propFile, dataFile))
     shutil.copy(name, "src/test/install/run.properties")
 finally:
