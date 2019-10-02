@@ -228,7 +228,7 @@
 				<version>2.18.1</version>
 				<configuration>
 					<excludes>
-						<exclude>**/integration/**/*Test.java</exclude>
+						<exclude>**/integration/*.java</exclude>
 					</excludes>
 					<systemPropertyVariables>
 						<javax.net.ssl.trustStore>${javax.net.ssl.trustStore}</javax.net.ssl.trustStore>
@@ -244,7 +244,7 @@
 				<version>2.18.1</version>
 				<configuration>
 					<includes>
-						<include>**/integration/**/*Test.java</include>
+						<include>**/integration/Test*.java</include>
 					</includes>
 					<systemPropertyVariables>
 						<serverUrl>${serverUrl}</serverUrl>

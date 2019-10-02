@@ -1,4 +1,4 @@
-package org.icatproject.icat_oaipmh;
+package org.icatproject.icat_oaipmh.integration;
 
 import static org.junit.Assert.assertEquals;
 
