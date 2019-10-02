@@ -28,8 +28,16 @@ import org.icatproject.utils.ShellCommand;
 public class Setup {
 
 	private String requestUrl = null;
+	private Path home;
 
 	public Setup(String runPropertiesFile, String icatdumpDataFile) throws Exception {
+		// Test home directory
+		String testHome = System.getProperty("testHome");
+		if (testHome == null) {
+			testHome = System.getProperty("user.home");
+		}
+		home = Paths.get(testHome);
+
 		// Read the test.properties
 		Properties testProps = new Properties();
 		InputStream is = Setup.class.getClassLoader().getResourceAsStream("test.properties");
@@ -50,8 +58,8 @@ public class Setup {
 		// Prepare run.properties and deploy icat.oaipmh
 		long time = System.currentTimeMillis();
 
-		ShellCommand sc = new ShellCommand("src/test/scripts/prepare_test.py", "src/test/resources/", runPropertiesFile,
-				icatdumpDataFile, containerHome, icatUrl, icatAuth);
+		ShellCommand sc = new ShellCommand("src/test/scripts/prepare_test.py", "src/test/resources/",
+				runPropertiesFile, icatdumpDataFile, home.toString(), containerHome, icatUrl, icatAuth);
 		System.out.println(sc.getStdout() + " " + sc.getStderr());
 
 		// Read some values from the run.properties

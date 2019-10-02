@@ -10,19 +10,21 @@ import shutil
 from zipfile import ZipFile
 import subprocess
 
-if len(sys.argv) != 7:
+if len(sys.argv) != 8:
     raise RuntimeError("Wrong number of arguments")
 
 resourceDir = sys.argv[1]
 propFile = sys.argv[2]
 dataFile = sys.argv[3]
-containerHome = sys.argv[4]
-icatUrl = sys.argv[5]
-icatAuth = sys.argv[6]
+home = sys.argv[4]
+containerHome = sys.argv[5]
+icatUrl = sys.argv[6]
+icatAuth = sys.argv[7]
 
 resourceDirAbs = os.path.abspath(resourceDir)
 
 subst = dict(os.environ)
+subst['HOME'] = home
 
 try:
     tmpf = tempfile.NamedTemporaryFile(delete=False)
