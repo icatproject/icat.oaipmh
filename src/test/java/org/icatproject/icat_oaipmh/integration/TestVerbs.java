@@ -31,6 +31,23 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testIdentify() throws Exception {
+		Document response = request("?verb=Identify");
+
+		getXmlNode(response, "Identify");
+
+		Node repositoryName = getXmlNode(response, "repositoryName");
+		assertEquals("Helmholtz-Zentrum Berlin für Materialien und Energie", repositoryName.getTextContent());
+
+		NodeList adminEmail = getXmlNodes(response, "adminEmail", 2);
+		assertEquals("someone@example.org", adminEmail.item(0).getTextContent());
+		assertEquals("another@example.org", adminEmail.item(1).getTextContent());
+
+		Node earliestDatestamp = getXmlNode(response, "earliestDatestamp");
+		assertEquals("2018-07-24T10:24:06Z", earliestDatestamp.getTextContent());
+	}
+
+	@Test
 	public void testListMetadataFormats() throws Exception {
 		Document response = request("?verb=ListMetadataFormats");
 
@@ -58,22 +75,5 @@ public class TestVerbs extends BaseTest {
 
 		Node metadataFormat = getXmlNode(response, "metadataFormat");
 		assertEquals("oai_dc", metadataFormat.getFirstChild().getTextContent());
-	}
-
-	@Test
-	public void testIdentify() throws Exception {
-		Document response = request("?verb=Identify");
-
-		getXmlNode(response, "Identify");
-
-		Node repositoryName = getXmlNode(response, "repositoryName");
-		assertEquals("Helmholtz-Zentrum Berlin für Materialien und Energie", repositoryName.getTextContent());
-
-		NodeList adminEmail = getXmlNodes(response, "adminEmail", 2);
-		assertEquals("someone@example.org", adminEmail.item(0).getTextContent());
-		assertEquals("another@example.org", adminEmail.item(1).getTextContent());
-
-		Node earliestDatestamp = getXmlNode(response, "earliestDatestamp");
-		assertEquals("2018-07-24T10:24:06Z", earliestDatestamp.getTextContent());
 	}
 }
