@@ -135,4 +135,57 @@ public class TestVerbs extends BaseTest {
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("idDoesNotExist", errorCode.getTextContent());
 	}
+
+	@Test
+	public void testGetRecordMissingIdentifier() throws Exception {
+		Document response = request("?verb=GetRecord&metadataPrefix=oai_datacite");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testGetRecordMissingFormat() throws Exception {
+		Document response = request("?verb=GetRecord&identifier=" + investigationUniqueIdentifier);
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testGetRecordInvalidFormat() throws Exception {
+		Document response = request(
+				"?verb=GetRecord&metadataPrefix=invalid&identifier=" + investigationUniqueIdentifier);
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("cannotDisseminateFormat", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testGetRecordUnsupportedFormat() throws Exception {
+		Document response = request("?verb=GetRecord&metadataPrefix=oai_datacite&identifier=" + studyUniqueIdentifier);
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("cannotDisseminateFormat", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testGetRecord() throws Exception {
+		Document response = request(
+				"?verb=GetRecord&metadataPrefix=oai_datacite&identifier=" + investigationUniqueIdentifier);
+
+		getXmlNode(response, "GetRecord");
+
+		Node header = getXmlNode(response, "header");
+		String identifier = getXmlChild(header, "identifier").getTextContent();
+		assertEquals(investigationUniqueIdentifier, identifier);
+	}
 }
