@@ -68,9 +68,8 @@ public class Setup {
 		requestUrl = runProperties.getString("requestUrl");
 		String dataPath = runProperties.getString("dataPath");
 
-		// If the configuration has changed, populate ICAT with sample data
-		if (sc.getExitValue() != 8)
-			populateIcat(icatUrl, icatAuth, dataPath);
+		// Populate ICAT with sample data
+		populateIcat(icatUrl, icatAuth, dataPath);
 
 		System.out.println("Setup for " + runPropertiesFile + " and " + icatdumpDataFile + " took "
 				+ (System.currentTimeMillis() - time) / 1000. + " seconds");

@@ -81,34 +81,34 @@ public class XmlResponse {
         document.getDocumentElement().appendChild(error);
     }
 
-    public Element addXmlElement(Element anker, String xmlElementName) {
-        if (anker == null)
-            anker = document.getDocumentElement();
+    public Element addXmlElement(Element anchor, String xmlElementName) {
+        if (anchor == null)
+            anchor = document.getDocumentElement();
 
         Element xmlElement = document.createElement(xmlElementName);
-        anker.appendChild(xmlElement);
+        anchor.appendChild(xmlElement);
         return xmlElement;
     }
 
-    public Element addXmlElement(Element anker, String xmlElementName, String xmlElementContent) {
-        if (anker == null)
-            anker = document.getDocumentElement();
+    public Element addXmlElement(Element anchor, String xmlElementName, String xmlElementContent) {
+        if (anchor == null)
+            anchor = document.getDocumentElement();
 
         Element xmlElement = document.createElement(xmlElementName);
         xmlElement.appendChild(document.createTextNode(xmlElementContent));
-        anker.appendChild(xmlElement);
+        anchor.appendChild(xmlElement);
         return xmlElement;
     }
 
-    public Element addXmlInformation(XmlInformation info, String xmlElementName, Element anker) {
+    public Element addXmlInformation(XmlInformation info, String xmlElementName, Element anchor) {
         Element xmlElement = null;
-        if (anker == null)
-            anker = document.getDocumentElement();
+        if (anchor == null)
+            anchor = document.getDocumentElement();
         if (xmlElementName == null)
-            xmlElement = anker;
+            xmlElement = anchor;
         else {
             xmlElement = document.createElement(xmlElementName);
-            anker.appendChild(xmlElement);
+            anchor.appendChild(xmlElement);
         }
 
         for (Map.Entry<String, String> property : info.getProperties().entrySet()) {
