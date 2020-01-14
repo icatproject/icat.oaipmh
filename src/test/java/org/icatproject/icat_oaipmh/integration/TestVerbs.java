@@ -68,6 +68,16 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testIdentifyWithArgument() throws Exception {
+		Document response = request("?verb=Identify&metadataPrefix=oai_dc");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
 	public void testListMetadataFormats() throws Exception {
 		Document response = request("?verb=ListMetadataFormats");
 
@@ -95,5 +105,15 @@ public class TestVerbs extends BaseTest {
 
 		Node metadataFormat = getXmlNode(response, "metadataFormat");
 		assertEquals("oai_dc", metadataFormat.getFirstChild().getTextContent());
+	}
+
+	@Test
+	public void testListMetadataFormatsInvalidIdentifier() throws Exception {
+		Document response = request("?verb=ListMetadataFormats&identifier=invalid");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("idDoesNotExist", errorCode.getTextContent());
 	}
 }
