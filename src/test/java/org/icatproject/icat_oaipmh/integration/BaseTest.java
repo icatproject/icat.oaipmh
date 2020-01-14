@@ -21,7 +21,7 @@ public class BaseTest {
 
 	protected static Setup setup;
 
-	public Document request(String urlParameters) throws IOException, ParserConfigurationException, SAXException {
+	public static Document request(String urlParameters) throws IOException, ParserConfigurationException, SAXException {
 		String url = setup.getRequestUrl() + urlParameters;
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -31,19 +31,19 @@ public class BaseTest {
 		return document;
 	}
 
-	public NodeList getXmlNodes(Document doc, String nodeName, int expectedNumber) {
+	public static NodeList getXmlNodes(Document doc, String nodeName, int expectedNumber) {
 		NodeList nodes = doc.getElementsByTagName(nodeName);
 		assertEquals(expectedNumber, nodes.getLength());
 		return nodes;
 	}
 
-	public Node getXmlNode(Document doc, String nodeName) {
+	public static Node getXmlNode(Document doc, String nodeName) {
 		NodeList nodes = doc.getElementsByTagName(nodeName);
 		assertEquals(1, nodes.getLength());
 		return nodes.item(0);
 	}
 
-	public List<Node> getXmlChildren(Node parent, String name) {
+	public static List<Node> getXmlChildren(Node parent, String name) {
 		List<Node> nl = new ArrayList<Node>();
 		for (Node child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child instanceof Element && name.equals(child.getNodeName())) {
@@ -53,7 +53,7 @@ public class BaseTest {
 		return nl;
 	}
 
-	public Node getXmlChild(Node parent, String name) {
+	public static Node getXmlChild(Node parent, String name) {
 		for (Node child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child instanceof Element && name.equals(child.getNodeName())) {
 				return child;

@@ -2,6 +2,7 @@ package org.icatproject.icat_oaipmh.integration;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.icatproject.icat_oaipmh.integration.BaseTest;
@@ -15,9 +16,35 @@ import org.w3c.dom.NodeList;
 
 public class TestVerbs extends BaseTest {
 
+	private static String investigationUniqueIdentifier;
+	private static String studyUniqueIdentifier;
+
 	@BeforeClass
 	public static void setup() throws Exception {
 		setup = new Setup("oaipmhInvStud.properties", "icatdump.data");
+		fetchExampleIdentifiers();
+	}
+
+	public static void fetchExampleIdentifiers() throws Exception {
+		List<String> identifiers = new ArrayList<String>();
+
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc");
+		String resumptionToken = null;
+
+		do {
+			Node listIdentifiers = getXmlNode(response, "ListIdentifiers");
+			List<Node> headers = getXmlChildren(listIdentifiers, "header");
+			for (Node header : headers) {
+				identifiers.add(getXmlChild(header, "identifier").getTextContent());
+			}
+			resumptionToken = getXmlChild(listIdentifiers, "resumptionToken").getTextContent();
+			response = request("?verb=ListIdentifiers&resumptionToken=" + resumptionToken);
+		} while (!resumptionToken.equals(""));
+
+		// Investigation identifier is first item in the list
+		investigationUniqueIdentifier = identifiers.get(0);
+		// Study identifier is last item in the list
+		studyUniqueIdentifier = identifiers.get(identifiers.size() - 1);
 	}
 
 	@Test
@@ -92,15 +119,7 @@ public class TestVerbs extends BaseTest {
 	public void testListMetadataFormatsStudy() throws Exception {
 		Document response = null;
 
-		// get unique identifier of last item in ListIdentifiers
-		response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc");
-		Node listIdentifiers = getXmlNode(response, "ListIdentifiers");
-		List<Node> headers = getXmlChildren(listIdentifiers, "header");
-		Node studyHeader = headers.get(headers.size() - 1);
-		String uniqueIdentifier = getXmlChild(studyHeader, "identifier").getTextContent();
-
-		// get available metadata formats for that item (item should be a Study)
-		response = request("?verb=ListMetadataFormats&identifier=" + uniqueIdentifier);
+		response = request("?verb=ListMetadataFormats&identifier=" + studyUniqueIdentifier);
 		getXmlNode(response, "ListMetadataFormats");
 
 		Node metadataFormat = getXmlNode(response, "metadataFormat");
