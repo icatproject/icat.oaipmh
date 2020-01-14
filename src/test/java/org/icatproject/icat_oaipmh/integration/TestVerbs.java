@@ -31,6 +31,26 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testUndefinedVerb() throws Exception {
+		Document response = request("?verb=undefined");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badVerb", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testMultipleVerbs() throws Exception {
+		Document response = request("?verb=ListMetadataFormats&verb=Identify");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
 	public void testIdentify() throws Exception {
 		Document response = request("?verb=Identify");
 
