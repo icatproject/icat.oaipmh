@@ -168,7 +168,7 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testGetRecordMissingFormat() throws Exception {
+	public void testGetRecordMissingMetadataFormat() throws Exception {
 		Document response = request("?verb=GetRecord&identifier=" + investigationUniqueIdentifier);
 
 		Node error = getXmlNode(response, "error");
@@ -178,7 +178,7 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testGetRecordInvalidFormat() throws Exception {
+	public void testGetRecordInvalidMetadataFormat() throws Exception {
 		Document response = request(
 				"?verb=GetRecord&metadataPrefix=invalid&identifier=" + investigationUniqueIdentifier);
 
@@ -189,7 +189,7 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testGetRecordUnsupportedFormat() throws Exception {
+	public void testGetRecordUnsupportedMetadataFormat() throws Exception {
 		Document response = request("?verb=GetRecord&metadataPrefix=oai_datacite&identifier=" + studyUniqueIdentifier);
 
 		Node error = getXmlNode(response, "error");
