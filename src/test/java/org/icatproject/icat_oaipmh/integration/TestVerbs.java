@@ -48,6 +48,27 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testResponseOutline() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-01-01T00:00:00Z&until=2018-12-31T00:00:00Z");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNode(response, "responseDate");
+		Node request = getXmlNode(response, "request");
+
+		NamedNodeMap attributes = request.getAttributes();
+		Node verb = attributes.getNamedItem("verb");
+		Node metadataPrefix = attributes.getNamedItem("metadataPrefix");
+		Node from = attributes.getNamedItem("from");
+		Node until = attributes.getNamedItem("until");
+		assertEquals("ListIdentifiers", verb.getTextContent());
+		assertEquals("oai_dc", metadataPrefix.getTextContent());
+		assertEquals("2018-01-01T00:00:00Z", from.getTextContent());
+		assertEquals("2018-12-31T00:00:00Z", until.getTextContent());
+		assertEquals(setup.getRequestUrl(), request.getTextContent());
+	}
+
+	@Test
 	public void testNoVerb() throws Exception {
 		Document response = request("");
 
