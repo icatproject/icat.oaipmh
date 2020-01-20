@@ -222,9 +222,9 @@ SampleType(createId:0,createTime:1,modId:2,modTime:3,facility(name:4),molecularF
 "simple/root",2018-07-24T10:24:05.000+00:00,"simple/root",2018-07-24T10:24:05.000+00:00,"ESNF","NiO","Nickel(II) oxide SC",NULL
 
 Investigation(createId:0,createTime:1,modId:2,modTime:3,doi:4,endDate:5,facility(name:6),name:7,releaseDate:8,startDate:9,summary:10,title:11,type(facility(name:12),name:13),visitId:14)
-"simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,NULL,NULL,"ESNF","08100122-EF",NULL,2008-03-13T11:39:42.000+01:00,NULL,"Durol single crystal","ESNF","Experiment","1.1-P"
-"simple/root",2018-07-24T10:24:07.000+00:00,"simple/root",2018-07-24T10:24:07.000+00:00,NULL,2010-10-12T17:00:00.000+00:00,"ESNF","10100601-ST",NULL,2010-09-30T12:27:24.000+00:00,NULL,"Ni-Mn-Ga flat cone","ESNF","Experiment","1.1-N"
-"simple/root",2018-07-24T10:24:08.000+00:00,"simple/root",2018-07-24T10:24:08.000+00:00,NULL,2012-08-06T03:10:08.000+00:00,"ESNF","12100409-ST",NULL,2012-07-26T17:44:24.000+00:00,NULL,"NiO SC OF1 JUH HHL","ESNF","Experiment","1.1-P"
+"simple/root",2018-07-13T15:34:36.000+00:00,"simple/root",2018-07-13T15:34:36.000+00:00,NULL,NULL,"ESNF","08100122-EF",NULL,2008-03-13T11:39:42.000+01:00,NULL,"Durol single crystal","ESNF","Experiment","1.1-P"
+"simple/root",2018-07-21T07:23:52.000+00:00,"simple/root",2018-07-21T07:23:52.000+00:00,NULL,2010-10-12T17:00:00.000+00:00,"ESNF","10100601-ST",NULL,2010-09-30T12:27:24.000+00:00,NULL,"Ni-Mn-Ga flat cone","ESNF","Experiment","1.1-N"
+"simple/root",2018-07-25T11:08:14.000+00:00,"simple/root",2018-07-25T11:08:14.000+00:00,NULL,2012-08-06T03:10:08.000+00:00,"ESNF","12100409-ST",NULL,2012-07-26T17:44:24.000+00:00,NULL,"NiO SC OF1 JUH HHL","ESNF","Experiment","1.1-P"
 
 Sample(createId:0,createTime:1,modId:2,modTime:3,investigation(facility(name:4),name:5,visitId:6),name:7,type(facility(name:8),molecularFormula:9,name:10))
 "simple/root",2018-07-24T10:24:06.000+00:00,"simple/root",2018-07-24T10:24:06.000+00:00,"ESNF","08100122-EF","1.1-P","Durol SC","ESNF","C10H14","Durol SC"

@@ -112,7 +112,7 @@ public class TestVerbs extends BaseTest {
 		assertEquals("another@example.org", adminEmail.item(1).getTextContent());
 
 		Node earliestDatestamp = getXmlNode(response, "earliestDatestamp");
-		assertEquals("2018-07-24T10:24:06Z", earliestDatestamp.getTextContent());
+		assertEquals("2018-07-13T15:34:36Z", earliestDatestamp.getTextContent());
 	}
 
 	@Test
