@@ -209,4 +209,198 @@ public class TestVerbs extends BaseTest {
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(investigationUniqueIdentifier, identifier);
 	}
+
+	@Test
+	public void testListIdentifiersMissingMetadataFormat() throws Exception {
+		Document response = request("?verb=ListIdentifiers");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiersInvalidMetadataFormat() throws Exception {
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=invalid");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("cannotDisseminateFormat", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiersIncompleteResumptionToken() throws Exception {
+		Document response = request("?verb=ListIdentifiers&resumptionToken=oai_dc");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badResumptionToken", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiersInvalidResumptionTokenMetadataFormat() throws Exception {
+		Document response = request("?verb=ListIdentifiers&resumptionToken=invalid,inv/1,null,null");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("cannotDisseminateFormat", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiersNoRecords() throws Exception {
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc&until=1900-01-01T00:00:00Z");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("noRecordsMatch", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiersInvalidTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-09-01T00:00:00Z&until=2018-07-01T00:00:00Z");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiers() throws Exception {
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 2);
+		getXmlNode(response, "resumptionToken");
+	}
+
+	@Test
+	public void testListIdentifiersWithResumptionToken() throws Exception {
+		Document response = request("?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,null,null");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 2);
+		getXmlNode(response, "resumptionToken");
+	}
+
+	@Test
+	public void testListIdentifiersWithTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-07-01T00:00:00Z&until=2018-07-15T00:00:00Z");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 1);
+	}
+
+	@Test
+	public void testListIdentifiersWithResumptionTokenAndTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 1);
+	}
+
+	@Test
+	public void testListRecordsMissingMetadataFormat() throws Exception {
+		Document response = request("?verb=ListRecords");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsInvalidMetadataFormat() throws Exception {
+		Document response = request("?verb=ListRecords&metadataPrefix=invalid");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("cannotDisseminateFormat", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsIncompleteResumptionToken() throws Exception {
+		Document response = request("?verb=ListRecords&resumptionToken=oai_dc");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badResumptionToken", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsInvalidResumptionTokenMetadataFormat() throws Exception {
+		Document response = request("?verb=ListRecords&resumptionToken=invalid,inv/1,null,null");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("cannotDisseminateFormat", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsNoRecords() throws Exception {
+		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc&until=1900-01-01T00:00:00Z");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("noRecordsMatch", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsInvalidTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListRecords&metadataPrefix=oai_dc&from=2018-09-01T00:00:00Z&until=2018-07-01T00:00:00Z");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecords() throws Exception {
+		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "header", 2);
+		getXmlNode(response, "resumptionToken");
+	}
+
+	@Test
+	public void testListRecordsWithResumptionToken() throws Exception {
+		Document response = request("?verb=ListRecords&resumptionToken=oai_dc,inv/1,null,null");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "header", 2);
+		getXmlNode(response, "resumptionToken");
+	}
+
+	@Test
+	public void testListRecordsWithTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListRecords&metadataPrefix=oai_dc&from=2018-07-01T00:00:00Z&until=2018-07-15T00:00:00Z");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "header", 1);
+	}
+
+	@Test
+	public void testListRecordsWithResumptionTokenAndTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "header", 1);
+	}
 }
