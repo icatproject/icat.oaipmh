@@ -38,10 +38,11 @@ public class RequestHandler {
 
     public String request(HttpServletRequest req) throws InternalException {
         XmlResponse res = new XmlResponse();
-        String verb = req.getParameter("verb");
+        String[] verbs = req.getParameterValues("verb");
         Templates template = null;
 
-        if (verb != null) {
+        if (verbs != null && verbs.length == 1) {
+            String verb = verbs[0];
             if (verb.equals("Identify"))
                 return handleIdentify(req, res, template);
             if (verb.equals("ListIdentifiers"))

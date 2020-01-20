@@ -69,8 +69,18 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testNoVerb() throws Exception {
+	public void testMissingVerb() throws Exception {
 		Document response = request("");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badVerb", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testNoVerb() throws Exception {
+		Document response = request("?verb");
 
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
@@ -95,7 +105,7 @@ public class TestVerbs extends BaseTest {
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
-		assertEquals("badArgument", errorCode.getTextContent());
+		assertEquals("badVerb", errorCode.getTextContent());
 	}
 
 	@Test
@@ -373,7 +383,7 @@ public class TestVerbs extends BaseTest {
 		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc");
 
 		getXmlNode(response, "ListRecords");
-		getXmlNodes(response, "header", 2);
+		getXmlNodes(response, "record", 2);
 		getXmlNode(response, "resumptionToken");
 	}
 
@@ -382,7 +392,7 @@ public class TestVerbs extends BaseTest {
 		Document response = request("?verb=ListRecords&resumptionToken=oai_dc,inv/1,null,null");
 
 		getXmlNode(response, "ListRecords");
-		getXmlNodes(response, "header", 2);
+		getXmlNodes(response, "record", 2);
 		getXmlNode(response, "resumptionToken");
 	}
 
@@ -392,7 +402,7 @@ public class TestVerbs extends BaseTest {
 				"?verb=ListRecords&metadataPrefix=oai_dc&from=2018-07-01T00:00:00Z&until=2018-07-15T00:00:00Z");
 
 		getXmlNode(response, "ListRecords");
-		getXmlNodes(response, "header", 1);
+		getXmlNodes(response, "record", 1);
 	}
 
 	@Test
@@ -401,6 +411,6 @@ public class TestVerbs extends BaseTest {
 				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
 
 		getXmlNode(response, "ListRecords");
-		getXmlNodes(response, "header", 1);
+		getXmlNodes(response, "record", 1);
 	}
 }
