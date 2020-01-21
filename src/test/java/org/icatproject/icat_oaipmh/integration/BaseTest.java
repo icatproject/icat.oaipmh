@@ -21,7 +21,8 @@ public class BaseTest {
 
 	protected static Setup setup;
 
-	public static Document request(String urlParameters) throws IOException, ParserConfigurationException, SAXException {
+	public static Document request(String urlParameters)
+			throws IOException, ParserConfigurationException, SAXException {
 		String url = setup.getRequestUrl() + urlParameters;
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

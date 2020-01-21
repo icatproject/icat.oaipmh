@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.icatproject.icat_oaipmh.integration.BaseTest;
 import org.icatproject.icat_oaipmh.integration.util.Setup;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -300,6 +299,15 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testListIdentifiersWithResumptionTokenAndTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 1);
+	}
+
+	@Test
 	public void testListIdentifiersWithTimespan() throws Exception {
 		Document response = request(
 				"?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-07-01T00:00:00Z&until=2018-07-15T00:00:00Z");
@@ -325,15 +333,6 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("badArgument", errorCode.getTextContent());
-	}
-
-	@Test
-	public void testListIdentifiersWithResumptionTokenAndTimespan() throws Exception {
-		Document response = request(
-				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
-
-		getXmlNode(response, "ListIdentifiers");
-		getXmlNodes(response, "header", 1);
 	}
 
 	@Test
@@ -416,6 +415,15 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testListRecordsWithResumptionTokenAndTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "record", 1);
+	}
+
+	@Test
 	public void testListRecordsWithTimespan() throws Exception {
 		Document response = request(
 				"?verb=ListRecords&metadataPrefix=oai_dc&from=2018-07-01T00:00:00Z&until=2018-07-15T00:00:00Z");
@@ -441,14 +449,5 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("badArgument", errorCode.getTextContent());
-	}
-
-	@Test
-	public void testListRecordsWithResumptionTokenAndTimespan() throws Exception {
-		Document response = request(
-				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
-
-		getXmlNode(response, "ListRecords");
-		getXmlNodes(response, "record", 1);
 	}
 }

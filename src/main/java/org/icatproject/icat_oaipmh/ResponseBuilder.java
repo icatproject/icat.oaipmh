@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
-import org.icatproject.icat.client.Session;
 import org.icatproject.icat.client.IcatException.IcatExceptionType;
+import org.icatproject.icat.client.Session;
 import org.icatproject.icat_oaipmh.exceptions.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

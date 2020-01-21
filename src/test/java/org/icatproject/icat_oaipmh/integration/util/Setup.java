@@ -58,8 +58,8 @@ public class Setup {
 		// Prepare run.properties and deploy icat.oaipmh
 		long time = System.currentTimeMillis();
 
-		ShellCommand sc = new ShellCommand("src/test/scripts/prepare_test.py", "src/test/resources/",
-				runPropertiesFile, icatdumpDataFile, home.toString(), containerHome, icatUrl, icatAuth);
+		ShellCommand sc = new ShellCommand("src/test/scripts/prepare_test.py", "src/test/resources/", runPropertiesFile,
+				icatdumpDataFile, home.toString(), containerHome, icatUrl, icatAuth);
 		System.out.println(sc.getStdout() + " " + sc.getStderr());
 
 		// Read some values from the run.properties
