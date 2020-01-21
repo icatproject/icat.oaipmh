@@ -5,6 +5,8 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.text.ParseException;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -97,16 +99,41 @@ public class IcatQueryParameters {
         }
 
         if (this.from != null) {
-            dtFrom = OffsetDateTime.parse(from);
+            DateTimeFormatter parser = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd['T'HH:mm:ssz]")
+                    .parseDefaulting(ChronoField.HOUR_OF_DAY, 0).parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                    .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
+                    .parseDefaulting(ChronoField.OFFSET_SECONDS, 0).toFormatter();
+            dtFrom = OffsetDateTime.parse(from, parser);
             this.fromTime = dtFrom.format(dtf);
         }
         if (this.until != null) {
-            dtUntil = OffsetDateTime.parse(until);
+            DateTimeFormatter parser = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd['T'HH:mm:ssz]")
+                    .parseDefaulting(ChronoField.HOUR_OF_DAY, 23).parseDefaulting(ChronoField.MINUTE_OF_HOUR, 59)
+                    .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 59)
+                    .parseDefaulting(ChronoField.NANO_OF_SECOND, 999999999)
+                    .parseDefaulting(ChronoField.OFFSET_SECONDS, 0).toFormatter();
+            dtUntil = OffsetDateTime.parse(until, parser);
             this.untilTime = dtUntil.format(dtf);
         }
 
         if (dtFrom != null && dtUntil != null) {
             if (dtFrom.compareTo(dtUntil) > 0) {
+                throw new IllegalArgumentException();
+            }
+
+            int testCount = 0;
+            DateTimeFormatter testParser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try {
+                testParser.parse(from);
+            } catch (DateTimeException e) {
+                testCount++;
+            }
+            try {
+                testParser.parse(until);
+            } catch (DateTimeException e) {
+                testCount++;
+            }
+            if (testCount % 2 != 0) {
                 throw new IllegalArgumentException();
             }
         }

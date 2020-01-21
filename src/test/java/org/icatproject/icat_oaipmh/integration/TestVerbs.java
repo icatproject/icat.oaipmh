@@ -309,6 +309,25 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testListIdentifiersWithDatespan() throws Exception {
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-07-01&until=2018-07-15");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 1);
+	}
+
+	@Test
+	public void testListIdentifiersWithDateAndTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-07-01&until=2018-07-15T00:00:00Z");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
 	public void testListIdentifiersWithResumptionTokenAndTimespan() throws Exception {
 		Document response = request(
 				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
@@ -403,6 +422,25 @@ public class TestVerbs extends BaseTest {
 
 		getXmlNode(response, "ListRecords");
 		getXmlNodes(response, "record", 1);
+	}
+
+	@Test
+	public void testListRecordsWithDatespan() throws Exception {
+		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc&from=2018-07-01&until=2018-07-15");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "header", 1);
+	}
+
+	@Test
+	public void testListRecordsWithDateAndTimespan() throws Exception {
+		Document response = request(
+				"?verb=ListRecords&metadataPrefix=oai_dc&from=2018-07-01&until=2018-07-15T00:00:00Z");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
 	}
 
 	@Test
