@@ -250,6 +250,17 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
+	public void testListIdentifiersResumptionTokenAndAdditionalArguments() throws Exception {
+		Document response = request(
+				"?verb=ListIdentifiers&metadataPrefix=oai_dc&resumptionToken=oai_dc,inv/1,null,null");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
 	public void testListIdentifiersInvalidResumptionTokenMetadataFormat() throws Exception {
 		Document response = request("?verb=ListIdentifiers&resumptionToken=invalid,inv/1,null,null");
 
@@ -363,6 +374,17 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("badResumptionToken", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsResumptionTokenAndAdditionalArguments() throws Exception {
+		Document response = request(
+				"?verb=ListRecords&metadataPrefix=oai_dc&resumptionToken=oai_dc,inv/1,null,null");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("badArgument", errorCode.getTextContent());
 	}
 
 	@Test

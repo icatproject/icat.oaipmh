@@ -173,10 +173,14 @@ public class RequestHandler {
 
         res.makeResponseOutline(rb.getRequestUrl(), checkedParameters, responseStyle);
 
-        if (parameters.size() != checkedParameters.size())
+        if (parameters.size() != checkedParameters.size()) {
             res.addError("badArgument", "The request includes illegal arguments, or includes a repeated argument");
-        if (includesResumptionToken && parameters.size() != 2)
+            allParamsOk = false;
+        }
+        if (includesResumptionToken && parameters.size() != 2) {
             res.addError("badArgument", "The request includes illegal arguments in addition to the resumptionToken");
+            allParamsOk = false;
+        }
 
         if (!includesResumptionToken) {
             for (String requiredParameter : requiredParameters) {
