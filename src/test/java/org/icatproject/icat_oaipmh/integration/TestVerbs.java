@@ -302,11 +302,22 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListIdentifiersWithResumptionToken() throws Exception {
-		Document response = request("?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,null,null");
+		Document response;
+		String resumptionToken;
+
+		response = request("?verb=ListIdentifiers&metadataPrefix=oai_datacite");
 
 		getXmlNode(response, "ListIdentifiers");
 		getXmlNodes(response, "header", 2);
-		getXmlNode(response, "resumptionToken");
+		resumptionToken = getXmlNode(response, "resumptionToken").getTextContent();
+
+		response = request("?verb=ListIdentifiers&resumptionToken=" + resumptionToken);
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 1);
+		resumptionToken = getXmlNode(response, "resumptionToken").getTextContent();
+
+		assertEquals("", resumptionToken);
 	}
 
 	@Test
@@ -429,11 +440,22 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListRecordsWithResumptionToken() throws Exception {
-		Document response = request("?verb=ListRecords&resumptionToken=oai_dc,inv/1,null,null");
+		Document response;
+		String resumptionToken;
+
+		response = request("?verb=ListRecords&metadataPrefix=oai_datacite");
 
 		getXmlNode(response, "ListRecords");
 		getXmlNodes(response, "record", 2);
-		getXmlNode(response, "resumptionToken");
+		resumptionToken = getXmlNode(response, "resumptionToken").getTextContent();
+
+		response = request("?verb=ListRecords&resumptionToken=" + resumptionToken);
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "record", 1);
+		resumptionToken = getXmlNode(response, "resumptionToken").getTextContent();
+
+		assertEquals("", resumptionToken);
 	}
 
 	@Test

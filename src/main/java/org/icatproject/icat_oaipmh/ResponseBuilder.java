@@ -297,7 +297,7 @@ public class ResponseBuilder {
         for (Map.Entry<String, DataConfiguration> config : dataConfigurations.entrySet()) {
             String dataConfigurationIdentifier = config.getKey();
             DataConfiguration dataConfiguration = config.getValue();
-            incomplete = true;
+            incomplete = false;
 
             // if the harvester requested a specific item,
             // skip data configurations which don't match with this item
@@ -333,16 +333,14 @@ public class ResponseBuilder {
             JsonArray resultsArray = jsonReader.readArray();
             jsonReader.close();
 
-            if (resultsArray.isEmpty()) {
-                incomplete = false;
+            if (resultsArray.isEmpty())
                 continue;
-            }
 
             int resultsArrayLimit = resultsArray.size();
-            if (queryLimit.equals(resultsArray.size()))
+            if (queryLimit.equals(resultsArray.size())) {
+                incomplete = true;
                 resultsArrayLimit--;
-            else
-                incomplete = false;
+            }
 
             if (incomplete && remainingResults <= 0)
                 break;
