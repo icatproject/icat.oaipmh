@@ -208,7 +208,7 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testGetRecord() throws Exception {
+	public void testGetRecordInvestigation() throws Exception {
 		Document response = request(
 				"?verb=GetRecord&metadataPrefix=oai_datacite&identifier=" + investigationUniqueIdentifier);
 
@@ -217,6 +217,17 @@ public class TestVerbs extends BaseTest {
 		Node header = getXmlNode(response, "header");
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(investigationUniqueIdentifier, identifier);
+	}
+
+	@Test
+	public void testGetRecordStudy() throws Exception {
+		Document response = request("?verb=GetRecord&metadataPrefix=oai_dc&identifier=" + studyUniqueIdentifier);
+
+		getXmlNode(response, "GetRecord");
+
+		Node header = getXmlNode(response, "header");
+		String identifier = getXmlChild(header, "identifier").getTextContent();
+		assertEquals(studyUniqueIdentifier, identifier);
 	}
 
 	@Test
