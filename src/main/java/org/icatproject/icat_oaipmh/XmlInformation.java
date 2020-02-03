@@ -6,15 +6,15 @@ import java.util.Map;
 
 public class XmlInformation {
 
-    private Map<String, String> properties;
+    private Map<String, ? extends List<String>> properties;
     private Map<String, ? extends List<XmlInformation>> informationLists;
 
-    public XmlInformation(Map<String, String> properties,
+    public XmlInformation(Map<String, ? extends List<String>> properties,
             Map<String, ? extends List<XmlInformation>> informationLists) {
         if (properties != null)
             this.properties = properties;
         else
-            this.properties = new HashMap<String, String>();
+            this.properties = new HashMap<String, List<String>>();
 
         if (informationLists != null)
             this.informationLists = informationLists;
@@ -22,7 +22,7 @@ public class XmlInformation {
             this.informationLists = new HashMap<String, List<XmlInformation>>();
     }
 
-    public Map<String, String> getProperties() {
+    public Map<String, ? extends List<String>> getProperties() {
         return properties;
     }
 

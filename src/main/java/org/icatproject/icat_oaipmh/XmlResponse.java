@@ -111,10 +111,12 @@ public class XmlResponse {
             anchor.appendChild(xmlElement);
         }
 
-        for (Map.Entry<String, String> property : info.getProperties().entrySet()) {
-            Element el = document.createElement(property.getKey());
-            el.appendChild(document.createTextNode(property.getValue()));
-            xmlElement.appendChild(el);
+        for (Map.Entry<String, ? extends List<String>> property : info.getProperties().entrySet()) {
+            for (String value : property.getValue()) {
+                Element el = document.createElement(property.getKey());
+                el.appendChild(document.createTextNode(value));
+                xmlElement.appendChild(el);
+            }
         }
 
         for (Map.Entry<String, ? extends List<XmlInformation>> entry : info.getInformationLists().entrySet()) {

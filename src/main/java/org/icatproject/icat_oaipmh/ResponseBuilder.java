@@ -373,15 +373,20 @@ public class ResponseBuilder {
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
             RequestedProperties requestedProperties) throws InternalException {
-        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
 
         JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
 
         String id = icatObject.get("id").toString();
         String modTime = icatObject.getString("modTime", null);
 
-        properties.put("identifier", IcatQueryParameters.makeUniqueIdentifier(dataConfigurationIdentifier, id));
-        properties.put("datestamp", IcatQueryParameters.makeFormattedDateTime(modTime));
+        ArrayList<String> identifier = new ArrayList<String>();
+        identifier.add(IcatQueryParameters.makeUniqueIdentifier(dataConfigurationIdentifier, id));
+        properties.put("identifier", identifier);
+
+        ArrayList<String> datestamp = new ArrayList<String>();
+        datestamp.add(IcatQueryParameters.makeFormattedDateTime(modTime));
+        properties.put("datestamp", datestamp);
 
         XmlInformation headers = new XmlInformation(properties, null);
         return headers;
@@ -391,7 +396,7 @@ public class ResponseBuilder {
             RequestedProperties requestedProperties) throws InternalException {
         ArrayList<XmlInformation> result = new ArrayList<XmlInformation>();
 
-        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
         HashMap<String, ArrayList<XmlInformation>> informationLists = new HashMap<String, ArrayList<XmlInformation>>();
 
         JsonValue icatObject = ((JsonObject) data).get(requestedProperties.getIcatObject());
@@ -404,25 +409,34 @@ public class ResponseBuilder {
 
             ArrayList<XmlInformation> elementsInfos = new ArrayList<XmlInformation>();
             for (JsonValue element : jsonArray) {
-                HashMap<String, String> elementProperties = new HashMap<String, String>();
+                HashMap<String, ArrayList<String>> elementProperties = new HashMap<String, ArrayList<String>>();
                 HashMap<String, ArrayList<XmlInformation>> elementInformationLists = new HashMap<String, ArrayList<XmlInformation>>();
 
                 for (String prop : requestedProperties.getStringProperties()) {
                     String value = ((JsonObject) element).getString(prop, null);
-                    if (value != null)
-                        elementProperties.put(prop, value);
+                    if (value != null) {
+                        ArrayList<String> valueList = new ArrayList<String>();
+                        valueList.add(value);
+                        elementProperties.put(prop, valueList);
+                    }
                 }
 
                 for (String prop : requestedProperties.getNumericProperties()) {
                     JsonValue value = ((JsonObject) element).get(prop);
-                    if (value != null)
-                        elementProperties.put(prop, value.toString());
+                    if (value != null) {
+                        ArrayList<String> valueList = new ArrayList<String>();
+                        valueList.add(value.toString());
+                        elementProperties.put(prop, valueList);
+                    }
                 }
 
                 for (String prop : requestedProperties.getDateProperties()) {
                     String value = ((JsonObject) element).getString(prop, null);
-                    if (value != null)
-                        elementProperties.put(prop, IcatQueryParameters.makeFormattedDateTime(value));
+                    if (value != null) {
+                        ArrayList<String> valueList = new ArrayList<String>();
+                        valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                        elementProperties.put(prop, valueList);
+                    }
                 }
 
                 for (RequestedProperties requestedSubProperties : requestedProperties.getSubPropertyLists()) {
@@ -440,20 +454,29 @@ public class ResponseBuilder {
 
             for (String prop : requestedProperties.getStringProperties()) {
                 String value = jsonObject.getString(prop, null);
-                if (value != null)
-                    properties.put(prop, value);
+                if (value != null) {
+                    ArrayList<String> valueList = new ArrayList<String>();
+                    valueList.add(value);
+                    properties.put(prop, valueList);
+                }
             }
 
             for (String prop : requestedProperties.getNumericProperties()) {
                 JsonValue value = jsonObject.get(prop);
-                if (value != null)
-                    properties.put(prop, value.toString());
+                if (value != null) {
+                    ArrayList<String> valueList = new ArrayList<String>();
+                    valueList.add(value.toString());
+                    properties.put(prop, valueList);
+                }
             }
 
             for (String prop : requestedProperties.getDateProperties()) {
                 String value = jsonObject.getString(prop, null);
-                if (value != null)
-                    properties.put(prop, IcatQueryParameters.makeFormattedDateTime(value));
+                if (value != null) {
+                    ArrayList<String> valueList = new ArrayList<String>();
+                    valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                    properties.put(prop, valueList);
+                }
             }
 
             for (RequestedProperties requestedSubProperties : requestedProperties.getSubPropertyLists()) {
