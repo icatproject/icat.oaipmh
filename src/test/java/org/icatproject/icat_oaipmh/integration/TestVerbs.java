@@ -492,7 +492,7 @@ public class TestVerbs extends BaseTest {
 		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc&from=2018-07-01&until=2018-07-15");
 
 		getXmlNode(response, "ListRecords");
-		getXmlNodes(response, "header", 1);
+		getXmlNodes(response, "record", 1);
 	}
 
 	@Test

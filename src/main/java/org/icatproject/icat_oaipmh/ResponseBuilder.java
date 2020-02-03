@@ -336,10 +336,10 @@ public class ResponseBuilder {
             if (resultsArray.isEmpty())
                 continue;
 
-            int resultsArrayLimit = resultsArray.size();
-            if (queryLimit.equals(resultsArray.size())) {
+            int resultsArraySize = resultsArray.size();
+            if (queryLimit.equals(resultsArraySize)) {
                 incomplete = true;
-                resultsArrayLimit--;
+                resultsArraySize--;
             }
 
             if (incomplete && remainingResults <= 0)
@@ -347,7 +347,7 @@ public class ResponseBuilder {
 
             RequestedProperties requestedProperties = dataConfiguration.getRequestedProperties();
 
-            for (JsonValue data : resultsArray.subList(0, resultsArrayLimit)) {
+            for (JsonValue data : resultsArray.subList(0, resultsArraySize)) {
                 XmlInformation header = extractHeaderInformation(data, dataConfigurationIdentifier,
                         requestedProperties);
 
@@ -359,11 +359,11 @@ public class ResponseBuilder {
                 records.add(new RecordInformation(dataConfigurationIdentifier, header, metadata));
             }
 
-            JsonObject lastResult = resultsArray.getJsonObject(resultsArrayLimit - 1);
+            JsonObject lastResult = resultsArray.getJsonObject(resultsArraySize - 1);
             lastId = lastResult.getJsonObject(requestedProperties.getIcatObject()).get("id").toString();
             lastDataConfiguration = dataConfigurationIdentifier;
 
-            remainingResults -= resultsArrayLimit;
+            remainingResults -= resultsArraySize;
             if (incomplete && remainingResults <= 0)
                 break;
         }

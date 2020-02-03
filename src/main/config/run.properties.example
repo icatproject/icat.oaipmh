@@ -3,7 +3,7 @@
 
 # ICAT Client configuration
 !icat.url = https://example.org:443
-!icat.auth = simple username nick password 123456
+!icat.auth = simple username root password secret
 
 # A human readable name for the repository
 !repositoryName = Example experimental data repository
@@ -11,7 +11,7 @@
 # The e-mail address(es) of the repository administrator
 !adminEmails = someone@example.org another@example.org
 
-# The Base URL of the OAI-PMH interface
+# The base URL of the OAI-PMH interface
 !requestUrl = https://www.example.org/oaipmh/request
 
 # The maximum number of results per page for incomplete responses

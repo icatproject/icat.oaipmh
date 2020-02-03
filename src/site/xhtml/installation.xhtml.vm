@@ -107,7 +107,7 @@
 			permitted to read all the ICAT tables that are of interest.
 		</dd>
 		<dd>
-			Example value: <b>"simple username nick password 123456"</b>
+			Example value: <b>"simple username root password secret"</b>
 		</dd>
 		<dt>repositoryName</dt>
 		<dd>
@@ -127,7 +127,7 @@
 		</dd>
 		<dt>requestUrl</dt>
 		<dd>
-			The Base URL of the OAI-PMH interface.
+			The base URL of the OAI-PMH interface.
 			Must be a well-formed URL.
 			This will be returned as part of the OAI-PMH "Identify" response,
 			and is being used for the unique identifiers of records.
@@ -346,7 +346,7 @@
 			want to apply to all XML responses.
 		</dd>
 		<dd>
-			One particular use for this would be to have the XML responses transform
+			One particular use case for this would be to have the XML responses transform
 			into HTML documents when making OAI-PMH calls from a web browser.
 		</dd>
 	</dl>
@@ -357,7 +357,7 @@
 		A simple standalone test is to run:
 		<blockquote>
 			<code>curl -k https://localhost:8181/oaipmh/request?verb=Identify -w "\n"</code>
-			which should return the OAI-PMH Identify response
+			which should return the OAI-PMH "Identify" response
 		</blockquote>
 	</p>
 
