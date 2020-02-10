@@ -23,6 +23,7 @@ if arg == "INSTALL":
 
     metadataPrefixes = properties["metadataPrefixes"].split()
     dataConfigurations = properties["data.configurations"].split()
+    sets = properties["sets"].split()
 
     try:
         val = int(properties["maxResults"])
@@ -35,6 +36,8 @@ if arg == "INSTALL":
         abort("Support for the metadataPrefix 'oai_dc' is missing in run.properties")
 
     for v in dataConfigurations:
+        if "," in v:
+            abort("The value '" + v + "' in data.configurations list must not contain a comma in run.properties")
         if "data." + v + ".mainObject" not in properties:
             abort("data.configurations include '" + v + "' but 'data." + v + ".mainObject' is not defined in run.properties")
         if "data." + v + ".metadataPrefixes" not in properties:
@@ -57,6 +60,19 @@ if arg == "INSTALL":
         if "responseDebug" not in properties or properties["responseDebug"] != "true":
             if not os.path.exists(properties[v + ".xslt"]):
                 abort("The file '" + properties[v + ".xslt"] + "' as listed in run.properties for '" + v + ".xslt' does not exist on your system")
+
+    for v in sets:
+        if "," in v:
+            abort("The value '" + v + "' in sets list must not contain a comma in run.properties")
+        if "sets." + v + ".name" not in properties:
+            abort("sets include '" + v + "' but 'sets." + v + ".name' is not defined in run.properties")
+        if "sets." + v + ".configurations" not in properties:
+            abort("sets include '" + v + "' but 'sets." + v + ".configurations' is not defined in run.properties")
+
+        setDataConfigurations = properties["sets." + v + ".configurations"].split()
+        for w in setDataConfigurations:
+            if w not in dataConfigurations:
+                abort("sets." + v + ".configurations include '" + w + "' but this data configuration is not defined in run.properties")
 
     try:
         undeploy()

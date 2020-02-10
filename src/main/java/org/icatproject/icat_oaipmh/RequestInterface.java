@@ -103,6 +103,28 @@ public class RequestInterface {
 						requestedProperties);
 				bean.registerDataConfiguration(identifier, dataConfiguration);
 			}
+
+			if (props.has("sets")) {
+				String[] sets = props.getString("sets").split("\\s+");
+				for (String setSpec : sets) {
+					propName = String.format("sets.%s.name", setSpec);
+					String setName = props.getString(propName);
+
+					ItemSet set = new ItemSet(setName);
+
+					propName = String.format("sets.%s.configurations", setSpec);
+					String[] setDataConfigurations = props.getString(propName).split("\\s+");
+					for (String setDataConfiguration : setDataConfigurations) {
+						String condition = null;
+						propName = String.format("sets.%s.condition.%s", setSpec, setDataConfiguration);
+						if (props.has(propName)) {
+							condition = props.getString(propName);
+						}
+						set.addDataConfigurationCondition(setDataConfiguration, condition);
+					}
+					bean.registerSet(setSpec, set);
+				}
+			}
 		} catch (CheckedPropertyException | FileNotFoundException | SecurityException | NumberFormatException
 				| TransformerConfigurationException | URISyntaxException e) {
 			logger.error(fatal, e.getMessage());
