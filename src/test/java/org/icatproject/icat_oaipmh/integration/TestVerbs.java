@@ -219,7 +219,7 @@ public class TestVerbs extends BaseTest {
 		assertEquals(investigationUniqueIdentifier, identifier);
 
 		Node setSpec = getXmlNode(response, "setSpec");
-		assertEquals("exampleSetB", setSpec.getTextContent());
+		assertEquals("exampleSetC", setSpec.getTextContent());
 	}
 
 	@Test
@@ -232,7 +232,8 @@ public class TestVerbs extends BaseTest {
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(studyUniqueIdentifier, identifier);
 
-		getXmlNodes(response, "setSpec", 0);
+		Node setSpec = getXmlNode(response, "setSpec");
+		assertEquals("exampleSetB", setSpec.getTextContent());
 	}
 
 	@Test

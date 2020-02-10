@@ -334,7 +334,7 @@
 			Each set must be defined using a unique identifier string.
 		</dd>
 		<dd>
-			Example value: <b>"exampleSetA exampleSetB"</b>
+			Example value: <b>"exampleSetA exampleSetB exampleSetC"</b>
 		</dd>
 		<dt>sets.&lt;set&gt;.name</dt>
 		<dd>
@@ -351,18 +351,22 @@
 			will be affiliated with the set.
 		</dd>
 		<dd>
-			For example, if the <code>sets</code> are <b>"exampleSetA exampleSetB"</b> and
+			For example, if the <code>sets</code> are <b>"exampleSetA exampleSetB exampleSetC"</b> and
 			the <code>data.configurations</code> are <b>"inv stud"</b> where
 			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b> and
 			<code>data.stud.mainObject</code> is set to <b>"Study"</b>, one might use:
 			<ul>
 				<li>
 					<b>"sets.exampleSetA.configurations = inv stud"</b> to say that the set
-					<b>"exampleSetA"</b> shall consist of both Investigations and Studies, and
+					<b>"exampleSetA"</b> shall consist of both Investigations and Studies,
 				</li>
 				<li>
-					<b>"sets.exampleSetB.configurations = inv"</b> to say that the set
-					<b>"exampleSetB"</b> shall consist only of Investigations.
+					<b>"sets.exampleSetB.configurations = inv stud"</b> to say that the set
+					<b>"exampleSetB"</b> shall also consist of both Investigations and Studies, and
+				</li>
+				<li>
+					<b>"sets.exampleSetC.configurations = inv"</b> to say that the set
+					<b>"exampleSetC"</b> shall consist only of Investigations.
 				</li>
 			</ul>
 		</dd>
@@ -373,16 +377,30 @@
 		</dd>
 		<dd>
 			Conditions must be defined using regular ICAT query syntax.
-			Please use the entity variable <b>"a"</b>, as seen below.
+			Use the entity variable <b>"a"</b> to access the attributes of the configured main object,
+			e.g. <b>"a.modTime"</b>, and use subsequent letters for included objects.
 		</dd>
 		<dd>
-			For example, if the <code>sets</code> include <b>"exampleSetA"</b> and
-			the <code>sets.exampleSetA.configurations</code> include <b>"stud"</b>, one might use:
+			For example, if the <code>sets</code> are <b>"exampleSetA exampleSetB exampleSetC"</b>,
+			the <code>sets.exampleSetA.configurations</code> are <b>"inv stud"</b>,
+			the <code>sets.exampleSetB.configurations</code> are <b>"inv stud"</b>, and 
+			the <code>sets.exampleSetC.configurations</code> are <b>"inv"</b>, one might use:
 			<ul>
 				<li>
 					<b>"sets.exampleSetA.condition.stud = a.modTime <= '2018-07-20 10:00:00'"</b>
 					to say that Studies shall only be affiliated with the set <b>"exampleSetA"</b>
 					if they were modified before 2018-07-20 10:00:00.
+				</li>
+				<li>
+					<b>"sets.exampleSetB.condition.inv = b.name = 'Nickel' OR b.name = 'Ni'"</b>
+					to say that Investigations shall only be affiliated with the set <b>"exampleSetB"</b>
+					if they are related to a keyword with name "Nickel" or "Ni". In this example, it is assumed
+					that the first entry in <code>data.inv.subPropertyLists</code> is <b>"keywords"</b>,
+					hence the letter <b>"b"</b> is used in the query.
+				</li>
+				<li>
+					Leave <b>"sets.exampleSetC.condition.inv"</b> blank to say that <i>all</i> Investigations
+					shall unconditionally be affiliated with the set <b>"exampleSetC"</b>.
 				</li>
 			</ul>
 		</dd>

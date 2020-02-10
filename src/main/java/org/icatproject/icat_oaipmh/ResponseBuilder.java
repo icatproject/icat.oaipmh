@@ -350,11 +350,12 @@ public class ResponseBuilder {
             }
 
             String mainObject = dataConfiguration.getMainObject();
+            String join = dataConfiguration.getJoinedObjects();
             String includes = dataConfiguration.getIncludedObjects();
             String where = parameters.makeWhereCondition(dataConfigurationIdentifier, setCondition);
             Integer queryLimit = new Integer(remainingResults + 1);
-            String query = String.format("SELECT a FROM %s a %s ORDER BY a.id LIMIT 0,%s %s", mainObject, where,
-                    queryLimit, includes);
+            String query = String.format("SELECT DISTINCT a FROM %s a %s %s ORDER BY a.id LIMIT 0,%s %s", mainObject,
+                    join, where, queryLimit, includes);
 
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));
@@ -377,7 +378,8 @@ public class ResponseBuilder {
             for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
                 String condition = set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier);
                 if (condition != null) {
-                    String setQuery = String.format("SELECT a.id FROM %s a WHERE %s", mainObject, condition);
+                    String setQuery = String.format("SELECT DISTINCT a.id FROM %s a %s WHERE %s", mainObject, join,
+                            condition);
                     String setObjects = queryIcat(setQuery);
 
                     JsonReader setJsonReader = Json.createReader(new StringReader(setObjects));

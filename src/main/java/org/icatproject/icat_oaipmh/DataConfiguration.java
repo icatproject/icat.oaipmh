@@ -8,6 +8,7 @@ public class DataConfiguration {
 
     private ArrayList<String> metadataPrefixes;
     private String mainObject;
+    private String joinedObjects;
     private String includedObjects;
     private RequestedProperties requestedProperties;
 
@@ -19,22 +20,25 @@ public class DataConfiguration {
         this.requestedProperties = requestedProperties;
 
         this.variable = 'a';
-        List<String> includedObjectsList = extractIncludedObjects(requestedProperties);
-        if (includedObjectsList.isEmpty())
+        List<String> subObjectsList = extractSubObjects(requestedProperties);
+        if (subObjectsList.isEmpty()) {
+            this.joinedObjects = "";
             this.includedObjects = "";
-        else
-            this.includedObjects = String.format("INCLUDE %s", String.join(", ", includedObjectsList));
+        } else {
+            this.joinedObjects = String.format("JOIN %s", String.join(", ", subObjectsList));
+            this.includedObjects = String.format("INCLUDE %s", String.join(", ", subObjectsList));
+        }
     }
 
-    private List<String> extractIncludedObjects(RequestedProperties properties) {
+    private List<String> extractSubObjects(RequestedProperties properties) {
         char currentVariable = variable;
-        List<String> includesList = new ArrayList<String>();
+        List<String> subList = new ArrayList<String>();
         for (RequestedProperties props : properties.getSubPropertyLists()) {
             variable++;
-            includesList.add(String.format("%s.%s %s", currentVariable, props.getIcatObject(), variable));
-            includesList.addAll(extractIncludedObjects(props));
+            subList.add(String.format("%s.%s %s", currentVariable, props.getIcatObject(), variable));
+            subList.addAll(extractSubObjects(props));
         }
-        return includesList;
+        return subList;
     }
 
     public ArrayList<String> getMetadataPrefixes() {
@@ -43,6 +47,10 @@ public class DataConfiguration {
 
     public String getMainObject() {
         return mainObject;
+    }
+
+    public String getJoinedObjects() {
+        return joinedObjects;
     }
 
     public String getIncludedObjects() {
