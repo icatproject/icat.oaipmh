@@ -116,11 +116,17 @@ public class RequestInterface {
 					String[] setDataConfigurations = props.getString(propName).split("\\s+");
 					for (String setDataConfiguration : setDataConfigurations) {
 						String condition = null;
+						String join = null;
 						propName = String.format("sets.%s.condition.%s", setSpec, setDataConfiguration);
 						if (props.has(propName)) {
 							condition = props.getString(propName);
 						}
+						propName = String.format("sets.%s.join.%s", setSpec, setDataConfiguration);
+						if (props.has(propName)) {
+							join = props.getString(propName);
+						}
 						set.addDataConfigurationCondition(setDataConfiguration, condition);
+						set.addDataConfigurationJoin(setDataConfiguration, join);
 					}
 					bean.registerSet(setSpec, set);
 				}
@@ -133,7 +139,7 @@ public class RequestInterface {
 			throw new IllegalStateException();
 		}
 
-		logger.info("Initialised RequestInterface");
+		logger.info("Initialized RequestInterface");
 	}
 
 	private RequestedProperties getRequestedProperties(CheckedProperties props, String prefix, String object)

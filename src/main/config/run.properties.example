@@ -95,8 +95,12 @@
 # Optional condition of set affiliation per set and data configuration
 !sets.exampleSetA.condition.inv = a.modTime >= '2018-07-20 08:00:00' AND a.modTime <= '2018-07-30 08:00:00'
 !sets.exampleSetA.condition.stud = a.modTime <= '2018-07-20 10:00:00'
-!sets.exampleSetB.condition.inv = b.name = 'Nickel' OR b.name = 'Ni'
-!sets.exampleSetB.condition.stud = e.name = 'Nickel' OR e.name = 'Ni'
+!sets.exampleSetB.condition.inv = kw.name = 'Nickel' OR kw.name = 'Ni'
+!sets.exampleSetB.condition.stud = kw.name = 'Nickel' OR kw.name = 'Ni'
+
+# Optional data objects to be joined when retrieving the items of a set
+!sets.exampleSetB.join.inv = JOIN a.keywords AS kw
+!sets.exampleSetB.join.stud = JOIN a.studyInvestigations AS si JOIN si.investigation AS i JOIN i.keywords AS kw
 
 # If set to 'true', metadata won't be transformed into another format
 !responseDebug = true

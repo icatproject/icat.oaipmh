@@ -8,7 +8,6 @@ public class DataConfiguration {
 
     private ArrayList<String> metadataPrefixes;
     private String mainObject;
-    private String joinedObjects;
     private String includedObjects;
     private RequestedProperties requestedProperties;
 
@@ -21,13 +20,10 @@ public class DataConfiguration {
 
         this.variable = 'a';
         List<String> subObjectsList = extractSubObjects(requestedProperties);
-        if (subObjectsList.isEmpty()) {
-            this.joinedObjects = "";
+        if (subObjectsList.isEmpty())
             this.includedObjects = "";
-        } else {
-            this.joinedObjects = String.format("JOIN %s", String.join(", ", subObjectsList));
+        else
             this.includedObjects = String.format("INCLUDE %s", String.join(", ", subObjectsList));
-        }
     }
 
     private List<String> extractSubObjects(RequestedProperties properties) {
@@ -47,10 +43,6 @@ public class DataConfiguration {
 
     public String getMainObject() {
         return mainObject;
-    }
-
-    public String getJoinedObjects() {
-        return joinedObjects;
     }
 
     public String getIncludedObjects() {

@@ -378,12 +378,13 @@
 		<dd>
 			Conditions must be defined using regular ICAT query syntax.
 			Use the entity variable <b>"a"</b> to access the attributes of the configured main object,
-			e.g. <b>"a.modTime"</b>, and use subsequent letters for included objects.
+			e.g. <b>"a.modTime"</b>, and use custom entity variables for related objects
+			(see <code>sets.&lt;set&gt;.join.*</code> below).
 		</dd>
 		<dd>
 			For example, if the <code>sets</code> are <b>"exampleSetA exampleSetB exampleSetC"</b>,
 			the <code>sets.exampleSetA.configurations</code> are <b>"inv stud"</b>,
-			the <code>sets.exampleSetB.configurations</code> are <b>"inv stud"</b>, and 
+			the <code>sets.exampleSetB.configurations</code> are <b>"inv stud"</b>, and
 			the <code>sets.exampleSetC.configurations</code> are <b>"inv"</b>, one might use:
 			<ul>
 				<li>
@@ -392,15 +393,48 @@
 					if they were modified before 2018-07-20 10:00:00.
 				</li>
 				<li>
-					<b>"sets.exampleSetB.condition.inv = b.name = 'Nickel' OR b.name = 'Ni'"</b>
+					<b>"sets.exampleSetB.condition.inv = kw.name = 'Nickel' OR kw.name = 'Ni'"</b>
 					to say that Investigations shall only be affiliated with the set <b>"exampleSetB"</b>
 					if they are related to a keyword with name "Nickel" or "Ni". In this example, it is assumed
-					that the first entry in <code>data.inv.subPropertyLists</code> is <b>"keywords"</b>,
-					hence the letter <b>"b"</b> is used in the query.
+					that <code>sets.exampleSetB.join.inv</code> is set to <b>"JOIN a.keywords AS kw"</b>,
+					hence the entity variable <b>"kw"</b> is used in the query.
 				</li>
 				<li>
 					Leave <b>"sets.exampleSetC.condition.inv"</b> blank to say that <i>all</i> Investigations
-					shall unconditionally be affiliated with the set <b>"exampleSetC"</b>.
+					shall be affiliated with the set <b>"exampleSetC"</b>.
+				</li>
+			</ul>
+		</dd>
+		<dt>sets.&lt;set&gt;.join.&lt;configuration&gt;</dt>
+		<dd>
+			For each set and each data configuration, optionally specify additional data objects to be joined
+			when retrieving the items of the set.
+		</dd>
+		<dd>
+			This may be needed to be able to specify certain conditions
+			(see <code>sets.&lt;set&gt;.condition.*</code> above).
+		</dd>
+		<dd>
+			Use the entity variable <b>"a"</b> to access the relations of the configured main object,
+			e.g. <b>"JOIN a.keywords AS kw"</b>.
+		</dd>
+		<dd>
+			For example, if the <code>sets</code> include <b>"exampleSetB"</b> and
+			the <code>sets.exampleSetB.configurations</code> are <b>"inv stud"</b> where
+			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b> and
+			<code>data.stud.mainObject</code> is set to <b>"Study"</b>, one might use:
+			<ul>
+				<li>
+					<b>"sets.exampleSetB.join.inv = JOIN a.keywords AS kw"</b> to say that
+					in the query used to retrieve the Investigations related to the set <b>"exampleSetB"</b>,
+					the related keywords shall be joined and made accessible as entity variable <b>"kw"</b>.
+				</li>
+				<li>
+					<b>"sets.exampleSetB.join.stud =
+						JOIN a.studyInvestigations AS si JOIN si.investigation AS i JOIN i.keywords AS kw"</b>
+					to say that in the query used to retrieve the Studies related to the set <b>"exampleSetB"</b>,
+					the keywords of the related studyInvestigations shall be joined and made accessible
+					as entity variable <b>"kw"</b>.
 				</li>
 			</ul>
 		</dd>

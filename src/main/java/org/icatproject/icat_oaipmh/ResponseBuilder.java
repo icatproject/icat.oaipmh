@@ -335,22 +335,23 @@ public class ResponseBuilder {
 
             // if the harvester requested a specific set,
             // skip data configurations which are not part of the set and
-            // apply conditions to the data configurations which are part of the set
+            // apply conditions and joins to data configurations which are part of the set
             String setCondition = null;
+            String setJoin = null;
             if (parameters.getSet() != null) {
                 ItemSet set = sets.get(parameters.getSet());
                 if (set != null) {
-                    HashMap<String, String> setDataConfigurationsConditions = set.getDataConfigurationsConditions();
-                    if (setDataConfigurationsConditions.keySet().contains(dataConfigurationIdentifier))
-                        setCondition = setDataConfigurationsConditions.get(dataConfigurationIdentifier);
-                    else
+                    if (set.getDataConfigurationsConditions().keySet().contains(dataConfigurationIdentifier)) {
+                        setCondition = set.getDataConfigurationsConditions().get(dataConfigurationIdentifier);
+                        setJoin = set.getDataConfigurationsJoins().get(dataConfigurationIdentifier);
+                    } else
                         continue;
                 } else
                     continue;
             }
 
             String mainObject = dataConfiguration.getMainObject();
-            String join = dataConfiguration.getJoinedObjects();
+            String join = setJoin != null ? setJoin : "";
             String includes = dataConfiguration.getIncludedObjects();
             String where = parameters.makeWhereCondition(dataConfigurationIdentifier, setCondition);
             Integer queryLimit = new Integer(remainingResults + 1);
@@ -376,13 +377,15 @@ public class ResponseBuilder {
 
             HashMap<String, ArrayList<String>> setsObjectIds = new HashMap<String, ArrayList<String>>();
             for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
-                String condition = set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier);
-                if (condition != null) {
-                    String setQuery = String.format("SELECT DISTINCT a.id FROM %s a %s WHERE %s", mainObject, join,
-                            condition);
-                    String setObjects = queryIcat(setQuery);
+                setCondition = set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier);
+                setJoin = set.getValue().getDataConfigurationsJoins().get(dataConfigurationIdentifier);
+                if (setCondition != null || setJoin != null) {
+                    join = setJoin != null ? setJoin : "";
+                    where = setCondition != null ? String.format("WHERE %s", setCondition) : "";
+                    query = String.format("SELECT DISTINCT a.id FROM %s a %s %s", mainObject, join, where);
+                    result = queryIcat(query);
 
-                    JsonReader setJsonReader = Json.createReader(new StringReader(setObjects));
+                    JsonReader setJsonReader = Json.createReader(new StringReader(result));
                     JsonArray setResultsArray = setJsonReader.readArray();
                     setJsonReader.close();
 
