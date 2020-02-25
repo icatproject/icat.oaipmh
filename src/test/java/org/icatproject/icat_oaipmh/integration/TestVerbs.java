@@ -147,9 +147,8 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListMetadataFormatsStudy() throws Exception {
-		Document response = null;
+		Document response = request("?verb=ListMetadataFormats&identifier=" + studyUniqueIdentifier);
 
-		response = request("?verb=ListMetadataFormats&identifier=" + studyUniqueIdentifier);
 		getXmlNode(response, "ListMetadataFormats");
 
 		Node metadataFormat = getXmlNode(response, "metadataFormat");
@@ -164,6 +163,30 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("idDoesNotExist", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListSets() throws Exception {
+		Document response = request("?verb=ListSets");
+
+		Node listSets = getXmlNode(response, "ListSets");
+		List<Node> sets = getXmlChildren(listSets, "set");
+
+		assertEquals(3, sets.size());
+
+		for (Node set : sets) {
+			String setSpec = getXmlChild(set, "setSpec").getTextContent();
+			String setName = getXmlChild(set, "setName").getTextContent();
+
+			if (setSpec.equals("exampleSetA"))
+				assertEquals("Example Set A", setName);
+			else if (setSpec.equals("exampleSetB"))
+				assertEquals("Example Set B", setName);
+			else if (setSpec.equals("exampleSetC"))
+				assertEquals("Example Set C", setName);
+			else
+				throw new AssertionError("Unknown setSpec: " + setSpec);
+		}
 	}
 
 	@Test
