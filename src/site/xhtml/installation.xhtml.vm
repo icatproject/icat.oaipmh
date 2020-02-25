@@ -345,114 +345,134 @@
 		</dd>
 		<dt>sets</dt>
 		<dd>
-			A space separated list of sets to be available in the repository (optional).
+			A space separated list of sets to be available in the repository
+			(optional).
 		</dd>
 		<dd>
-			Sets can be used to group items for the purpose of selective harvesting.
-			Each set must be defined using a unique identifier string.
+			Sets can be used to group items for the purpose of selective
+			harvesting. Each set must be defined using a unique identifier
+			string.
 		</dd>
 		<dd>
 			Example value: <b>"exampleSetA exampleSetB exampleSetC"</b>
 		</dd>
 		<dt>sets.&lt;set&gt;.name</dt>
 		<dd>
-			For each set, specify a descriptive, human readable name.
-			This will be returned as part of the OAI-PMH "ListSets" response.
+			For each set, specify a descriptive, human readable name. This will
+			be returned as part of the OAI-PMH "ListSets" response.
 		</dd>
 		<dd>
 			Example: <b>"sets.exampleSetA.name = Example Set A"</b>
 		</dd>
 		<dt>sets.&lt;set&gt;.configurations</dt>
 		<dd>
-			For each set, specify a space separated list of relevant data configurations.
-			If no further conditions are applied, all items of the relevant data configurations
-			will be affiliated with the set.
+			For each set, specify a space separated list of relevant data
+			configurations. If no further conditions are applied, all items of
+			the relevant data configurations will be affiliated with the set.
 		</dd>
 		<dd>
-			For example, if the <code>sets</code> are <b>"exampleSetA exampleSetB exampleSetC"</b> and
-			the <code>data.configurations</code> are <b>"inv stud"</b> where
-			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b> and
-			<code>data.stud.mainObject</code> is set to <b>"Study"</b>, one might use:
+			For example, if the <code>sets</code> are
+			<b>"exampleSetA exampleSetB exampleSetC"</b> and the
+			<code>data.configurations</code> are <b>"inv stud"</b> where
+			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b>
+			and <code>data.stud.mainObject</code> is set to <b>"Study"</b>, one
+			might use:
 			<ul>
 				<li>
-					<b>"sets.exampleSetA.configurations = inv stud"</b> to say that the set
-					<b>"exampleSetA"</b> shall consist of both Investigations and Studies,
+					<b>"sets.exampleSetA.configurations = inv stud"</b> to say
+					that the set <b>"exampleSetA"</b> shall consist of both
+					Investigations and Studies,
 				</li>
 				<li>
-					<b>"sets.exampleSetB.configurations = inv stud"</b> to say that the set
-					<b>"exampleSetB"</b> shall also consist of both Investigations and Studies, and
+					<b>"sets.exampleSetB.configurations = inv stud"</b> to say
+					that the set <b>"exampleSetB"</b> shall also consist of both
+					Investigations and Studies, and
 				</li>
 				<li>
-					<b>"sets.exampleSetC.configurations = inv"</b> to say that the set
-					<b>"exampleSetC"</b> shall consist only of Investigations.
+					<b>"sets.exampleSetC.configurations = inv"</b> to say that
+					the set <b>"exampleSetC"</b> shall consist only of
+					Investigations.
 				</li>
 			</ul>
 		</dd>
 		<dt>sets.&lt;set&gt;.condition.&lt;configuration&gt;</dt>
 		<dd>
-			For each set and each data configuration, optionally specify an additional condition.
-			Only items that meet this condition will be affiliated with the set.
+			For each set and each data configuration, optionally specify an
+			additional condition. Only items that meet this condition will be
+			affiliated with the set.
 		</dd>
 		<dd>
-			Conditions must be defined using regular ICAT query syntax.
-			Use the entity variable <b>"a"</b> to access the attributes of the configured main object,
-			e.g. <b>"a.modTime"</b>, and use custom entity variables for related objects
-			(see <code>sets.&lt;set&gt;.join.*</code> below).
+			Conditions must be defined using regular ICAT query syntax. Use the
+			entity variable <b>"a"</b> to access the attributes of the
+			configured main object, e.g. <b>"a.modTime"</b>, and use custom
+			entity variables for related objects (see
+			<code>sets.&lt;set&gt;.join.*</code> below).
 		</dd>
 		<dd>
-			For example, if the <code>sets</code> are <b>"exampleSetA exampleSetB exampleSetC"</b>,
-			the <code>sets.exampleSetA.configurations</code> are <b>"inv stud"</b>,
-			the <code>sets.exampleSetB.configurations</code> are <b>"inv stud"</b>, and
-			the <code>sets.exampleSetC.configurations</code> are <b>"inv"</b>, one might use:
+			For example, if the <code>sets</code> are
+			<b>"exampleSetA exampleSetB exampleSetC"</b>, the
+			<code>sets.exampleSetA.configurations</code> are <b>"inv stud"</b>,
+			the <code>sets.exampleSetB.configurations</code> are
+			<b>"inv stud"</b>, and the
+			<code>sets.exampleSetC.configurations</code> are <b>"inv"</b>, one
+			might use:
 			<ul>
 				<li>
 					<b>"sets.exampleSetA.condition.stud = a.modTime <= '2018-07-20 10:00:00'"</b>
-					to say that Studies shall only be affiliated with the set <b>"exampleSetA"</b>
-					if they were modified before 2018-07-20 10:00:00.
+					to say that Studies shall only be affiliated with the set
+					<b>"exampleSetA"</b> if they were modified before 2018-07-20
+					10:00:00.
 				</li>
 				<li>
 					<b>"sets.exampleSetB.condition.inv = kw.name = 'Nickel' OR kw.name = 'Ni'"</b>
-					to say that Investigations shall only be affiliated with the set <b>"exampleSetB"</b>
-					if they are related to a keyword with name "Nickel" or "Ni". In this example, it is assumed
-					that <code>sets.exampleSetB.join.inv</code> is set to <b>"JOIN a.keywords AS kw"</b>,
-					hence the entity variable <b>"kw"</b> is used in the query.
+					to say that Investigations shall only be affiliated with the
+					set <b>"exampleSetB"</b> if they are related to a keyword
+					with name "Nickel" or "Ni". In this example, it is assumed
+					that <code>sets.exampleSetB.join.inv</code> is set to
+					<b>"JOIN a.keywords AS kw"</b>, hence the entity variable
+					<b>"kw"</b> is used in the query.
 				</li>
 				<li>
-					Leave <b>"sets.exampleSetC.condition.inv"</b> blank to say that <i>all</i> Investigations
-					shall be affiliated with the set <b>"exampleSetC"</b>.
+					Leave <b>"sets.exampleSetC.condition.inv"</b> blank to say
+					that <i>all</i> Investigations shall be affiliated with the
+					set <b>"exampleSetC"</b>.
 				</li>
 			</ul>
 		</dd>
 		<dt>sets.&lt;set&gt;.join.&lt;configuration&gt;</dt>
 		<dd>
-			For each set and each data configuration, optionally specify additional data objects to be joined
-			when retrieving the items of the set.
+			For each set and each data configuration, optionally specify
+			additional data objects to be joined when retrieving the items of
+			the set.
 		</dd>
 		<dd>
-			This may be needed to be able to specify certain conditions
-			(see <code>sets.&lt;set&gt;.condition.*</code> above).
+			This may be needed to be able to specify certain conditions (see
+			<code>sets.&lt;set&gt;.condition.*</code> above).
 		</dd>
 		<dd>
-			Use the entity variable <b>"a"</b> to access the relations of the configured main object,
-			e.g. <b>"JOIN a.keywords AS kw"</b>.
+			Use the entity variable <b>"a"</b> to access the relations of the
+			configured main object, e.g. <b>"JOIN a.keywords AS kw"</b>.
 		</dd>
 		<dd>
-			For example, if the <code>sets</code> include <b>"exampleSetB"</b> and
-			the <code>sets.exampleSetB.configurations</code> are <b>"inv stud"</b> where
-			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b> and
-			<code>data.stud.mainObject</code> is set to <b>"Study"</b>, one might use:
+			For example, if the <code>sets</code> include <b>"exampleSetB"</b>
+			and the <code>sets.exampleSetB.configurations</code> are
+			<b>"inv stud"</b> where <code>data.inv.mainObject</code> is set to
+			<b>"Investigation"</b> and <code>data.stud.mainObject</code> is set
+			to <b>"Study"</b>, one might use:
 			<ul>
 				<li>
-					<b>"sets.exampleSetB.join.inv = JOIN a.keywords AS kw"</b> to say that
-					in the query used to retrieve the Investigations related to the set <b>"exampleSetB"</b>,
-					the related keywords shall be joined and made accessible as entity variable <b>"kw"</b>.
+					<b>"sets.exampleSetB.join.inv = JOIN a.keywords AS kw"</b>
+					to say that in the query used to retrieve the Investigations
+					related to the set <b>"exampleSetB"</b>, the related
+					keywords shall be joined and made accessible as entity
+					variable <b>"kw"</b>.
 				</li>
 				<li>
-					<b>"sets.exampleSetB.join.stud =
-						JOIN a.studyInvestigations AS si JOIN si.investigation AS i JOIN i.keywords AS kw"</b>
-					to say that in the query used to retrieve the Studies related to the set <b>"exampleSetB"</b>,
-					the keywords of the related studyInvestigations shall be joined and made accessible
-					as entity variable <b>"kw"</b>.
+					<b>"sets.exampleSetB.join.stud = JOIN a.studyInvestigations AS si JOIN si.investigation AS i JOIN i.keywords AS kw"</b>
+					to say that in the query used to retrieve the Studies
+					related to the set <b>"exampleSetB"</b>, the keywords of the
+					related studyInvestigations shall be joined and made
+					accessible as entity variable <b>"kw"</b>.
 				</li>
 			</ul>
 		</dd>
