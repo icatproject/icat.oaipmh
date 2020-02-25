@@ -11,25 +11,21 @@
 	<h2>Compatibility</h2>
 	This plugin will work with an ICAT version of 4.9.0 or greater.
 
+
 	<h2>Prerequisites</h2>
 
 	<ul>
 		<li>
-			The icat_oaipmh distribution:
-			<a
+			The icat_oaipmh distribution: <a
 				href="${repoUrl}/org/icatproject/icat.oaipmh/${project.version}/icat.oaipmh-${project.version}-distro.zip">
-				icat_oaipmh-${project.version}-distro.zip
-			</a>
+				icat_oaipmh-${project.version}-distro.zip</a>
 		</li>
 		<li>
 			A suitable deployed container (here assumed to be Glassfish/Payara)
-			to support a web application. Testing has been carried out with payara41.
-			<a href="http://icatproject.org/installation/glassfish/">
-				Glassfish/Payara installation instructions
-			</a>
-			are available.
+			to support a web application. Testing has been carried out with
+			payara41. <a href="http://icatproject.org/installation/glassfish/">
+				Glassfish/Payara installation instructions</a> are available.
 		</li>
-
 		<li>Python (version 2.4 to 2.7) installed on the server.</li>
 	</ul>
 
@@ -37,10 +33,8 @@
 	<h2>Summary of steps</h2>
 	<ol>
 		<li>
-			Please follow
-			<a href="http://icatproject.org/installation/component/">
-				the generic installation instructions
-			</a>
+			Please follow <a href="http://icatproject.org/installation/component/">
+				the generic installation instructions</a>
 		</li>
 		<li>
 			Check that it works.
@@ -52,28 +46,26 @@
 	<dl>
 		<dt>container</dt>
 		<dd>
-			Values must be chosen from:
-			<a target="_blank"
+			Values must be chosen from: <a target="_blank"
 				href="http://www.eclipse.org/eclipselink/api/2.6/org/eclipse/persistence/config/TargetServer.html">
-				TargetServer
-			</a>
+				TargetServer</a>
 			Though only Glassfish is working properly at the moment.
 		</dd>
 		<dt>home</dt>
 		<dd>
-			is the top level of the container installation.
-			For Glassfish it must contain "glassfish/domains" and
-			for JBoss (wildfly) it must contain jboss-modules.jar.
+			is the top level of the container installation. For Glassfish it
+			must contain "glassfish/domains" and for JBoss (wildfly) it must
+			contain jboss-modules.jar.
 		</dd>
 		<dt>port</dt>
 		<dd>
-			is the administration port of the container
-			which is typically 4848 for Glassfish and 9990 for JBoss.
+			is the administration port of the container which is typically 4848
+			for Glassfish and 9990 for JBoss.
 		</dd>
 		<dt>secure</dt>
 		<dd>
-			must be set to true or false.
-			If true then only https and not http connections will be allowed.
+			must be set to true or false. If true then only https and not http
+			connections will be allowed.
 		</dd>
 	</dl>
 
@@ -87,16 +79,18 @@
 
 	<h2>The run.properties file</h2>
 	<p>
-		<b>Note:</b> When you are using non-ASCII characters for one or more properties
-		(e.g. for the <code>repositoryName</code>), the <code>run.properties</code> file must
-		either be encoded as ISO 8859-1 (Latin-1), or non-ASCII characters must be represented
-		using Unicode escapes (e.g. <code>\u00fc</code> for the character <code>&uuml;</code>).
+		<b>Note:</b> When you are using non-ASCII characters for one or more
+		properties (e.g. for the <code>repositoryName</code>), the
+		<code>run.properties</code> file must either be encoded as ISO 8859-1
+		(Latin-1), or non-ASCII characters must be represented using Unicode
+		escapes (e.g. <code>\u00fc</code> for the character
+		<code>&uuml;</code>).
 	</p>
 	<dl>
 		<dt>icat.url</dt>
 		<dd>
-			The url of the machine hosting the icat service.
-			It should normally just have the scheme, the hostname and the port.
+			The url of the machine hosting the icat service. It should normally
+			just have the scheme, the hostname and the port.
 		</dd>
 		<dd>
 			Example value: <b>"https://example.org:443"</b>
@@ -111,24 +105,24 @@
 		</dd>
 		<dt>repositoryName</dt>
 		<dd>
-			A human readable name for the repository.
-			The name will be returned as part of the OAI-PMH "Identify" response.
+			A human readable name for the repository. The name will be returned
+			as part of the OAI-PMH "Identify" response.
 		</dd>
 		<dd>
 			Example value: <b>"Example experimental data repository"</b>
 		</dd>
 		<dt>adminEmails</dt>
 		<dd>
-			A space separated list of e-mail addresses of the repository administrator.
-			The email addresses will be returned as part of the OAI-PMH "Identify" response.
+			A space separated list of e-mail addresses of the repository
+			administrator. The email addresses will be returned as part of the
+			OAI-PMH "Identify" response.
 		</dd>
 		<dd>
 			Example value: <b>"someone@example.org another@example.org"</b>
 		</dd>
 		<dt>requestUrl</dt>
 		<dd>
-			The base URL of the OAI-PMH interface.
-			Must be a well-formed URL.
+			The base URL of the OAI-PMH interface. Must be a well-formed URL.
 			This will be returned as part of the OAI-PMH "Identify" response,
 			and is being used for the unique identifiers of records.
 		</dd>
@@ -153,36 +147,44 @@
 			Example values: <b>"yyyy-MM-dd HH:mm:ss Z"</b> or <b>"MM/dd/yyyy HH:mm.ss Z"</b>
 		</dd>
 		<dd>
-			This will be used to format date/time values when querying ICAT
-			(see <code>icatDateTimeZone</code> below for details).
+			This will be used to format date/time values when querying ICAT (see
+			<code>icatDateTimeZone</code> below for details).
 		</dd>
 		<dt>icatDateTimeZone</dt>
 		<dd>
-			A zoneId (or time zone offset) for the <code>of(String zoneId)</code> method of the Java
-			<a target="_blank" href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html">
+			A zoneId (or time zone offset) for the <code>of(String zoneId)</code>
+			method of the Java <a target="_blank"
+				href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html">
 				ZoneId</a>.
 		</dd>
 		<dd>
-			Example values: <b>"Z"</b> or <b>"Europe/Berlin"</b> or <b>"+02:00"</b>
+			Example values: <b>"Z"</b> or <b>"Europe/Berlin"</b> or
+			<b>"+02:00"</b>
 		</dd>
 		<dd>
 			This will be used to format date/time values when querying ICAT.
-			Make sure both the <code>icatDateTimeFormat</code> and the <code>icatDateTimeZone</code>
-			match with the way date/time values are stored in your ICAT.
+			Make sure both the <code>icatDateTimeFormat</code> and the
+			<code>icatDateTimeZone</code> match with the way date/time values
+			are stored in your ICAT.
 		</dd>
 		<dd>
-			For example, when a harvester requests the records from 2018-08-31 07:45:20 (UTC),
+			For example, when a harvester requests the records from 2018-08-31
+			07:45:20 (UTC),
 			<ul>
 				<li>
-					if <code>icatDateTimeFormat</code> is set to <b>"MM/dd/yyyy HH:mm.ss Z"</b>,
-					and <code>icatDateTimeZone</code> is set to <b>"+02:00"</b>,
-					the query sent to ICAT by icat.oaipmh would use the following condition: <br />
+					if <code>icatDateTimeFormat</code> is set to
+					<b>"MM/dd/yyyy HH:mm.ss Z"</b>, and
+					<code>icatDateTimeZone</code> is set to <b>"+02:00"</b>,
+					the query sent to ICAT by icat.oaipmh would use the
+					following condition: <br />
 					<b>"WHERE a.modTime >= '08/31/2018 09:45.20 +0200'"</b>.
 				</li>
 				<li>
-					if <code>icatDateTimeFormat</code> is set to <b>"yyyy-MM-dd HH:mm:ss Z"</b>,
-					and <code>icatDateTimeZone</code> is set to <b>"Z"</b>,
-					the query sent to ICAT by icat.oaipmh would use the following condition: <br />
+					if <code>icatDateTimeFormat</code> is set to
+					<b>"yyyy-MM-dd HH:mm:ss Z"</b>, and
+					<code>icatDateTimeZone</code> is set to <b>"Z"</b>, the
+					query sent to ICAT by icat.oaipmh would use the following
+					condition: <br />
 					<b>"WHERE a.modTime >= '2018-08-31 07:45:20 +0000'"</b>.
 				</li>
 			</ul>
@@ -192,20 +194,23 @@
 			A space separated list of metadata formats to be supported.
 		</dd>
 		<dd>
-			At minimum, support for the Dublin Core format ("oai_dc") is required.
+			At minimum, support for the Dublin Core format ("oai_dc") is
+			required.
 		</dd>
 		<dd>
 			Example value: <b>"oai_dc oai_datacite"</b>
 		</dd>
 		<dt>&lt;metadataPrefix&gt;.xslt</dt>
 		<dd>
-			For each metadata format, specify the absolute path to an XSLT definition.
-			This XSLT file must be able to transform metadata from the generic XML format
-			(as defined by the <code>data.*</code> properties below)
-			into some other well defined metadata format (such as Dublin Core).
+			For each metadata format, specify the absolute path to an XSLT
+			definition. This XSLT file must be able to transform metadata from
+			the generic XML format (as defined by the <code>data.*</code>
+			properties below) into some other well defined metadata format (such
+			as Dublin Core).
 		</dd>
 		<dd>
-			For more information, see the example files located at "src/main/config/".
+			For more information, see the example files located at
+			"src/main/config/".
 		</dd>
 		<dd>
 			Example: <b>"oai_dc.xslt = /home/icat/xslt/dublin_core.xsl"</b>
@@ -215,16 +220,16 @@
 			For each metadata format, specify the namespace.
 		</dd>
 		<dd>
-			Example (official Dublin Core namespace): <b>"oai_dc.namespace =
-				http://www.openarchives.org/OAI/2.0/oai_dc/"</b>
+			Example (official Dublin Core namespace):
+			<b>"oai_dc.namespace = http://www.openarchives.org/OAI/2.0/oai_dc/"</b>
 		</dd>
 		<dt>&lt;metadataPrefix&gt;.schema</dt>
 		<dd>
 			For each metadata format, specify the link to a schema definition.
 		</dd>
 		<dd>
-			Example (official Dublin Core schema definition): <b>"oai_dc.schema =
-				http://www.openarchives.org/OAI/2.0/oai_dc.xsd"</b>
+			Example (official Dublin Core schema definition):
+			<b>"oai_dc.schema = http://www.openarchives.org/OAI/2.0/oai_dc.xsd"</b>
 		</dd>
 		<dt>data.configurations</dt>
 		<dd>
@@ -232,27 +237,32 @@
 			metadata to be retrieved from ICAT.
 		</dd>
 		<dd>
-			Each listed data configuration must use a unique identifier.
-			It is recommended to use short human readable identifiers, such as
-			'inv' for the data object Investigation, or 'stud' for Study.
+			Each listed data configuration must use a unique identifier. It is
+			recommended to use short human readable identifiers, such as 'inv'
+			for the data object Investigation, or 'stud' for Study.
 		</dd>
 		<dd>
 			Example value: <b>"inv stud"</b>
 		</dd>
 		<dt>data.&lt;configuration&gt;.metadataPrefixes</dt>
 		<dd>
-			For each data configuration, specify a space separated list of supported metadata formats
-			(as defined in the list of <code>metadataPrefixes</code> above).
+			For each data configuration, specify a space separated list of
+			supported metadata formats (as defined in the list of
+			<code>metadataPrefixes</code> above).
 		</dd>
 		<dd>
-			At minimum, support for the Dublin Core format ("oai_dc") is required.
+			At minimum, support for the Dublin Core format ("oai_dc") is
+			required.
 		</dd>
 		<dd>
-			For example, if the <code>metadataPrefixes</code> are <b>"oai_dc oai_datacite"</b>, and
-			the <code>data.configurations</code> are <b>"inv stud"</b>, one might use:
+			For example, if the <code>metadataPrefixes</code> are
+			<b>"oai_dc oai_datacite"</b>, and the
+			<code>data.configurations</code> are <b>"inv stud"</b>, one might
+			use:
 			<ul>
 				<li>
-					<b>"data.inv.metadataPrefixes = oai_dc oai_datacite"</b>, and
+					<b>"data.inv.metadataPrefixes = oai_dc oai_datacite"</b>,
+					and
 				</li>
 				<li>
 					<b>"data.stud.metadataPrefixes = oai_dc"</b>
@@ -261,11 +271,13 @@
 		</dd>
 		<dt>data.&lt;configuration&gt;.mainObject</dt>
 		<dd>
-			For each data configuration, specify the ICAT object (from the ICAT metadata schema)
-			which will be the main source of information when retrieving metadata from ICAT.
+			For each data configuration, specify the ICAT object (from the ICAT
+			metadata schema) which will be the main source of information when
+			retrieving metadata from ICAT.
 		</dd>
 		<dd>
-			For example, if the <code>data.configurations</code> are <b>"inv stud"</b>, one might use:
+			For example, if the <code>data.configurations</code> are
+			<b>"inv stud"</b>, one might use:
 			<ul>
 				<li>
 					<b>"data.inv.mainObject = Investigation"</b>, and
@@ -277,27 +289,31 @@
 		</dd>
 		<dt>data.&lt;configuration&gt;.&lt;icatObject&gt;.subPropertyLists</dt>
 		<dd>
-			A space separated list of ICAT sub-objects which are to be included in the property hierarchy
-			below the <code>&lt;icatObject&gt;</code> for the respective <code>&lt;configuration&gt;</code>.
+			A space separated list of ICAT sub-objects which are to be included
+			in the property hierarchy below the <code>&lt;icatObject&gt;</code>
+			for the respective <code>&lt;configuration&gt;</code>.
 		</dd>
 		<dd>
-			For example, if the <code>data.configurations</code> include <b>"inv"</b>, and
-			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b>, one might use:
+			For example, if the <code>data.configurations</code> include
+			<b>"inv"</b>, and <code>data.inv.mainObject</code> is set to
+			<b>"Investigation"</b>, one might use:
 			<ul>
 				<li>
-					<b>"data.inv.subPropertyLists = datasets"</b>
-					to include the datasets as part an investigation, and
+					<b>"data.inv.subPropertyLists = datasets"</b> to include the
+					datasets as part an investigation, and
 				</li>
 				<li>
 					<b>"data.inv.datasets.subPropertyLists = datafiles parameters"</b>
-					to include the datafiles and parameters as part of a dataset.
+					to include the datafiles and parameters as part of a
+					dataset.
 				</li>
 			</ul>
 		</dd>
 		<dt>data.&lt;configuration&gt;.&lt;icatObject&gt;.&lt;dataTypeProperties&gt;</dt>
 		<dd>
 			A space separated list of ICAT properties to be retrieved from ICAT
-			for the <code>&lt;icatObject&gt;</code> when retrieving metadata from ICAT.
+			for the <code>&lt;icatObject&gt;</code> when retrieving metadata
+			from ICAT.
 		</dd>
 		<dd>
 			Possible <code>&lt;dataTypeProperties&gt;</code> are:
@@ -305,15 +321,17 @@
 			depending on the data type within ICAT.
 		</dd>
 		<dd>
-			For example, if the <code>data.configurations</code> include <b>"inv"</b>,
-			<code>data.inv.mainObject</code> is set to <b>"Investigation"</b>,
-			<code>data.inv.subPropertyLists</code> is set to <b>"investigationUsers"</b>, and
-			<code>data.inv.investigationUsers.subPropertyLists</code> is set to <b>"user"</b>,
-			one might use:
+			For example, if the <code>data.configurations</code> include
+			<b>"inv"</b>, <code>data.inv.mainObject</code> is set to
+			<b>"Investigation"</b>, <code>data.inv.subPropertyLists</code> is
+			set to <b>"investigationUsers"</b>, and
+			<code>data.inv.investigationUsers.subPropertyLists</code> is set to
+			<b>"user"</b>, one might use:
 			<ul>
 				<li>
 					<b>"data.inv.stringProperties = doi title summary"</b> and
-					<b>"data.inv.dateProperties = startDate endDate"</b> as properties for the investigation,
+					<b>"data.inv.dateProperties = startDate endDate"</b> as
+					properties for the investigation,
 				</li>
 				<li>
 					<b>"data.inv.investigationUsers.stringProperties = role"</b>
@@ -440,27 +458,30 @@
 		</dd>
 		<dt>responseDebug</dt>
 		<dd>
-			If this (optional) parameter is included and set to <b>"true"</b>, the metadata
-			received when making OAI-PMH calls won't be transformed into another format.
+			If this (optional) parameter is included and set to <b>"true"</b>,
+			the metadata received when making OAI-PMH calls won't be transformed
+			into another format.
 		</dd>
 		<dd>
-			This means, the metadata will stay in the generic XML format
-			(as defined by the <code>data.*</code> properties above),
-			and the defined <code>metadataPrefixes</code> properties are ignored.
+			This means, the metadata will stay in the generic XML format (as
+			defined by the <code>data.*</code> properties above), and the
+			defined <code>metadataPrefixes</code> properties are ignored.
 		</dd>
 		<dd>
-			This is particularly helpful for the development of custom XSLT files,
-			in order to understand the structure of the generic XML format before
-			attempting to transform it into some other metadata format.
+			This is particularly helpful for the development of custom XSLT
+			files, in order to understand the structure of the generic XML
+			format before attempting to transform it into some other metadata
+			format.
 		</dd>
 		<dt>responseStyle</dt>
 		<dd>
-			Set this (optional) parameter to the URL of an XSL document which you
-			want to apply to all XML responses.
+			Set this (optional) parameter to the URL of an XSL document which
+			you want to apply to all XML responses.
 		</dd>
 		<dd>
-			One particular use case for this would be to have the XML responses transform
-			into HTML documents when making OAI-PMH calls from a web browser.
+			One particular use case for this would be to have the XML responses
+			transform into HTML documents when making OAI-PMH calls from a web
+			browser.
 		</dd>
 	</dl>
 
@@ -469,8 +490,8 @@
 	<p>
 		A simple standalone test is to run:
 		<blockquote>
-			<code>curl -k https://localhost:8181/oaipmh/request?verb=Identify -w "\n"</code>
-			which should return the OAI-PMH "Identify" response
+			<code>curl -k https://localhost:8181/oaipmh/request?verb=Identify -w
+			"\n" </code> which should return the OAI-PMH "Identify" response
 		</blockquote>
 	</p>
 
