@@ -23,7 +23,10 @@ if arg == "INSTALL":
 
     metadataPrefixes = properties["metadataPrefixes"].split()
     dataConfigurations = properties["data.configurations"].split()
-    sets = properties["sets"].split()
+    try:
+        sets = properties["sets"].split()
+    except KeyError:
+        sets = []
 
     try:
         val = int(properties["maxResults"])
