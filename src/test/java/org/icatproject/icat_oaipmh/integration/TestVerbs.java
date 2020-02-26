@@ -147,9 +147,8 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListMetadataFormatsStudy() throws Exception {
-		Document response = null;
+		Document response = request("?verb=ListMetadataFormats&identifier=" + studyUniqueIdentifier);
 
-		response = request("?verb=ListMetadataFormats&identifier=" + studyUniqueIdentifier);
 		getXmlNode(response, "ListMetadataFormats");
 
 		Node metadataFormat = getXmlNode(response, "metadataFormat");
@@ -164,6 +163,30 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("idDoesNotExist", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListSets() throws Exception {
+		Document response = request("?verb=ListSets");
+
+		Node listSets = getXmlNode(response, "ListSets");
+		List<Node> sets = getXmlChildren(listSets, "set");
+
+		assertEquals(3, sets.size());
+
+		for (Node set : sets) {
+			String setSpec = getXmlChild(set, "setSpec").getTextContent();
+			String setName = getXmlChild(set, "setName").getTextContent();
+
+			if (setSpec.equals("exampleSetA"))
+				assertEquals("Example Set A", setName);
+			else if (setSpec.equals("exampleSetB"))
+				assertEquals("Example Set B", setName);
+			else if (setSpec.equals("exampleSetC"))
+				assertEquals("Example Set C", setName);
+			else
+				throw new AssertionError("Unknown setSpec: " + setSpec);
+		}
 	}
 
 	@Test
@@ -217,6 +240,9 @@ public class TestVerbs extends BaseTest {
 		Node header = getXmlNode(response, "header");
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(investigationUniqueIdentifier, identifier);
+
+		Node setSpec = getXmlNode(response, "setSpec");
+		assertEquals("exampleSetC", setSpec.getTextContent());
 	}
 
 	@Test
@@ -228,6 +254,9 @@ public class TestVerbs extends BaseTest {
 		Node header = getXmlNode(response, "header");
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(studyUniqueIdentifier, identifier);
+
+		Node setSpec = getXmlNode(response, "setSpec");
+		assertEquals("exampleSetB", setSpec.getTextContent());
 	}
 
 	@Test
@@ -263,7 +292,7 @@ public class TestVerbs extends BaseTest {
 	@Test
 	public void testListIdentifiersResumptionTokenAndAdditionalArguments() throws Exception {
 		Document response = request(
-				"?verb=ListIdentifiers&metadataPrefix=oai_dc&resumptionToken=oai_dc,inv/1,null,null");
+				"?verb=ListIdentifiers&metadataPrefix=oai_dc&resumptionToken=oai_dc,inv/1,null,null,null");
 
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
@@ -273,7 +302,7 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListIdentifiersInvalidResumptionTokenMetadataFormat() throws Exception {
-		Document response = request("?verb=ListIdentifiers&resumptionToken=invalid,inv/1,null,null");
+		Document response = request("?verb=ListIdentifiers&resumptionToken=invalid,inv/1,null,null,null");
 
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
@@ -312,11 +341,11 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testListIdentifiersWithResumptionToken() throws Exception {
+	public void testListIdentifiersWithResumptionTokenAndSet() throws Exception {
 		Document response;
 		String resumptionToken;
 
-		response = request("?verb=ListIdentifiers&metadataPrefix=oai_datacite");
+		response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc&set=exampleSetB");
 
 		getXmlNode(response, "ListIdentifiers");
 		getXmlNodes(response, "header", 2);
@@ -334,7 +363,7 @@ public class TestVerbs extends BaseTest {
 	@Test
 	public void testListIdentifiersWithResumptionTokenAndTimespan() throws Exception {
 		Document response = request(
-				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
+				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z,null");
 
 		getXmlNode(response, "ListIdentifiers");
 		getXmlNodes(response, "header", 1);
@@ -366,6 +395,27 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListIdentifiersWithSet() throws Exception {
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc&set=exampleSetA");
+
+		getXmlNode(response, "ListIdentifiers");
+		getXmlNodes(response, "header", 2);
+
+		String resumptionToken = getXmlNode(response, "resumptionToken").getTextContent();
+		assertEquals("", resumptionToken);
+	}
+
+	@Test
+	public void testListIdentifiersWithUndefinedSet() throws Exception {
+		Document response = request("?verb=ListIdentifiers&metadataPrefix=oai_dc&set=undefined");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("noRecordsMatch", errorCode.getTextContent());
 	}
 
 	@Test
@@ -401,7 +451,7 @@ public class TestVerbs extends BaseTest {
 	@Test
 	public void testListRecordsResumptionTokenAndAdditionalArguments() throws Exception {
 		Document response = request(
-				"?verb=ListRecords&metadataPrefix=oai_dc&resumptionToken=oai_dc,inv/1,null,null");
+				"?verb=ListRecords&metadataPrefix=oai_dc&resumptionToken=oai_dc,inv/1,null,null,null");
 
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
@@ -411,7 +461,7 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListRecordsInvalidResumptionTokenMetadataFormat() throws Exception {
-		Document response = request("?verb=ListRecords&resumptionToken=invalid,inv/1,null,null");
+		Document response = request("?verb=ListRecords&resumptionToken=invalid,inv/1,null,null,null");
 
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
@@ -450,11 +500,11 @@ public class TestVerbs extends BaseTest {
 	}
 
 	@Test
-	public void testListRecordsWithResumptionToken() throws Exception {
+	public void testListRecordsWithResumptionTokenAndSet() throws Exception {
 		Document response;
 		String resumptionToken;
 
-		response = request("?verb=ListRecords&metadataPrefix=oai_datacite");
+		response = request("?verb=ListRecords&metadataPrefix=oai_dc&set=exampleSetB");
 
 		getXmlNode(response, "ListRecords");
 		getXmlNodes(response, "record", 2);
@@ -472,7 +522,7 @@ public class TestVerbs extends BaseTest {
 	@Test
 	public void testListRecordsWithResumptionTokenAndTimespan() throws Exception {
 		Document response = request(
-				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z");
+				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z,null");
 
 		getXmlNode(response, "ListRecords");
 		getXmlNodes(response, "record", 1);
@@ -504,5 +554,26 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testListRecordsWithSet() throws Exception {
+		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc&set=exampleSetA");
+
+		getXmlNode(response, "ListRecords");
+		getXmlNodes(response, "record", 2);
+
+		String resumptionToken = getXmlNode(response, "resumptionToken").getTextContent();
+		assertEquals("", resumptionToken);
+	}
+
+	@Test
+	public void testListRecordsWithUndefinedSet() throws Exception {
+		Document response = request("?verb=ListRecords&metadataPrefix=oai_dc&set=undefined");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("noRecordsMatch", errorCode.getTextContent());
 	}
 }

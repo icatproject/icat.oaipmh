@@ -79,6 +79,29 @@
 !data.stud.studyInvestigations.investigation.investigationUsers.subPropertyLists = user
 !data.stud.studyInvestigations.investigation.investigationUsers.user.stringProperties = fullName givenName familyName orcidId
 
+# A list of sets to be available in the repository (OAI-PMH feature)
+!sets = exampleSetA exampleSetB exampleSetC
+
+# A descriptive name for each set
+!sets.exampleSetA.name = Example Set A
+!sets.exampleSetB.name = Example Set B
+!sets.exampleSetC.name = Example Set C
+
+# The list of relevant data configurations for each set
+!sets.exampleSetA.configurations = inv stud
+!sets.exampleSetB.configurations = inv stud
+!sets.exampleSetC.configurations = inv
+
+# Optional condition of set affiliation per set and data configuration
+!sets.exampleSetA.condition.inv = a.modTime >= '2018-07-20 08:00:00' AND a.modTime <= '2018-07-30 08:00:00'
+!sets.exampleSetA.condition.stud = a.modTime <= '2018-07-20 10:00:00'
+!sets.exampleSetB.condition.inv = kw.name = 'Nickel' OR kw.name = 'Ni'
+!sets.exampleSetB.condition.stud = kw.name = 'Nickel' OR kw.name = 'Ni'
+
+# Optional data objects to be joined when retrieving the items of a set
+!sets.exampleSetB.join.inv = JOIN a.keywords AS kw
+!sets.exampleSetB.join.stud = JOIN a.studyInvestigations AS si JOIN si.investigation AS i JOIN i.keywords AS kw
+
 # If set to 'true', metadata won't be transformed into another format
 !responseDebug = true
 

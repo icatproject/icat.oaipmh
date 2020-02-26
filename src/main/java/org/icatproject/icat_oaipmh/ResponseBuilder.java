@@ -39,11 +39,13 @@ public class ResponseBuilder {
     private final String requestUrl;
     private HashMap<String, MetadataFormat> metadataFormats;
     private HashMap<String, DataConfiguration> dataConfigurations;
+    private HashMap<String, ItemSet> sets;
 
     public ResponseBuilder(String icatUrl, String[] icatAuth, String repositoryName, ArrayList<String> adminEmails,
             String requestUrl) {
         metadataFormats = new HashMap<String, MetadataFormat>();
         dataConfigurations = new HashMap<String, DataConfiguration>();
+        sets = new HashMap<String, ItemSet>();
         this.icatUrl = icatUrl;
         this.icatAuth = icatAuth;
         this.repositoryName = repositoryName;
@@ -57,6 +59,10 @@ public class ResponseBuilder {
 
     public void addDataConfiguration(String identifier, DataConfiguration dataConfiguration) {
         dataConfigurations.put(identifier, dataConfiguration);
+    }
+
+    public void addSet(String setSpec, ItemSet set) {
+        sets.put(setSpec, set);
     }
 
     public Map<String, MetadataFormat> getMetadataFormats() {
@@ -188,8 +194,15 @@ public class ResponseBuilder {
         }
     }
 
-    public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) {
-        res.addError("noSetHierarchy", "This repository does not support sets");
+    public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
+        Element listSets = res.addXmlElement(null, "ListSets");
+
+        for (Map.Entry<String, ItemSet> s : sets.entrySet()) {
+            Element set = res.addXmlElement(listSets, "set");
+
+            res.addXmlElement(set, "setSpec", s.getKey());
+            res.addXmlElement(set, "setName", s.getValue().getSetName());
+        }
     }
 
     public void buildListMetadataFormatsResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
@@ -263,15 +276,14 @@ public class ResponseBuilder {
             } catch (ParseException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
-        } else if (req.getParameter("set") != null) {
-            res.addError("noSetHierarchy", "This repository does not support sets");
         } else {
             String metadataPrefix = req.getParameter("metadataPrefix");
             String identifier = req.getParameter("identifier");
             String from = req.getParameter("from");
             String until = req.getParameter("until");
+            String set = req.getParameter("set");
             try {
-                parameters = new IcatQueryParameters(metadataPrefix, from, until, identifier,
+                parameters = new IcatQueryParameters(metadataPrefix, from, until, set, identifier,
                         dataConfigurations.keySet());
             } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
@@ -321,12 +333,30 @@ public class ResponseBuilder {
                     continue;
             }
 
+            // if the harvester requested a specific set,
+            // skip data configurations which are not part of the set and
+            // apply conditions and joins to data configurations which are part of the set
+            String setCondition = null;
+            String setJoin = null;
+            if (parameters.getSet() != null) {
+                ItemSet set = sets.get(parameters.getSet());
+                if (set != null) {
+                    if (set.getDataConfigurationsConditions().keySet().contains(dataConfigurationIdentifier)) {
+                        setCondition = set.getDataConfigurationsConditions().get(dataConfigurationIdentifier);
+                        setJoin = set.getDataConfigurationsJoins().get(dataConfigurationIdentifier);
+                    } else
+                        continue;
+                } else
+                    continue;
+            }
+
             String mainObject = dataConfiguration.getMainObject();
+            String join = setJoin != null ? setJoin : "";
             String includes = dataConfiguration.getIncludedObjects();
-            String where = parameters.makeWhereCondition(dataConfigurationIdentifier);
+            String where = parameters.makeWhereCondition(dataConfigurationIdentifier, setCondition);
             Integer queryLimit = new Integer(remainingResults + 1);
-            String query = String.format("SELECT a FROM %s a %s ORDER BY a.id LIMIT 0,%s %s", mainObject, where,
-                    queryLimit, includes);
+            String query = String.format("SELECT DISTINCT a FROM %s a %s %s ORDER BY a.id LIMIT 0,%s %s", mainObject,
+                    join, where, queryLimit, includes);
 
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));
@@ -345,11 +375,33 @@ public class ResponseBuilder {
             if (incomplete && remainingResults <= 0)
                 break;
 
+            HashMap<String, ArrayList<String>> setsObjectIds = new HashMap<String, ArrayList<String>>();
+            for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
+                setCondition = set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier);
+                setJoin = set.getValue().getDataConfigurationsJoins().get(dataConfigurationIdentifier);
+                if (setCondition != null || setJoin != null) {
+                    join = setJoin != null ? setJoin : "";
+                    where = setCondition != null ? String.format("WHERE %s", setCondition) : "";
+                    query = String.format("SELECT DISTINCT a.id FROM %s a %s %s", mainObject, join, where);
+                    result = queryIcat(query);
+
+                    JsonReader setJsonReader = Json.createReader(new StringReader(result));
+                    JsonArray setResultsArray = setJsonReader.readArray();
+                    setJsonReader.close();
+
+                    ArrayList<String> setObjectIds = new ArrayList<String>();
+                    for (JsonValue id : setResultsArray) {
+                        setObjectIds.add(id.toString());
+                    }
+                    setsObjectIds.put(set.getKey(), setObjectIds);
+                }
+            }
+
             RequestedProperties requestedProperties = dataConfiguration.getRequestedProperties();
 
             for (JsonValue data : resultsArray.subList(0, resultsArraySize)) {
-                XmlInformation header = extractHeaderInformation(data, dataConfigurationIdentifier,
-                        requestedProperties);
+                XmlInformation header = extractHeaderInformation(data, dataConfigurationIdentifier, requestedProperties,
+                        setsObjectIds);
 
                 XmlInformation metadata = null;
                 if (includeMetadata)
@@ -372,7 +424,8 @@ public class ResponseBuilder {
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
-            RequestedProperties requestedProperties) throws InternalException {
+            RequestedProperties requestedProperties, Map<String, ? extends List<String>> setsObjectIds)
+            throws InternalException {
         HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
 
         JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
@@ -387,6 +440,17 @@ public class ResponseBuilder {
         ArrayList<String> datestamp = new ArrayList<String>();
         datestamp.add(IcatQueryParameters.makeFormattedDateTime(modTime));
         properties.put("datestamp", datestamp);
+
+        ArrayList<String> setAffiliation = new ArrayList<String>();
+        for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
+            if (set.getValue().getDataConfigurationsConditions().keySet().contains(dataConfigurationIdentifier))
+                if (set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier) == null)
+                    setAffiliation.add(set.getKey());
+                else if (setsObjectIds.get(set.getKey()).contains(id))
+                    setAffiliation.add(set.getKey());
+        }
+        if (setAffiliation.size() != 0)
+            properties.put("setSpec", setAffiliation);
 
         XmlInformation headers = new XmlInformation(properties, null);
         return headers;

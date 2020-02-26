@@ -36,6 +36,10 @@ public class RequestHandler {
         rb.addDataConfiguration(identifier, configuration);
     }
 
+    public void registerSet(String setSpec, ItemSet set) {
+        rb.addSet(setSpec, set);
+    }
+
     public String request(HttpServletRequest req) throws InternalException {
         XmlResponse res = new XmlResponse();
         String[] verbs = req.getParameterValues("verb");
@@ -101,7 +105,7 @@ public class RequestHandler {
 
     private String handleListSets(HttpServletRequest req, XmlResponse res, Templates template)
             throws InternalException {
-        String[] allowedParameters = { "verb", "resumptionToken" };
+        String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
 
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {

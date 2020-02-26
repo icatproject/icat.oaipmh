@@ -30,10 +30,11 @@ public class IcatQueryParameters {
     private String untilTime;
     private String identifierDataConfiguration;
     private String identifierId;
+    private String set;
 
     private static final Logger logger = LoggerFactory.getLogger(XmlResponse.class);
 
-    public IcatQueryParameters(String metadataPrefix, String from, String until, String uniqueIdentifier,
+    public IcatQueryParameters(String metadataPrefix, String from, String until, String set, String uniqueIdentifier,
             Set<String> dataConfigurations) throws ParseException, InternalException {
         this.metadataPrefix = metadataPrefix;
 
@@ -43,6 +44,8 @@ public class IcatQueryParameters {
         this.from = from;
         this.until = until;
         this.setFromUntilTimes();
+
+        this.set = set;
 
         if (uniqueIdentifier != null) {
             String[] identifierParts = uniqueIdentifier.split(":");
@@ -66,7 +69,7 @@ public class IcatQueryParameters {
             throws ParseException, InternalException {
         String[] token = resumptionToken.split(",");
 
-        if (token.length != 4)
+        if (token.length != 5)
             throw new ParseException(resumptionToken, 0);
 
         this.metadataPrefix = token[0];
@@ -81,6 +84,8 @@ public class IcatQueryParameters {
         this.from = token[2].equals("null") ? null : token[2];
         this.until = token[3].equals("null") ? null : token[3];
         this.setFromUntilTimes();
+
+        this.set = token[4].equals("null") ? null : token[4];
 
         this.identifierDataConfiguration = null;
         this.identifierId = null;
@@ -153,10 +158,10 @@ public class IcatQueryParameters {
         String lastIdentifier = String.format("%s/%s", newLastDataConfiguration, newLastId);
         if (until == null)
             until = formatDateTime(OffsetDateTime.now().withNano(0));
-        return String.join(",", metadataPrefix, lastIdentifier, from, until);
+        return String.join(",", metadataPrefix, lastIdentifier, from, until, set);
     }
 
-    public String makeWhereCondition(String dataConfiguration) {
+    public String makeWhereCondition(String dataConfiguration, String setCondition) {
         ArrayList<String> constraints = new ArrayList<String>();
         if (lastId != null && dataConfiguration.equals(lastDataConfiguration))
             constraints.add(String.format("a.id > %s", lastId));
@@ -166,6 +171,8 @@ public class IcatQueryParameters {
             constraints.add(String.format("a.modTime <= '%s'", untilTime));
         if (identifierId != null)
             constraints.add(String.format("a.id = %s", identifierId));
+        if (setCondition != null)
+            constraints.add(setCondition);
 
         return constraints.isEmpty() ? "" : String.format("WHERE %s", String.join(" AND ", constraints));
     }
@@ -214,5 +221,9 @@ public class IcatQueryParameters {
 
     public String getIdentifierDataConfiguration() {
         return identifierDataConfiguration;
+    }
+
+    public String getSet() {
+        return set;
     }
 }
