@@ -105,5 +105,6 @@
 # If set to 'true', metadata won't be transformed into another format
 !responseDebug = true
 
-# The URL to an XSL document to be applied to all XML responses
-!responseStyle = https://oai.datacite.org/xsl/oaitohtml.xsl
+# The URL to an XSLT document to be applied to all XML responses.
+# Must be hosted on the same server as icat.oaipmh.
+!responseStyle = /static/oaitohtml.xsl
