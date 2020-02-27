@@ -177,7 +177,7 @@
 					<code>icatDateTimeZone</code> is set to <b>"+02:00"</b>,
 					the query sent to ICAT by icat.oaipmh would use the
 					following condition: <br />
-					<b>"WHERE a.modTime >= '08/31/2018 09:45.20 +0200'"</b>.
+					<b>"WHERE a.modTime &gt;= '08/31/2018 09:45.20 +0200'"</b>.
 				</li>
 				<li>
 					if <code>icatDateTimeFormat</code> is set to
@@ -185,7 +185,7 @@
 					<code>icatDateTimeZone</code> is set to <b>"Z"</b>, the
 					query sent to ICAT by icat.oaipmh would use the following
 					condition: <br />
-					<b>"WHERE a.modTime >= '2018-08-31 07:45:20 +0000'"</b>.
+					<b>"WHERE a.modTime &gt;= '2018-08-31 07:45:20 +0000'"</b>.
 				</li>
 			</ul>
 		</dd>
@@ -418,7 +418,7 @@
 			might use:
 			<ul>
 				<li>
-					<b>"sets.exampleSetA.condition.stud = a.modTime <= '2018-07-20 10:00:00'"</b>
+					<b>"sets.exampleSetA.condition.stud = a.modTime &lt;= '2018-07-20 10:00:00'"</b>
 					to say that Studies shall only be affiliated with the set
 					<b>"exampleSetA"</b> if they were modified before 2018-07-20
 					10:00:00.
