@@ -495,13 +495,17 @@
 		</dd>
 		<dt>responseStyle</dt>
 		<dd>
-			Set this (optional) parameter to the URL of an XSL document which
-			you want to apply to all XML responses.
+			Set this (optional) parameter to the URL of an XSLT document which
+			you want to apply to all XML responses.  The browser's same-origin
+			policy requires this file to be hosted on the same server as
+			icat.oaipmh.
 		</dd>
 		<dd>
 			One particular use case for this would be to have the XML responses
 			transform into HTML documents when making OAI-PMH calls from a web
-			browser.
+			browser.  This is particularly useful for debugging.  A suitable
+			XSLT file for this purpose can be found
+			<a href="https://wiki.eprints.org/w/EPrints_OAI_Stylesheet">here</a>.
 		</dd>
 	</dl>
 
