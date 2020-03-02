@@ -195,13 +195,17 @@ public class ResponseBuilder {
     }
 
     public void buildListSetsResponse(HttpServletRequest req, XmlResponse res) throws InternalException {
-        Element listSets = res.addXmlElement(null, "ListSets");
+        if (sets.isEmpty()) {
+            res.addError("noSetHierarchy", "This repository does not have any sets");
+        } else {
+            Element listSets = res.addXmlElement(null, "ListSets");
 
-        for (Map.Entry<String, ItemSet> s : sets.entrySet()) {
-            Element set = res.addXmlElement(listSets, "set");
+            for (Map.Entry<String, ItemSet> s : sets.entrySet()) {
+                Element set = res.addXmlElement(listSets, "set");
 
-            res.addXmlElement(set, "setSpec", s.getKey());
-            res.addXmlElement(set, "setName", s.getValue().getSetName());
+                res.addXmlElement(set, "setSpec", s.getKey());
+                res.addXmlElement(set, "setName", s.getValue().getSetName());
+            }
         }
     }
 
