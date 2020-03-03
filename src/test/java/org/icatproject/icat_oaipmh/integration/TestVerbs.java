@@ -363,7 +363,7 @@ public class TestVerbs extends BaseTest {
 	@Test
 	public void testListIdentifiersWithResumptionTokenAndTimespan() throws Exception {
 		Document response = request(
-				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z,null");
+				"?verb=ListIdentifiers&resumptionToken=oai_dc,inv/0,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z,null");
 
 		getXmlNode(response, "ListIdentifiers");
 		getXmlNodes(response, "header", 1);
@@ -522,7 +522,7 @@ public class TestVerbs extends BaseTest {
 	@Test
 	public void testListRecordsWithResumptionTokenAndTimespan() throws Exception {
 		Document response = request(
-				"?verb=ListRecords&resumptionToken=oai_dc,inv/1,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z,null");
+				"?verb=ListRecords&resumptionToken=oai_dc,inv/0,2018-07-01T00:00:00Z,2018-07-15T00:00:00Z,null");
 
 		getXmlNode(response, "ListRecords");
 		getXmlNodes(response, "record", 1);
