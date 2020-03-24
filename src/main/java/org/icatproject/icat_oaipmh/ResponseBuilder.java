@@ -110,7 +110,7 @@ public class ResponseBuilder {
         OffsetDateTime earliestDateTime = OffsetDateTime.MAX;
 
         for (DataConfiguration dataConfiguration : dataConfigurations.values()) {
-            String query = String.format("SELECT a.modTime FROM %s a ORDER BY a.modTime",
+            String query = String.format("SELECT MIN(a.modTime) FROM %s a",
                     dataConfiguration.getMainObject());
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));
