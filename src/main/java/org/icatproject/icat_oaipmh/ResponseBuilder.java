@@ -380,7 +380,6 @@ public class ResponseBuilder {
                 break;
 
             // for each set, get the IDs of the affiliated items
-            Integer offsetResults = Integer.valueOf(0);
             Integer maxResults = Integer.valueOf(parameters.getMaxResults());
             HashMap<String, ArrayList<String>> setsObjectIds = new HashMap<String, ArrayList<String>>();
             for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
@@ -391,6 +390,7 @@ public class ResponseBuilder {
                     where = setCondition != null ? String.format("WHERE %s", setCondition) : "";
 
                     JsonArray setResultsArray;
+                    Integer offsetResults = Integer.valueOf(0);
                     ArrayList<String> setObjectIds = new ArrayList<String>();
                     do {
                         query = String.format("SELECT DISTINCT a.id FROM %s a %s %s LIMIT %s,%s", mainObject, join,
