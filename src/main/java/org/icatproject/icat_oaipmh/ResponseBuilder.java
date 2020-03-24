@@ -390,6 +390,7 @@ public class ResponseBuilder {
                     join = setJoin != null ? setJoin : "";
                     where = setCondition != null ? String.format("WHERE %s", setCondition) : "";
 
+                    JsonArray setResultsArray;
                     ArrayList<String> setObjectIds = new ArrayList<String>();
                     do {
                         query = String.format("SELECT DISTINCT a.id FROM %s a %s %s LIMIT %s,%s", mainObject, join,
@@ -398,13 +399,13 @@ public class ResponseBuilder {
                         offsetResults += maxResults;
 
                         jsonReader = Json.createReader(new StringReader(result));
-                        resultsArray = jsonReader.readArray();
+                        setResultsArray = jsonReader.readArray();
                         jsonReader.close();
 
-                        for (JsonValue id : resultsArray) {
+                        for (JsonValue id : setResultsArray) {
                             setObjectIds.add(id.toString());
                         }
-                    } while (!resultsArray.isEmpty());
+                    } while (!setResultsArray.isEmpty());
                     setsObjectIds.put(set.getKey(), setObjectIds);
                 }
             }
