@@ -358,7 +358,7 @@ public class ResponseBuilder {
             String join = setJoin != null ? setJoin : "";
             String includes = dataConfiguration.getIncludedObjects();
             String where = parameters.makeWhereCondition(dataConfigurationIdentifier, setCondition);
-            Integer queryLimit = new Integer(remainingResults + 1);
+            Integer queryLimit = Integer.valueOf(remainingResults + 1);
             String query = String.format("SELECT DISTINCT a FROM %s a %s %s ORDER BY a.id LIMIT 0,%s %s", mainObject,
                     join, where, queryLimit, includes);
 
@@ -379,6 +379,8 @@ public class ResponseBuilder {
             if (incomplete && remainingResults <= 0)
                 break;
 
+            // for each set, get the IDs of the affiliated items
+            Integer maxResults = Integer.valueOf(parameters.getMaxResults());
             HashMap<String, ArrayList<String>> setsObjectIds = new HashMap<String, ArrayList<String>>();
             for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
                 setCondition = set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier);
@@ -386,17 +388,24 @@ public class ResponseBuilder {
                 if (setCondition != null || setJoin != null) {
                     join = setJoin != null ? setJoin : "";
                     where = setCondition != null ? String.format("WHERE %s", setCondition) : "";
-                    query = String.format("SELECT DISTINCT a.id FROM %s a %s %s", mainObject, join, where);
-                    result = queryIcat(query);
 
-                    JsonReader setJsonReader = Json.createReader(new StringReader(result));
-                    JsonArray setResultsArray = setJsonReader.readArray();
-                    setJsonReader.close();
-
+                    JsonArray setResultsArray;
+                    Integer offsetResults = Integer.valueOf(0);
                     ArrayList<String> setObjectIds = new ArrayList<String>();
-                    for (JsonValue id : setResultsArray) {
-                        setObjectIds.add(id.toString());
-                    }
+                    do {
+                        query = String.format("SELECT DISTINCT a.id FROM %s a %s %s LIMIT %s,%s", mainObject, join,
+                                where, offsetResults, maxResults);
+                        result = queryIcat(query);
+                        offsetResults += maxResults;
+
+                        jsonReader = Json.createReader(new StringReader(result));
+                        setResultsArray = jsonReader.readArray();
+                        jsonReader.close();
+
+                        for (JsonValue id : setResultsArray) {
+                            setObjectIds.add(id.toString());
+                        }
+                    } while (!setResultsArray.isEmpty());
                     setsObjectIds.put(set.getKey(), setObjectIds);
                 }
             }
