@@ -5,7 +5,6 @@ import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Properties;
 
 import javax.json.Json;
@@ -13,11 +12,11 @@ import javax.json.JsonArray;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 
-import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
 import org.icatproject.icat.client.Session;
 import org.icatproject.icat.client.Session.Attributes;
 import org.icatproject.icat.client.Session.DuplicateAction;
+import org.icatproject.icat_oaipmh.ICATInterface;
 import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.ShellCommand;
 
@@ -77,24 +76,22 @@ public class Setup {
 
 	public void populateIcat(String icatUrl, String icatAuth, String dataPath)
 			throws URISyntaxException, IcatException {
-		ICAT icat = new ICAT(icatUrl);
-
 		String[] icatAuthCredentials = icatAuth.split("\\s+");
-		HashMap<String, String> credentials = new HashMap<String, String>();
-		for (int i = 1; i < icatAuthCredentials.length; i += 2) {
-			credentials.put(icatAuthCredentials[i], icatAuthCredentials[i + 1]);
-		}
 
-		Session session = icat.login(icatAuthCredentials[0], credentials);
+		ICATInterface restIcat = new ICATInterface(icatUrl);
+		restIcat.login(icatAuthCredentials);
 
-		deleteIcatObjects(session, "Investigation");
-		deleteIcatObjects(session, "Study");
-		deleteIcatObjects(session, "User");
-		deleteIcatObjects(session, "Facility");
-		deleteIcatObjects(session, "DataCollection");
-		deleteIcatObjects(session, "PublicStep");
-		deleteIcatObjects(session, "Grouping");
-		deleteIcatObjects(session, "Rule");
+		Session session = restIcat.getIcatSession();
+		Integer maxEntities = restIcat.getIcatMaxEntities();
+
+		deleteIcatObjects(session, maxEntities, "Investigation");
+		deleteIcatObjects(session, maxEntities, "Study");
+		deleteIcatObjects(session, maxEntities, "User");
+		deleteIcatObjects(session, maxEntities, "Facility");
+		deleteIcatObjects(session, maxEntities, "DataCollection");
+		deleteIcatObjects(session, maxEntities, "PublicStep");
+		deleteIcatObjects(session, maxEntities, "Grouping");
+		deleteIcatObjects(session, maxEntities, "Rule");
 
 		Path path = Paths.get(dataPath);
 		DuplicateAction duplicateAction = DuplicateAction.OVERWRITE;
@@ -103,16 +100,23 @@ public class Setup {
 		session.importMetaData(path, duplicateAction, attributes);
 	}
 
-	public void deleteIcatObjects(Session session, String object) throws IcatException {
-		String results = session.search(String.format("%s.id", object));
+	public void deleteIcatObjects(Session session, Integer maxEntities, String object) throws IcatException {
+		JsonReader jsonReader;
+		JsonArray jsonArray;
+		Integer offset = Integer.valueOf(0);
+		do {
+			String results = session
+					.search(String.format("SELECT a.id FROM %s a LIMIT %s,%s", object, offset, maxEntities));
+			offset += maxEntities;
 
-		JsonReader jsonReader = Json.createReader(new StringReader(results));
-		JsonArray jsonArray = jsonReader.readArray();
-		jsonReader.close();
+			jsonReader = Json.createReader(new StringReader(results));
+			jsonArray = jsonReader.readArray();
+			jsonReader.close();
 
-		for (JsonValue id : jsonArray) {
-			session.delete(String.format("{\"%s\":{\"id\":%s}}", object, id));
-		}
+			for (JsonValue id : jsonArray) {
+				session.delete(String.format("{\"%s\":{\"id\":%s}}", object, id));
+			}
+		} while (!jsonArray.isEmpty());
 	}
 
 	public String getRequestUrl() {

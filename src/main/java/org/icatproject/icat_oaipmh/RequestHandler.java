@@ -144,7 +144,7 @@ public class RequestHandler {
     private String handleIllegalVerb(HttpServletRequest req, XmlResponse res, Templates template)
             throws InternalException {
         res.makeResponseOutline(rb.getRequestUrl(), new HashMap<String, String>(), responseStyle);
-        res.addError("badVerb", "Illegal verb: " + req.getParameter("verb"));
+        res.addError("badVerb", "Illegal verb");
         return res.transformXml(template);
     }
 
