@@ -395,7 +395,7 @@ public class ResponseBuilder {
                         for (JsonValue id : setResultsArray) {
                             setObjectIds.add(id.toString());
                         }
-                    } while (!setResultsArray.isEmpty());
+                    } while (setResultsArray.size() == icatMaxEntities);
                     setsObjectIds.put(set.getKey(), setObjectIds);
                 }
             }

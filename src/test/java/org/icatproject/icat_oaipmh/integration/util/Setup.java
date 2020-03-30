@@ -116,7 +116,7 @@ public class Setup {
 			for (JsonValue id : jsonArray) {
 				session.delete(String.format("{\"%s\":{\"id\":%s}}", object, id));
 			}
-		} while (!jsonArray.isEmpty());
+		} while (jsonArray.size() == maxEntities);
 	}
 
 	public String getRequestUrl() {
