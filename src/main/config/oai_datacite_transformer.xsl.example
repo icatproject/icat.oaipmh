@@ -15,12 +15,12 @@
       <oai_datacite xmlns="http://schema.datacite.org/oai/oai-1.1/" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.datacite.org/oai/oai-1.1/ http://schema.datacite.org/oai/oai-1.1/oai.xsd">
 
-        <schemaVersion>4.2</schemaVersion>
+        <schemaVersion>4.3</schemaVersion>
         <datacentreSymbol>EI</datacentreSymbol>
 
         <payload>
-          <resource xmlns="http://schema.datacite.org/meta/kernel-4.2/" 
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.datacite.org/meta/kernel-4.2/ http://schema.datacite.org/meta/kernel-4.2/metadata.xsd">
+          <resource xmlns="http://datacite.org/schema/kernel-4" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
 
             <identifier identifierType="DOI">
               <xsl:if test="doi">
