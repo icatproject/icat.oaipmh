@@ -27,7 +27,7 @@
                 <xsl:value-of select="doi"/>
               </xsl:if>
               <xsl:if test="not(doi)">
-                <xsl:text>(:tba)</xsl:text>
+                <xsl:text>:unav</xsl:text>
               </xsl:if>
             </identifier>
 
@@ -40,7 +40,7 @@
                         <xsl:value-of select="fullName"/>
                       </xsl:if>
                       <xsl:if test="not(fullName)">
-                        <xsl:text>(:null)</xsl:text>
+                        <xsl:text>:null</xsl:text>
                       </xsl:if>
                     </creatorName>
                     <xsl:if test="givenName">
@@ -63,7 +63,7 @@
               </xsl:if>
               <xsl:if test="not(investigationUsers/instance)">
                 <creator>
-                  <creatorName nameType="Personal">(:null)</creatorName>
+                  <creatorName nameType="Personal">:null</creatorName>
                 </creator>
               </xsl:if>
             </creators>
@@ -74,7 +74,7 @@
                   <xsl:value-of select="title"/>
                 </xsl:if>
                 <xsl:if test="not(title)">
-                  <xsl:text>(:null)</xsl:text>
+                  <xsl:text>:null</xsl:text>
                 </xsl:if>
               </title>
             </titles>
@@ -88,7 +88,7 @@
             </xsl:if>
             <xsl:if test="not(releaseDate)">
               <publicationYear>
-                <xsl:text>(:tba)</xsl:text>
+                <xsl:text>:unav</xsl:text>
               </publicationYear>
             </xsl:if>
 
