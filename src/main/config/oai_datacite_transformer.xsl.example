@@ -54,9 +54,14 @@
                       </familyName>
                     </xsl:if>
                     <xsl:if test="orcidId">
-                      <nameIdentifier nameIdentifierScheme="ORCID">
+                      <nameIdentifier schemeURI="https://orcid.org/" nameIdentifierScheme="ORCID">
                         <xsl:value-of select="orcidId"/>
                       </nameIdentifier>
+                    </xsl:if>
+                    <xsl:if test="affiliation">
+                      <affiliation>
+                        <xsl:value-of select="affiliation"/>
+                      </affiliation>
                     </xsl:if>
                   </creator>
                 </xsl:for-each>
