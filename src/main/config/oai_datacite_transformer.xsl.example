@@ -92,8 +92,8 @@
               </publicationYear>
             </xsl:if>
 
-            <resourceType resourceTypeGeneral="Collection">
-              <xsl:text>Data from large facility measurement</xsl:text>
+            <resourceType resourceTypeGeneral="Dataset">
+              <xsl:text>Dataset</xsl:text>
             </resourceType>
 
             <xsl:if test="keywords/instance">
