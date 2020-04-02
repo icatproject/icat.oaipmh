@@ -18,7 +18,6 @@ import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 import javax.servlet.http.HttpServletRequest;
 
-import org.icatproject.icat.client.ICAT;
 import org.icatproject.icat.client.IcatException;
 import org.icatproject.icat.client.IcatException.IcatExceptionType;
 import org.icatproject.icat.client.Session;
@@ -31,8 +30,7 @@ public class ResponseBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseBuilder.class);
 
-    private Session icatSession;
-    private final String icatUrl;
+    private ICATInterface restIcat;
     private final String[] icatAuth;
     private final String repositoryName;
     private final ArrayList<String> adminEmails;
@@ -42,15 +40,21 @@ public class ResponseBuilder {
     private HashMap<String, ItemSet> sets;
 
     public ResponseBuilder(String icatUrl, String[] icatAuth, String repositoryName, ArrayList<String> adminEmails,
-            String requestUrl) {
+            String requestUrl) throws InternalException {
         metadataFormats = new HashMap<String, MetadataFormat>();
         dataConfigurations = new HashMap<String, DataConfiguration>();
         sets = new HashMap<String, ItemSet>();
-        this.icatUrl = icatUrl;
         this.icatAuth = icatAuth;
         this.repositoryName = repositoryName;
         this.adminEmails = adminEmails;
         this.requestUrl = requestUrl;
+
+        try {
+            this.restIcat = new ICATInterface(icatUrl);
+        } catch (URISyntaxException | IcatException e) {
+            logger.error(e.getMessage());
+            throw new InternalException();
+        }
     }
 
     public void addMetadataFormat(String identifier, MetadataFormat metadataFormat) {
@@ -70,21 +74,8 @@ public class ResponseBuilder {
     }
 
     public void loginIcat() throws InternalException {
-        ICAT restIcat = null;
         try {
-            restIcat = new ICAT(icatUrl);
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
-        }
-
-        HashMap<String, String> credentials = new HashMap<String, String>();
-        for (int i = 1; i < icatAuth.length; i += 2) {
-            credentials.put(icatAuth[i], icatAuth[i + 1]);
-        }
-
-        try {
-            icatSession = restIcat.login(icatAuth[0], credentials);
+            restIcat.login(icatAuth);
         } catch (IcatException e) {
             logger.error(e.getMessage());
             throw new InternalException();
@@ -93,6 +84,7 @@ public class ResponseBuilder {
 
     public String queryIcat(String query) throws InternalException {
         try {
+            Session icatSession = restIcat.getIcatSession();
             return icatSession.search(query);
         } catch (IcatException e) {
             if (e.getType().equals(IcatExceptionType.SESSION)) {
@@ -275,9 +267,7 @@ public class ResponseBuilder {
         if (resumptionToken != null) {
             try {
                 parameters = new IcatQueryParameters(resumptionToken, dataConfigurations.keySet());
-            } catch (DateTimeException | IllegalArgumentException e) {
-                res.addError("badArgument", "The request includes arguments with illegal values or syntax");
-            } catch (ParseException e) {
+            } catch (DateTimeException | IllegalArgumentException | ParseException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
             }
         } else {
@@ -380,7 +370,7 @@ public class ResponseBuilder {
                 break;
 
             // for each set, get the IDs of the affiliated items
-            Integer maxResults = Integer.valueOf(parameters.getMaxResults());
+            Integer icatMaxEntities = restIcat.getIcatMaxEntities();
             HashMap<String, ArrayList<String>> setsObjectIds = new HashMap<String, ArrayList<String>>();
             for (Map.Entry<String, ItemSet> set : sets.entrySet()) {
                 setCondition = set.getValue().getDataConfigurationsConditions().get(dataConfigurationIdentifier);
@@ -390,13 +380,13 @@ public class ResponseBuilder {
                     where = setCondition != null ? String.format("WHERE %s", setCondition) : "";
 
                     JsonArray setResultsArray;
-                    Integer offsetResults = Integer.valueOf(0);
+                    Integer offset = Integer.valueOf(0);
                     ArrayList<String> setObjectIds = new ArrayList<String>();
                     do {
                         query = String.format("SELECT DISTINCT a.id FROM %s a %s %s LIMIT %s,%s", mainObject, join,
-                                where, offsetResults, maxResults);
+                                where, offset, icatMaxEntities);
                         result = queryIcat(query);
-                        offsetResults += maxResults;
+                        offset += icatMaxEntities;
 
                         jsonReader = Json.createReader(new StringReader(result));
                         setResultsArray = jsonReader.readArray();
@@ -405,7 +395,7 @@ public class ResponseBuilder {
                         for (JsonValue id : setResultsArray) {
                             setObjectIds.add(id.toString());
                         }
-                    } while (!setResultsArray.isEmpty());
+                    } while (setResultsArray.size() == icatMaxEntities);
                     setsObjectIds.put(set.getKey(), setObjectIds);
                 }
             }
