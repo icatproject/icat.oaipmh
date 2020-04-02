@@ -15,19 +15,19 @@
       <oai_datacite xmlns="http://schema.datacite.org/oai/oai-1.1/" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.datacite.org/oai/oai-1.1/ http://schema.datacite.org/oai/oai-1.1/oai.xsd">
 
-        <schemaVersion>4.2</schemaVersion>
+        <schemaVersion>4.3</schemaVersion>
         <datacentreSymbol>EI</datacentreSymbol>
 
         <payload>
-          <resource xmlns="http://schema.datacite.org/meta/kernel-4.2/" 
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.datacite.org/meta/kernel-4.2/ http://schema.datacite.org/meta/kernel-4.2/metadata.xsd">
+          <resource xmlns="http://datacite.org/schema/kernel-4" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd">
 
             <identifier identifierType="DOI">
               <xsl:if test="doi">
                 <xsl:value-of select="doi"/>
               </xsl:if>
               <xsl:if test="not(doi)">
-                <xsl:text>(:tba)</xsl:text>
+                <xsl:text>:unav</xsl:text>
               </xsl:if>
             </identifier>
 
@@ -40,7 +40,7 @@
                         <xsl:value-of select="fullName"/>
                       </xsl:if>
                       <xsl:if test="not(fullName)">
-                        <xsl:text>(:null)</xsl:text>
+                        <xsl:text>:null</xsl:text>
                       </xsl:if>
                     </creatorName>
                     <xsl:if test="givenName">
@@ -54,16 +54,21 @@
                       </familyName>
                     </xsl:if>
                     <xsl:if test="orcidId">
-                      <nameIdentifier nameIdentifierScheme="ORCID">
+                      <nameIdentifier schemeURI="https://orcid.org/" nameIdentifierScheme="ORCID">
                         <xsl:value-of select="orcidId"/>
                       </nameIdentifier>
+                    </xsl:if>
+                    <xsl:if test="affiliation">
+                      <affiliation>
+                        <xsl:value-of select="affiliation"/>
+                      </affiliation>
                     </xsl:if>
                   </creator>
                 </xsl:for-each>
               </xsl:if>
               <xsl:if test="not(investigationUsers/instance)">
                 <creator>
-                  <creatorName nameType="Personal">(:null)</creatorName>
+                  <creatorName nameType="Personal">:null</creatorName>
                 </creator>
               </xsl:if>
             </creators>
@@ -74,7 +79,7 @@
                   <xsl:value-of select="title"/>
                 </xsl:if>
                 <xsl:if test="not(title)">
-                  <xsl:text>(:null)</xsl:text>
+                  <xsl:text>:null</xsl:text>
                 </xsl:if>
               </title>
             </titles>
@@ -88,13 +93,9 @@
             </xsl:if>
             <xsl:if test="not(releaseDate)">
               <publicationYear>
-                <xsl:text>(:tba)</xsl:text>
+                <xsl:text>:unav</xsl:text>
               </publicationYear>
             </xsl:if>
-
-            <resourceType resourceTypeGeneral="Collection">
-              <xsl:text>Data from large facility measurement</xsl:text>
-            </resourceType>
 
             <xsl:if test="keywords/instance">
               <subjects>
@@ -132,6 +133,10 @@
                 </date>
               </dates>
             </xsl:if>
+
+            <resourceType resourceTypeGeneral="Dataset">
+              <xsl:text>Dataset</xsl:text>
+            </resourceType>
 
             <rightsList>
               <rights rightsURI="https://creativecommons.org/publicdomain/zero/1.0/" rightsIdentifier="CC0-1.0">

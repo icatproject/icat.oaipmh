@@ -58,7 +58,7 @@
 !data.inv.investigationUsers.stringProperties = role
 !data.inv.investigationUsers.subPropertyLists = user
 
-!data.inv.investigationUsers.user.stringProperties = fullName givenName familyName orcidId
+!data.inv.investigationUsers.user.stringProperties = fullName givenName familyName orcidId affiliation
 
 !data.stud.mainObject = Study
 
