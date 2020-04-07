@@ -308,15 +308,17 @@ public class ResponseBuilder {
 
             // if the harvester requested a specific item,
             // skip data configurations which don't match with this item
-            if (parameters.getIdentifierDataConfiguration() != null)
+            if (parameters.getIdentifierDataConfiguration() != null) {
                 if (!parameters.getIdentifierDataConfiguration().equals(dataConfigurationIdentifier))
                     continue;
+            }
 
             // if the harvester requested a specific metadataPrefix,
             // skip data configurations which don't support this metadataPrefix
-            if (parameters.getMetadataPrefix() != null)
+            else if (parameters.getMetadataPrefix() != null) {
                 if (!dataConfiguration.getMetadataPrefixes().contains(parameters.getMetadataPrefix()))
                     continue;
+            }
 
             // if the harvester used a resumptionToken,
             // skip data configurations which come before the 'lastDataConfiguration'
