@@ -173,13 +173,13 @@ public class IcatQueryParameters {
         return String.format("oai:%s:%s/%s", identifierPrefix, dataConfiguration, id);
     }
 
-    public static String makeFormattedDateTime(String dateTime) {
+    public static String makeFormattedDateTime(String dateTime) throws DateTimeException {
         if (dateTime != null)
             return formatDateTime(OffsetDateTime.parse(dateTime));
         return null;
     }
 
-    private static String formatDateTime(OffsetDateTime dateTime) {
+    private static String formatDateTime(OffsetDateTime dateTime) throws DateTimeException {
         return dateTime.format(DateTimeFormatter.ISO_INSTANT);
     }
 

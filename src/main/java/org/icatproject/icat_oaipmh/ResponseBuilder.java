@@ -504,7 +504,11 @@ public class ResponseBuilder {
                     String value = ((JsonObject) element).getString(prop, null);
                     if (value != null) {
                         ArrayList<String> valueList = new ArrayList<String>();
-                        valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                        try {
+                            valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                        } catch (DateTimeException e) {
+                            logger.warn("Cannot format property " + prop + " as date");
+                        }
                         elementProperties.put(prop, valueList);
                     }
                 }
@@ -544,7 +548,11 @@ public class ResponseBuilder {
                 String value = jsonObject.getString(prop, null);
                 if (value != null) {
                     ArrayList<String> valueList = new ArrayList<String>();
-                    valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                    try {
+                        valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                    } catch (DateTimeException e) {
+                        logger.warn("Cannot format " + dataConfigurationIdentifier + " property " + prop + " as date");
+                    }
                     properties.put(prop, valueList);
                 }
             }
