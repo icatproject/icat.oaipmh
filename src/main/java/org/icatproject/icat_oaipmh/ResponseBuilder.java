@@ -205,33 +205,30 @@ public class ResponseBuilder {
         IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
         if (parameters != null) {
-            IcatQueryResults result = getIcatRecords(parameters, false);
+            DataConfiguration dataConfiguration = null;
             String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
 
-            if (dataConfigurationIdentifier != null && result.getResults().isEmpty()) {
-                res.addError("idDoesNotExist",
-                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
-            } else {
-                boolean listAllMetadataFormats = true;
-                DataConfiguration dataConfiguration = null;
-
-                if (dataConfigurationIdentifier != null) {
-                    listAllMetadataFormats = false;
-                    dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
+            if (dataConfigurationIdentifier != null) {
+                IcatQueryResults result = getIcatRecords(parameters, false);
+                if (result.getResults().isEmpty()) {
+                    res.addError("idDoesNotExist", "Identifier '" + req.getParameter("identifier")
+                            + "' is unknown or illegal in this repository");
+                    return;
                 }
+                dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
+            }
 
-                Element listMetadataFormats = res.addXmlElement(null, "ListMetadataFormats");
+            Element listMetadataFormats = res.addXmlElement(null, "ListMetadataFormats");
 
-                for (Map.Entry<String, MetadataFormat> format : metadataFormats.entrySet()) {
-                    if (!listAllMetadataFormats && !dataConfiguration.getMetadataPrefixes().contains(format.getKey()))
-                        continue;
+            for (Map.Entry<String, MetadataFormat> format : metadataFormats.entrySet()) {
+                if (dataConfiguration != null && !dataConfiguration.getMetadataPrefixes().contains(format.getKey()))
+                    continue;
 
-                    Element metadataFormat = res.addXmlElement(listMetadataFormats, "metadataFormat");
+                Element metadataFormat = res.addXmlElement(listMetadataFormats, "metadataFormat");
 
-                    res.addXmlElement(metadataFormat, "metadataPrefix", format.getKey());
-                    res.addXmlElement(metadataFormat, "schema", format.getValue().getMetadataSchema());
-                    res.addXmlElement(metadataFormat, "metadataNamespace", format.getValue().getMetadataNamespace());
-                }
+                res.addXmlElement(metadataFormat, "metadataPrefix", format.getKey());
+                res.addXmlElement(metadataFormat, "schema", format.getValue().getMetadataSchema());
+                res.addXmlElement(metadataFormat, "metadataNamespace", format.getValue().getMetadataNamespace());
             }
         }
     }
