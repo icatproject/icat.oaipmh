@@ -267,8 +267,11 @@ public class ResponseBuilder {
         if (resumptionToken != null) {
             try {
                 parameters = new IcatQueryParameters(resumptionToken, dataConfigurations.keySet());
-            } catch (DateTimeException | IllegalArgumentException | ParseException e) {
+            } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
+            } catch (IllegalStateException e) {
+                logger.error(e.getMessage());
+                throw new InternalException();
             }
         } else {
             String metadataPrefix = req.getParameter("metadataPrefix");
@@ -279,11 +282,14 @@ public class ResponseBuilder {
             try {
                 parameters = new IcatQueryParameters(metadataPrefix, from, until, set, identifier,
                         dataConfigurations.keySet());
-            } catch (DateTimeException | IllegalArgumentException e) {
+            } catch (DateTimeException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
-            } catch (ParseException e) {
+            } catch (IllegalArgumentException e) {
                 res.addError("idDoesNotExist",
                         "Identifier '" + identifier + "' is unknown or illegal in this repository");
+            } catch (IllegalStateException e) {
+                logger.error(e.getMessage());
+                throw new InternalException();
             }
         }
 
