@@ -86,8 +86,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleIdentify(HttpServletRequest req, XmlResponse res, Templates template)
-            throws InternalException {
+    private void handleIdentify(HttpServletRequest req, XmlResponse res, Templates template) throws InternalException {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
 
@@ -120,8 +119,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleListSets(HttpServletRequest req, XmlResponse res, Templates template)
-            throws InternalException {
+    private void handleListSets(HttpServletRequest req, XmlResponse res, Templates template) throws InternalException {
         String[] allowedParameters = { "verb" };
         String[] requiredParameters = {};
 
@@ -140,8 +138,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleGetRecord(HttpServletRequest req, XmlResponse res, Templates template)
-            throws InternalException {
+    private void handleGetRecord(HttpServletRequest req, XmlResponse res, Templates template) throws InternalException {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
 
@@ -152,8 +149,7 @@ public class RequestHandler {
         }
     }
 
-    private void handleIllegalVerb(HttpServletRequest req, XmlResponse res, String message)
-            throws InternalException {
+    private void handleIllegalVerb(HttpServletRequest req, XmlResponse res, String message) throws InternalException {
         res.makeResponseOutline(rb.getRequestUrl(), new HashMap<String, String>(), responseStyle);
         res.addError("badVerb", message);
     }

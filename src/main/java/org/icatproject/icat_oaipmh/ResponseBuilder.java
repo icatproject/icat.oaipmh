@@ -2,7 +2,6 @@ package org.icatproject.icat_oaipmh;
 
 import java.io.StringReader;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -102,8 +101,7 @@ public class ResponseBuilder {
         OffsetDateTime earliestDateTime = OffsetDateTime.MAX;
 
         for (DataConfiguration dataConfiguration : dataConfigurations.values()) {
-            String query = String.format("SELECT MIN(a.modTime) FROM %s a",
-                    dataConfiguration.getMainObject());
+            String query = String.format("SELECT MIN(a.modTime) FROM %s a", dataConfiguration.getMainObject());
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
@@ -430,8 +428,7 @@ public class ResponseBuilder {
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
-            RequestedProperties requestedProperties, Map<String, ? extends List<String>> setsObjectIds)
-            throws InternalException {
+            RequestedProperties requestedProperties, Map<String, ? extends List<String>> setsObjectIds) {
         HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
 
         JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
@@ -463,7 +460,7 @@ public class ResponseBuilder {
     }
 
     private ArrayList<XmlInformation> extractMetadataInformation(JsonValue data, String dataConfigurationIdentifier,
-            RequestedProperties requestedProperties) throws InternalException {
+            RequestedProperties requestedProperties) {
         ArrayList<XmlInformation> result = new ArrayList<XmlInformation>();
 
         HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
