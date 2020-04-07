@@ -19,29 +19,23 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.icatproject.icat_oaipmh.exceptions.InternalException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
 public class XmlResponse {
 
-    private static final Logger logger = LoggerFactory.getLogger(XmlResponse.class);
-
     private DocumentBuilderFactory factory;
     private Document document;
 
-    public XmlResponse() throws InternalException {
+    public XmlResponse() throws IllegalStateException {
         factory = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder builder = null;
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
+            throw new IllegalStateException(e.getMessage(), e.getCause());
         }
 
         document = builder.newDocument();
@@ -163,7 +157,7 @@ public class XmlResponse {
         xmlElement.appendChild(el);
     }
 
-    public String transformXml(Templates template) throws InternalException {
+    public String transformXml(Templates template) throws IllegalStateException {
         Transformer transformer = null;
         Document doc = null;
         String output = null;
@@ -187,8 +181,7 @@ public class XmlResponse {
             transformer.transform(source, new StreamResult(writer));
             output = writer.getBuffer().toString();
         } catch (TransformerException | ParserConfigurationException e) {
-            logger.error(e.getMessage());
-            throw new InternalException();
+            throw new IllegalStateException(e.getMessage(), e.getCause());
         }
 
         return output;
