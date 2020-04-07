@@ -237,21 +237,19 @@ public class ResponseBuilder {
         IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
         if (parameters != null) {
+            IcatQueryResults result = getIcatRecords(parameters, true);
+
             String metadataPrefix = parameters.getMetadataPrefix();
             String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
             DataConfiguration dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
 
-            if (!dataConfiguration.getMetadataPrefixes().contains(metadataPrefix)) {
+            if (result.getResults().isEmpty()) {
+                res.addError("idDoesNotExist",
+                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
+            } else if (!dataConfiguration.getMetadataPrefixes().contains(metadataPrefix)) {
                 res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the item");
             } else {
-                IcatQueryResults result = getIcatRecords(parameters, true);
-
-                if (result.getResults().isEmpty()) {
-                    res.addError("idDoesNotExist", "Identifier '" + req.getParameter("identifier")
-                            + "' is unknown or illegal in this repository");
-                } else {
-                    res.addRecordInformation(result.getResults(), "GetRecord", true);
-                }
+                res.addRecordInformation(result.getResults(), "GetRecord", true);
             }
         }
     }
