@@ -2,7 +2,6 @@ package org.icatproject.icat_oaipmh;
 
 import java.io.StringReader;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -102,8 +101,7 @@ public class ResponseBuilder {
         OffsetDateTime earliestDateTime = OffsetDateTime.MAX;
 
         for (DataConfiguration dataConfiguration : dataConfigurations.values()) {
-            String query = String.format("SELECT MIN(a.modTime) FROM %s a",
-                    dataConfiguration.getMainObject());
+            String query = String.format("SELECT MIN(a.modTime) FROM %s a", dataConfiguration.getMainObject());
             String result = queryIcat(query);
             JsonReader jsonReader = Json.createReader(new StringReader(result));
             JsonArray jsonArray = jsonReader.readArray();
@@ -115,8 +113,8 @@ public class ResponseBuilder {
                     earliestDateTime = earliest;
                     earliestDatestamp = IcatQueryParameters.makeFormattedDateTime(earliestString);
                 }
-            } catch (IndexOutOfBoundsException e) {
-                logger.warn("No objects of type " + dataConfiguration.getMainObject() + " exist in ICAT");
+            } catch (IndexOutOfBoundsException | ClassCastException e) {
+                logger.warn("No objects of type " + dataConfiguration.getMainObject() + " found in ICAT");
             } catch (DateTimeException e) {
                 logger.error(e.getMessage());
                 throw new InternalException();
@@ -205,33 +203,30 @@ public class ResponseBuilder {
         IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
         if (parameters != null) {
-            IcatQueryResults result = getIcatRecords(parameters, false);
+            DataConfiguration dataConfiguration = null;
             String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
 
-            if (dataConfigurationIdentifier != null && result.getResults().isEmpty()) {
-                res.addError("idDoesNotExist",
-                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
-            } else {
-                boolean listAllMetadataFormats = true;
-                DataConfiguration dataConfiguration = null;
-
-                if (dataConfigurationIdentifier != null) {
-                    listAllMetadataFormats = false;
-                    dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
+            if (dataConfigurationIdentifier != null) {
+                IcatQueryResults result = getIcatRecords(parameters, false);
+                if (result.getResults().isEmpty()) {
+                    res.addError("idDoesNotExist", "Identifier '" + req.getParameter("identifier")
+                            + "' is unknown or illegal in this repository");
+                    return;
                 }
+                dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
+            }
 
-                Element listMetadataFormats = res.addXmlElement(null, "ListMetadataFormats");
+            Element listMetadataFormats = res.addXmlElement(null, "ListMetadataFormats");
 
-                for (Map.Entry<String, MetadataFormat> format : metadataFormats.entrySet()) {
-                    if (!listAllMetadataFormats && !dataConfiguration.getMetadataPrefixes().contains(format.getKey()))
-                        continue;
+            for (Map.Entry<String, MetadataFormat> format : metadataFormats.entrySet()) {
+                if (dataConfiguration != null && !dataConfiguration.getMetadataPrefixes().contains(format.getKey()))
+                    continue;
 
-                    Element metadataFormat = res.addXmlElement(listMetadataFormats, "metadataFormat");
+                Element metadataFormat = res.addXmlElement(listMetadataFormats, "metadataFormat");
 
-                    res.addXmlElement(metadataFormat, "metadataPrefix", format.getKey());
-                    res.addXmlElement(metadataFormat, "schema", format.getValue().getMetadataSchema());
-                    res.addXmlElement(metadataFormat, "metadataNamespace", format.getValue().getMetadataNamespace());
-                }
+                res.addXmlElement(metadataFormat, "metadataPrefix", format.getKey());
+                res.addXmlElement(metadataFormat, "schema", format.getValue().getMetadataSchema());
+                res.addXmlElement(metadataFormat, "metadataNamespace", format.getValue().getMetadataNamespace());
             }
         }
     }
@@ -240,21 +235,19 @@ public class ResponseBuilder {
         IcatQueryParameters parameters = getIcatQueryParameters(req, res);
 
         if (parameters != null) {
+            IcatQueryResults result = getIcatRecords(parameters, true);
+
             String metadataPrefix = parameters.getMetadataPrefix();
             String dataConfigurationIdentifier = parameters.getIdentifierDataConfiguration();
             DataConfiguration dataConfiguration = dataConfigurations.get(dataConfigurationIdentifier);
 
-            if (!dataConfiguration.getMetadataPrefixes().contains(metadataPrefix)) {
+            if (result.getResults().isEmpty()) {
+                res.addError("idDoesNotExist",
+                        "Identifier '" + req.getParameter("identifier") + "' is unknown or illegal in this repository");
+            } else if (!dataConfiguration.getMetadataPrefixes().contains(metadataPrefix)) {
                 res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the item");
             } else {
-                IcatQueryResults result = getIcatRecords(parameters, true);
-
-                if (result.getResults().isEmpty()) {
-                    res.addError("idDoesNotExist", "Identifier '" + req.getParameter("identifier")
-                            + "' is unknown or illegal in this repository");
-                } else {
-                    res.addRecordInformation(result.getResults(), "GetRecord", true);
-                }
+                res.addRecordInformation(result.getResults(), "GetRecord", true);
             }
         }
     }
@@ -267,8 +260,11 @@ public class ResponseBuilder {
         if (resumptionToken != null) {
             try {
                 parameters = new IcatQueryParameters(resumptionToken, dataConfigurations.keySet());
-            } catch (DateTimeException | IllegalArgumentException | ParseException e) {
+            } catch (DateTimeException | IllegalArgumentException e) {
                 res.addError("badResumptionToken", "The value of the resumptionToken argument is invalid");
+            } catch (IllegalStateException e) {
+                logger.error(e.getMessage());
+                throw new InternalException();
             }
         } else {
             String metadataPrefix = req.getParameter("metadataPrefix");
@@ -279,11 +275,14 @@ public class ResponseBuilder {
             try {
                 parameters = new IcatQueryParameters(metadataPrefix, from, until, set, identifier,
                         dataConfigurations.keySet());
-            } catch (DateTimeException | IllegalArgumentException e) {
+            } catch (DateTimeException e) {
                 res.addError("badArgument", "The request includes arguments with illegal values or syntax");
-            } catch (ParseException e) {
+            } catch (IllegalArgumentException e) {
                 res.addError("idDoesNotExist",
                         "Identifier '" + identifier + "' is unknown or illegal in this repository");
+            } catch (IllegalStateException e) {
+                logger.error(e.getMessage());
+                throw new InternalException();
             }
         }
 
@@ -307,15 +306,17 @@ public class ResponseBuilder {
 
             // if the harvester requested a specific item,
             // skip data configurations which don't match with this item
-            if (parameters.getIdentifierDataConfiguration() != null)
+            if (parameters.getIdentifierDataConfiguration() != null) {
                 if (!parameters.getIdentifierDataConfiguration().equals(dataConfigurationIdentifier))
                     continue;
+            }
 
             // if the harvester requested a specific metadataPrefix,
             // skip data configurations which don't support this metadataPrefix
-            if (parameters.getMetadataPrefix() != null)
+            else if (parameters.getMetadataPrefix() != null) {
                 if (!dataConfiguration.getMetadataPrefixes().contains(parameters.getMetadataPrefix()))
                     continue;
+            }
 
             // if the harvester used a resumptionToken,
             // skip data configurations which come before the 'lastDataConfiguration'
@@ -427,8 +428,7 @@ public class ResponseBuilder {
     }
 
     private XmlInformation extractHeaderInformation(JsonValue data, String dataConfigurationIdentifier,
-            RequestedProperties requestedProperties, Map<String, ? extends List<String>> setsObjectIds)
-            throws InternalException {
+            RequestedProperties requestedProperties, Map<String, ? extends List<String>> setsObjectIds) {
         HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
 
         JsonObject icatObject = ((JsonObject) data).getJsonObject(requestedProperties.getIcatObject());
@@ -460,7 +460,7 @@ public class ResponseBuilder {
     }
 
     private ArrayList<XmlInformation> extractMetadataInformation(JsonValue data, String dataConfigurationIdentifier,
-            RequestedProperties requestedProperties) throws InternalException {
+            RequestedProperties requestedProperties) {
         ArrayList<XmlInformation> result = new ArrayList<XmlInformation>();
 
         HashMap<String, ArrayList<String>> properties = new HashMap<String, ArrayList<String>>();
@@ -501,7 +501,11 @@ public class ResponseBuilder {
                     String value = ((JsonObject) element).getString(prop, null);
                     if (value != null) {
                         ArrayList<String> valueList = new ArrayList<String>();
-                        valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                        try {
+                            valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                        } catch (DateTimeException e) {
+                            logger.warn("Cannot format property " + prop + " as date");
+                        }
                         elementProperties.put(prop, valueList);
                     }
                 }
@@ -541,7 +545,11 @@ public class ResponseBuilder {
                 String value = jsonObject.getString(prop, null);
                 if (value != null) {
                     ArrayList<String> valueList = new ArrayList<String>();
-                    valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                    try {
+                        valueList.add(IcatQueryParameters.makeFormattedDateTime(value));
+                    } catch (DateTimeException e) {
+                        logger.warn("Cannot format " + dataConfigurationIdentifier + " property " + prop + " as date");
+                    }
                     properties.put(prop, valueList);
                 }
             }

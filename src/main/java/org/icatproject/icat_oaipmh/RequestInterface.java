@@ -26,15 +26,12 @@ import org.icatproject.utils.CheckedProperties;
 import org.icatproject.utils.CheckedProperties.CheckedPropertyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 @Path("/")
 @Stateless
 public class RequestInterface {
 
 	private static final Logger logger = LoggerFactory.getLogger(RequestInterface.class);
-	private static final Marker fatal = MarkerFactory.getMarker("FATAL");
 
 	private static final String[] propertyTypes = { "stringProperties", "numericProperties", "dateProperties" };
 
@@ -133,8 +130,8 @@ public class RequestInterface {
 			}
 		} catch (CheckedPropertyException | FileNotFoundException | SecurityException | NumberFormatException
 				| TransformerConfigurationException | URISyntaxException e) {
-			logger.error(fatal, e.getMessage());
-			throw new IllegalStateException(e.getMessage());
+			logger.error(e.getMessage());
+			throw new IllegalStateException();
 		} catch (InternalException e) {
 			throw new IllegalStateException();
 		}

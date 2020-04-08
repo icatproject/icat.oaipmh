@@ -157,7 +157,7 @@ public class TestVerbs extends BaseTest {
 
 	@Test
 	public void testListMetadataFormatsInvalidIdentifier() throws Exception {
-		Document response = request("?verb=ListMetadataFormats&identifier=invalid");
+		Document response = request("?verb=ListMetadataFormats&identifier=oai:invalid:stud/0");
 
 		Node error = getXmlNode(response, "error");
 		NamedNodeMap attributes = error.getAttributes();
@@ -197,6 +197,16 @@ public class TestVerbs extends BaseTest {
 		NamedNodeMap attributes = error.getAttributes();
 		Node errorCode = attributes.getNamedItem("code");
 		assertEquals("badArgument", errorCode.getTextContent());
+	}
+
+	@Test
+	public void testGetRecordInvalidIdentifier() throws Exception {
+		Document response = request("?verb=GetRecord&metadataPrefix=oai_datacite&identifier=oai:invalid:stud/0");
+
+		Node error = getXmlNode(response, "error");
+		NamedNodeMap attributes = error.getAttributes();
+		Node errorCode = attributes.getNamedItem("code");
+		assertEquals("idDoesNotExist", errorCode.getTextContent());
 	}
 
 	@Test
