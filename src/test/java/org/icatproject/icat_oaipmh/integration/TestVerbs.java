@@ -250,9 +250,10 @@ public class TestVerbs extends BaseTest {
 		Node header = getXmlNode(response, "header");
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(investigationUniqueIdentifier, identifier);
+		String setSpec = getXmlChild(header, "setSpec").getTextContent();
+		assertEquals("exampleSetC", setSpec);
 
-		Node setSpec = getXmlNode(response, "setSpec");
-		assertEquals("exampleSetC", setSpec.getTextContent());
+		getXmlNodes(response, "dataConfigurationIdentifier", 0);
 	}
 
 	@Test
@@ -264,9 +265,10 @@ public class TestVerbs extends BaseTest {
 		Node header = getXmlNode(response, "header");
 		String identifier = getXmlChild(header, "identifier").getTextContent();
 		assertEquals(studyUniqueIdentifier, identifier);
+		String setSpec = getXmlChild(header, "setSpec").getTextContent();
+		assertEquals("exampleSetB", setSpec);
 
-		Node setSpec = getXmlNode(response, "setSpec");
-		assertEquals("exampleSetB", setSpec.getTextContent());
+		getXmlNodes(response, "dataConfigurationIdentifier", 0);
 	}
 
 	@Test
@@ -506,6 +508,7 @@ public class TestVerbs extends BaseTest {
 
 		getXmlNode(response, "ListRecords");
 		getXmlNodes(response, "record", 2);
+		getXmlNodes(response, "dataConfigurationIdentifier", 0);
 		getXmlNode(response, "resumptionToken");
 	}
 
