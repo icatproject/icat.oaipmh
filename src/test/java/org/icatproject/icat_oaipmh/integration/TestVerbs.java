@@ -141,8 +141,8 @@ public class TestVerbs extends BaseTest {
 		getXmlNode(response, "ListMetadataFormats");
 
 		NodeList metadataFormat = getXmlNodes(response, "metadataFormat", 2);
-		assertEquals("oai_dc", metadataFormat.item(0).getFirstChild().getTextContent());
-		assertEquals("oai_datacite", metadataFormat.item(1).getFirstChild().getTextContent());
+		assertEquals("oai_dc", getXmlChild(metadataFormat.item(0), "metadataPrefix").getTextContent());
+		assertEquals("oai_datacite", getXmlChild(metadataFormat.item(1), "metadataPrefix").getTextContent());
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class TestVerbs extends BaseTest {
 		getXmlNode(response, "ListMetadataFormats");
 
 		Node metadataFormat = getXmlNode(response, "metadataFormat");
-		assertEquals("oai_dc", metadataFormat.getFirstChild().getTextContent());
+		assertEquals("oai_dc", getXmlChild(metadataFormat, "metadataPrefix").getTextContent());
 	}
 
 	@Test

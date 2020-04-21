@@ -514,8 +514,8 @@
 	<p>
 		A simple standalone test is to run:
 		<blockquote>
-			<code>curl -k https://localhost:8181/oaipmh/request?verb=Identify -w
-			"\n" </code> which should return the OAI-PMH "Identify" response
+			<code>curl -k https://localhost:8181/oaipmh/request?verb=Identify</code>
+			which should return the OAI-PMH "Identify" response
 		</blockquote>
 	</p>
 

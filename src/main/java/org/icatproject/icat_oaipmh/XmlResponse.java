@@ -166,6 +166,7 @@ public class XmlResponse {
             if (template == null) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 transformer = transformerFactory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 doc = document;
             } else {
                 transformer = template.newTransformer();
