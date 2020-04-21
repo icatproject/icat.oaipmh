@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -157,13 +158,13 @@ public class XmlResponse {
         xmlElement.appendChild(el);
     }
 
-    public String transformXml(Templates template) throws IllegalStateException {
+    public String transformXml(Templates template, boolean responseDebug) throws IllegalStateException {
         Transformer transformer = null;
         Document doc = null;
         String output = null;
 
         try {
-            if (template == null) {
+            if (template == null || responseDebug) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 transformer = transformerFactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");

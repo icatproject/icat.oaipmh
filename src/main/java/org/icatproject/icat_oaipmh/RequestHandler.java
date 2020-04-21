@@ -79,7 +79,7 @@ public class RequestHandler {
         }
 
         try {
-            return res.transformXml(template);
+            return res.transformXml(template, responseDebug);
         } catch (IllegalStateException e) {
             logger.error(e.getMessage());
             throw new InternalException();
@@ -99,26 +99,34 @@ public class RequestHandler {
         String[] allowedParameters = { "verb", "from", "until", "metadataPrefix", "set", "resumptionToken" };
         String[] requiredParameters = { "metadataPrefix" };
 
-        Templates template = null;
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
-            template = getMetadataTemplate(req, res);
-            if (template != null || responseDebug)
-                rb.buildListIdentifiersResponse(req, res);
+            Templates template;
+            try {
+                template = getMetadataTemplate(req, res);
+            } catch (NullPointerException e) {
+                return null;
+            }
+            rb.buildListIdentifiersResponse(req, res);
+            return template;
         }
-        return template;
+        return null;
     }
 
     private Templates handleListRecords(HttpServletRequest req, XmlResponse res) throws InternalException {
         String[] allowedParameters = { "verb", "from", "until", "set", "resumptionToken", "metadataPrefix" };
         String[] requiredParameters = { "metadataPrefix" };
 
-        Templates template = null;
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
-            template = getMetadataTemplate(req, res);
-            if (template != null || responseDebug)
-                rb.buildListRecordsResponse(req, res);
+            Templates template;
+            try {
+                template = getMetadataTemplate(req, res);
+            } catch (NullPointerException e) {
+                return null;
+            }
+            rb.buildListRecordsResponse(req, res);
+            return template;
         }
-        return template;
+        return null;
     }
 
     private void handleListSets(HttpServletRequest req, XmlResponse res) throws InternalException {
@@ -143,13 +151,17 @@ public class RequestHandler {
         String[] allowedParameters = { "verb", "identifier", "metadataPrefix" };
         String[] requiredParameters = { "identifier", "metadataPrefix" };
 
-        Templates template = null;
         if (checkParameters(allowedParameters, requiredParameters, req, res)) {
-            template = getMetadataTemplate(req, res);
-            if (template != null || responseDebug)
-                rb.buildGetRecordResponse(req, res);
+            Templates template;
+            try {
+                template = getMetadataTemplate(req, res);
+            } catch (NullPointerException e) {
+                return null;
+            }
+            rb.buildGetRecordResponse(req, res);
+            return template;
         }
-        return template;
+        return null;
     }
 
     private void handleIllegalVerb(HttpServletRequest req, XmlResponse res, String message) throws InternalException {
@@ -221,7 +233,7 @@ public class RequestHandler {
             return metadataFormat.getTemplate();
         } else {
             res.addError("cannotDisseminateFormat", "'" + metadataPrefix + "' is not supported by the repository");
-            return null;
+            throw new NullPointerException();
         }
     }
 
