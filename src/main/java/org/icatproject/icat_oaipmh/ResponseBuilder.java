@@ -52,7 +52,7 @@ public class ResponseBuilder {
             this.restIcat = new ICATInterface(icatUrl);
         } catch (URISyntaxException | IcatException e) {
             logger.error(e.getMessage());
-            throw new InternalException();
+            throw new InternalException("Exception setting up ICAT interface", e);
         }
     }
 
