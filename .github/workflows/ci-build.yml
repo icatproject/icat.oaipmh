@@ -45,6 +45,8 @@ jobs:
           sed -i -e "s/^payara_user: \"glassfish\"/payara_user: \"runner\"/" icat-ansible/group_vars/all/vars.yml
       - name: Add Ansible Role
         run: |
+          sed -i "/- role: authn_anon$/a\
+          \    - role: authn_db" icat-ansible/icatdb_minimal_hosts.yml
           sed -i "/- role: icat_server$/a\
           \    - role: dev_common" icat-ansible/icatdb_minimal_hosts.yml
 
@@ -73,6 +75,9 @@ jobs:
           grep payara ~/.bash_profile > payara_path_command
           source payara_path_command
           mvn install -DskipTests
+
+      - name: Run Integration Tests
+        run: mvn failsafe:integration-test failsafe:verify -B
 
       - name: After Failure
         if: ${{ failure() }}
