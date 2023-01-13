@@ -26,8 +26,8 @@ public class MetadataFormat {
             this.template = null;
         } else {
             TransformerFactory factory = TransformerFactory.newInstance();
-            StreamSource xsl = new StreamSource(new FileInputStream(metadataXslt));
-            this.template = factory.newTemplates(xsl);
+            StreamSource xslt = new StreamSource(new FileInputStream(metadataXslt));
+            this.template = factory.newTemplates(xslt);
         }
     }
 
