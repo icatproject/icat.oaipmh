@@ -38,8 +38,8 @@ try:
         print("requestUrl = %s/oaipmh/request" % icatUrl, file=f)
         print("icat.auth = %s" % icatAuth, file=f)
         print("icat.url = %s" % icatUrl, file=f)
-        print("oai_dc.xslt = %s/oai_dc.xsl" % resourceDirAbs, file=f)
-        print("oai_datacite.xslt = %s/oai_datacite.xsl" % resourceDirAbs, file=f)
+        print("oai_dc.xslt = %s/oai_dc.xslt" % resourceDirAbs, file=f)
+        print("oai_datacite.xslt = %s/oai_datacite.xslt" % resourceDirAbs, file=f)
     print("Installing with %s and %s" % (propFile, dataFile))
     shutil.copy(name, "src/test/install/run.properties")
 finally:

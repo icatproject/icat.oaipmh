@@ -213,7 +213,7 @@
 			"src/main/config/".
 		</dd>
 		<dd>
-			Example: <b>"oai_dc.xslt = /home/icat/xslt/dublin_core.xsl"</b>
+			Example: <b>"oai_dc.xslt = /home/icat/xslt/dublin_core.xslt"</b>
 		</dd>
 		<dt>&lt;metadataPrefix&gt;.namespace</dt>
 		<dd>

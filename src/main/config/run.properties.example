@@ -27,8 +27,8 @@
 !metadataPrefixes = oai_dc oai_datacite
 
 # The path to the XSLT definition for each metadata format
-!oai_dc.xslt        = /path/to/oai_dc.xsl
-!oai_datacite.xslt  = /path/to/oai_datacite.xsl
+!oai_dc.xslt        = /path/to/oai_dc.xslt
+!oai_datacite.xslt  = /path/to/oai_datacite.xslt
 
 # The namespace for each metadata format
 !oai_dc.namespace       = http://www.openarchives.org/OAI/2.0/oai_dc/
@@ -107,4 +107,4 @@
 
 # The URL to an XSLT document to be applied to all XML responses.
 # Must be hosted on the same server as icat.oaipmh.
-!responseStyle = /static/oaitohtml.xsl
+!responseStyle = /static/oaitohtml.xslt
