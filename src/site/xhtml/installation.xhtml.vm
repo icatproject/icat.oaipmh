@@ -26,7 +26,7 @@
 			payara41. <a href="http://icatproject.org/installation/glassfish/">
 				Glassfish/Payara installation instructions</a> are available.
 		</li>
-		<li>Python (version 2.4 to 2.7) installed on the server.</li>
+		<li>Python 3 installed on the server.</li>
 	</ul>
 
 
