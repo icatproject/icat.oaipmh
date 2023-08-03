@@ -131,9 +131,9 @@ public class RequestInterface {
 		} catch (CheckedPropertyException | FileNotFoundException | SecurityException | NumberFormatException
 				| TransformerConfigurationException | URISyntaxException e) {
 			logger.error(e.getMessage());
-			throw new IllegalStateException();
+			throw new IllegalStateException("Configuration exception during initialization", e);
 		} catch (InternalException e) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("Internal exception during initialization", e);
 		}
 
 		logger.info("Initialized RequestInterface");

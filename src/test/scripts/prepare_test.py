@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function
 import sys
 import os
@@ -38,8 +38,8 @@ try:
         print("requestUrl = %s/oaipmh/request" % icatUrl, file=f)
         print("icat.auth = %s" % icatAuth, file=f)
         print("icat.url = %s" % icatUrl, file=f)
-        print("oai_dc.xslt = %s/oai_dc.xsl" % resourceDirAbs, file=f)
-        print("oai_datacite.xslt = %s/oai_datacite.xsl" % resourceDirAbs, file=f)
+        print("oai_dc.xslt = %s/oai_dc.xslt" % resourceDirAbs, file=f)
+        print("oai_datacite.xslt = %s/oai_datacite.xslt" % resourceDirAbs, file=f)
     print("Installing with %s and %s" % (propFile, dataFile))
     shutil.copy(name, "src/test/install/run.properties")
 finally:
@@ -48,11 +48,12 @@ finally:
 for f in glob.glob("src/test/install/*.war"):
     os.remove(f)
 
-with open("src/test/install/setup.properties", "wt") as f:
-    print("secure         = true", file=f)
-    print("container      = Glassfish", file=f)
-    print("home           = %s" % containerHome, file=f)
-    print("port           = 4848", file=f)
+if not os.path.exists("src/test/install/setup.properties"):
+    with open("src/test/install/setup.properties", "wt") as f:
+        print("secure         = true", file=f)
+        print("container      = Glassfish", file=f)
+        print("home           = %s" % containerHome, file=f)
+        print("port           = 4848", file=f)
 
 with open("src/test/install/run.properties.example", "wt") as f:
     pass
@@ -64,10 +65,11 @@ with ZipFile(glob.glob("target/icat.oaipmh-*-distro.zip")[0]) as z:
     with open("src/test/install/setup_utils.py", "wb") as f:
         f.write(z.read("icat.oaipmh/setup_utils.py"))
 
-with open("src/main/resources/logback.xml", "rt") as s:
-    with open("src/test/install/logback.xml", "wt") as f:
-        t = Template(s.read()).substitute(subst)
-        print(t, end="", file=f)
+if not os.path.exists("src/test/install/logback.xml"):
+    with open("src/main/resources/logback.xml", "rt") as s:
+        with open("src/test/install/logback.xml", "wt") as f:
+            t = Template(s.read()).substitute(subst)
+            print(t, end="", file=f)
 
 p = subprocess.Popen(["./setup", "install"], cwd="src/test/install")
 p.wait()
